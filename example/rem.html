@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" id="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>REM</title>
+</head>
+<body>
+    <style>
+            html{
+                font-size:100px;
+            }
+            #left{
+                background:green;
+            }
+            #right{
+                background:red;
+            }
+            #left,#right{
+                float:left;
+                font-size:1.6rem;
+                width: 1.6rem;
+                height:0.6rem;
+            }
+    </style>
+    <div id="left"></div>
+    <div id="right"></div>
+    <script>
+        function WindowResize(){
+            var dpr = window.devicePixelRatio;
+            var meta = document.getElementById('viewport')
+            document.getElementsByTagName('html')[0].style.fontSize = 100*window.innerWidth / 320 + 'px';
+            meta.setAttribute('content', 'initial-scale=' + 1/dpr + ', maximum-scale=' + 1/dpr + ', minimum-scale=' + 1/dpr + ', user-scalable=no')
+        }
+        WindowResize();
+        window.onresize = function(){
+            WindowResize();
+        }
+    </script>
+</body>
+</html>
