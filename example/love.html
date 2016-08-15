@@ -1,0 +1,605 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>我爱你</title>
+
+<link rel="icon" href="./images/201511/love.ico" type="image/x-icon" />
+<style type="text/css">
+	@font-face {
+		font-family: digit;
+		src: url('digital-7_mono.ttf') format("truetype");
+	}
+	body{margin:0;padding:0;background:#ffe;font-size:12px;overflow:auto}
+	#mainDiv{width:100%;height:100%}
+	#loveHeart{width:670;height: 625px;margin:0 auto;}
+	#garden{width:100%;height:100%}
+	#elapseClock{text-align:right;margin-top:10px;margin-bottom:10px;}
+	#words{font-family:"sans-serif";width:500px;font-size:24px;color:#666;margin-left: -250px;overflow: hidden;height: 300px;}
+	.messages{display:none}
+	
+	#elapseClock .digit{font-family:"digit";font-size:36px}
+	.loveu{padding:5px;font-size:22px;margin-top:80px;margin-right:120px;text-align:right;display:none;display: none;width: 260px;padding-left: 120px}
+	.loveu .signature{margin-top:10px;font-size:20px;font-style:italic}
+	#clickSound{display:none}
+	#copyright{margin-top:10px;text-align:center;width:100%;color:#666}
+	#errorMsg{width:100%;text-align:center;font-size:24px;position:absolute;top:100px;left:0}
+	#copyright a{color:#666}
+	.messages2016,.loveu2016,#elapseClock{display: block;opacity: 0;font-size: 60px}
+
+	/*花瓣css*/
+	@keyframes mysnow{
+	    0%{bottom:100%;opacity:0;}
+	    50%{opacity:1;transform: rotate(35deg);margin-left:-200px;}
+	    100%{transform: rotate(0deg);opacity: 0;bottom:0;margin-left:-200px;}
+	}
+	@-webkit-keyframes mysnow{
+	    0%{bottom:100%;opacity:0;}
+	    50%{opacity:1;-webkit-transform: rotate(35deg);margin-left:-200px;}
+	    100%{-webkit-transform: rotate(0deg);opacity: 0;bottom:0;margin-left:-200px;}
+	}
+	@-moz-keyframes mysnow{
+	    0%{bottom:100%;opacity:0;}
+	    50%{opacity:1;-moz-transform: rotate(35deg);margin-left:-200px;}
+	    100%{-moz-transform: rotate(0deg);margin-left:-200px;opacity: 0;bottom:0;}
+	}
+	@-ms-keyframes mysnow{
+	    0%{bottom:100%;opacity:0;}
+	    50%{opacity:1;-ms-transform: rotate(35deg);margin-left:-200px;}
+	    100%{-ms-transform: rotate(0deg);opacity: 0;bottom:0;margin-left:-200px;}
+	}
+	@-o-keyframes mysnow{
+	    0%{bottom:100%;opacity:0;}
+	    50%{opacity:1;-o-transform: rotate(35deg);margin-left:-200px;}
+	    100%{-o-transform: rotate(0deg);opacity: 0;bottom:0;margin-left:-200px;}
+	}
+	.roll{
+	    position:absolute;
+	    opacity:0;
+	    animation: mysnow 5s ease-in-out;
+	    -webkit-animation: mysnow 5s ease-in-out;
+	    -moz-animation: mysnow 5s ease-in-out;
+	    -ms-animation: mysnow 5s ease-in-out;
+	    -o-animation: mysnow 5s ease-in-out;
+	}
+	#leaf{
+		position: absolute;
+		top: 10px;
+	}
+	 #leaf img{
+	    z-index:999;
+	}
+	.div{
+	    position:fixed;
+	    z-index:999;
+	}
+</style>
+
+<!-- <link href="css/default.css" type="text/css" rel="stylesheet"> -->
+<script type="text/javascript" src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    // function.js
+	var $window = $(window), gardenCtx, gardenCanvas, $garden, garden;
+	var clientWidth = $(window).width();
+	var clientHeight = $(window).height();
+
+	$(function () {
+	    // setup garden
+		$loveHeart = $("#loveHeart");
+		var offsetX = $loveHeart.width() / 2;
+		var offsetY = $loveHeart.height() / 2 - 55;
+	    $garden = $("#garden");
+	    gardenCanvas = $garden[0];
+		gardenCanvas.width = $("#loveHeart").width();
+	    gardenCanvas.height = $("#loveHeart").height()
+	    gardenCtx = gardenCanvas.getContext("2d");
+	    gardenCtx.globalCompositeOperation = "lighter";
+	    garden = new Garden(gardenCtx, gardenCanvas);
+		
+		$("#content").css("width", $loveHeart.width() + $("#code").width());
+		$("#content").css("height", Math.max($loveHeart.height(), $("#code").height()));
+		$("#content").css("margin-top", Math.max(($window.height() - $("#content").height()) / 2, 10));
+		$("#content").css("margin-left", Math.max(($window.width() - $("#content").width()) / 2, 10));
+
+	    // renderLoop
+	    setInterval(function () {
+	        garden.render();
+	    }, Garden.options.growSpeed);
+	});
+
+	$(window).resize(function() {
+	    var newWidth = $(window).width();
+	    var newHeight = $(window).height();
+	    if (newWidth != clientWidth && newHeight != clientHeight) {
+	        location.replace(location);
+	    }
+	});
+
+	function getHeartPoint(angle) {
+		var t = angle / Math.PI;
+		var x = 19.5 * (16 * Math.pow(Math.sin(t), 3));
+		var y = - 20 * (13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+		return new Array(offsetX + x, offsetY + y);
+	}
+
+	function startHeartAnimation() {
+		var interval = 50;
+		var angle = 10;
+		var heart = new Array();
+		var animationTimer = setInterval(function () {
+			var bloom = getHeartPoint(angle);
+			var draw = true;
+			for (var i = 0; i < heart.length; i++) {
+				var p = heart[i];
+				var distance = Math.sqrt(Math.pow(p[0] - bloom[0], 2) + Math.pow(p[1] - bloom[1], 2));
+				if (distance < Garden.options.bloomRadius.max * 1.3) {
+					draw = false;
+					break;
+				}
+			}
+			if (draw) {
+				heart.push(bloom);
+				garden.createRandomBloom(bloom[0], bloom[1]);
+			}
+			if (angle >= 30) {
+				clearInterval(animationTimer);
+				showMessages();
+			} else {
+				angle += 0.2;
+			}
+		}, interval);
+	}
+
+	(function($) {
+		$.fn.typewriter = function() {
+			this.each(function() {
+				var $ele = $(this), str = $ele.html(), progress = 0;
+				$ele.html('');
+				var timer = setInterval(function() {
+					var current = str.substr(progress, 1);
+					if (current == '<') {
+						progress = str.indexOf('>', progress) + 1;
+					} else {
+						progress++;
+					}
+					$ele.html(str.substring(0, progress) + (progress & 1 ? '_' : ''));
+					if (progress >= str.length) {
+						clearInterval(timer);
+					}
+				}, 75);
+			});
+			return this;
+		};
+	})(jQuery);
+
+	function timeElapse(date){
+		var current = Date();
+		var seconds = (Date.parse(current) - Date.parse(date)) / 1000;
+		var days = Math.floor(seconds / (3600 * 24));
+		seconds = seconds % (3600 * 24);
+		var hours = Math.floor(seconds / 3600);
+		if (hours < 10) {
+			hours = "0" + hours;
+		}
+		seconds = seconds % 3600;
+		var minutes = Math.floor(seconds / 60);
+		if (minutes < 10) {
+			minutes = "0" + minutes;
+		}
+		seconds = seconds % 60;
+		if (seconds < 10) {
+			seconds = "0" + seconds;
+		}
+		var result = "<span class=\"digit\">" + days + "</span> days <span class=\"digit\">" + hours + "</span> hours <span class=\"digit\">" + minutes + "</span> minutes <span class=\"digit\">" + seconds + "</span> seconds"; 
+		$("#elapseClock").html(result);
+	}
+
+	function showMessages() {
+		adjustWordsPosition();
+		wordShow();
+	}
+
+	//文字动画效果
+	function wordShow(){
+			var i = 1;
+		    function box(i){
+		  	
+				$('.messages').eq(i).fadeIn(3000, function() {
+					showLoveU(i);
+			    });
+		    }
+		  	
+		  	
+			function showLoveU(z) {
+				$('.loveu').eq(z).fadeIn(3000,function(){
+					if(z<=3){
+						setTimeout(function(){
+							$('.loveu').eq(z).fadeOut(2000);
+							$('.messages').eq(z).fadeOut(2000);
+						},2000)
+						
+					}
+				});
+			}
+
+
+			box(0);
+
+			var a = setInterval(function(){
+			 	if(i > 4){
+			 		console.log(2)
+			 		clearInterval(a)
+			 	}else if(i == 4){
+			 		console.log(3)
+			 		$('.messages').eq(i).animate({fontSize:"24px",opacity:"1"},3000);
+			 		$('#elapseClock').animate({fontSize:"18px",opacity:"1"},3000);
+			 		$('.loveu').eq(i).animate({fontSize:"22px",opacity:"1"},3000);
+			 	}else{
+			 		console.log(4)
+			 		box(i);
+			 	}
+			 	i++;
+			},10000)
+	}
+
+
+	function adjustWordsPosition() {
+		$('#words').css("position", "absolute");
+		$('#words').css("top", $("#garden").position().top + 195);
+		$('#words').css("left", "50%");
+	}
+
+	function showLoveU() {
+		$('#loveu').fadeIn(3000,function(){
+			$('#messages,#loveu').fadeOut(2000)
+		});
+	}
+
+
+	// garden.js
+
+    function Vector(x, y) {
+        this.x = x;
+        this.y = y;
+    };
+	
+    Vector.prototype = {
+        rotate: function (theta) {
+            var x = this.x;
+            var y = this.y;
+            this.x = Math.cos(theta) * x - Math.sin(theta) * y;
+            this.y = Math.sin(theta) * x + Math.cos(theta) * y;
+            return this;
+        },
+        mult: function (f) {
+            this.x *= f;
+            this.y *= f;
+            return this;
+        },
+        clone: function () {
+            return new Vector(this.x, this.y);
+        },
+        length: function () {
+            return Math.sqrt(this.x * this.x + this.y * this.y);
+        },
+        subtract: function (v) {
+            this.x -= v.x;
+            this.y -= v.y;
+            return this;
+        },
+        set: function (x, y) {
+            this.x = x;
+            this.y = y;
+            return this;
+        }
+    };
+	
+    function Petal(stretchA, stretchB, startAngle, angle, growFactor, bloom) {
+        this.stretchA = stretchA;
+        this.stretchB = stretchB;
+        this.startAngle = startAngle;
+        this.angle = angle;
+        this.bloom = bloom;
+        this.growFactor = growFactor;
+        this.r = 1;
+        this.isfinished = false;
+        //this.tanAngleA = Garden.random(-Garden.degrad(Garden.options.tanAngle), Garden.degrad(Garden.options.tanAngle));
+        //this.tanAngleB = Garden.random(-Garden.degrad(Garden.options.tanAngle), Garden.degrad(Garden.options.tanAngle));
+    }
+    Petal.prototype = {
+        draw: function () {
+            var ctx = this.bloom.garden.ctx;
+            var v1, v2, v3, v4;
+            v1 = new Vector(0, this.r).rotate(Garden.degrad(this.startAngle));
+            v2 = v1.clone().rotate(Garden.degrad(this.angle));
+            v3 = v1.clone().mult(this.stretchA); //.rotate(this.tanAngleA);
+            v4 = v2.clone().mult(this.stretchB); //.rotate(this.tanAngleB);
+            ctx.strokeStyle = this.bloom.c;
+            ctx.beginPath();
+            ctx.moveTo(v1.x, v1.y);
+            ctx.bezierCurveTo(v3.x, v3.y, v4.x, v4.y, v2.x, v2.y);
+            ctx.stroke();
+        },
+        render: function () {
+            if (this.r <= this.bloom.r) {
+                this.r += this.growFactor; // / 10;
+                this.draw();
+            } else {
+                this.isfinished = true;
+            }
+        }
+    }
+
+    function Bloom(p, r, c, pc, garden) {
+        this.p = p;
+        this.r = r;
+        this.c = c;
+        this.pc = pc;
+        this.petals = [];
+        this.garden = garden;
+        this.init();
+        this.garden.addBloom(this);
+    }
+    Bloom.prototype = {
+        draw: function () {
+            var p, isfinished = true;
+            this.garden.ctx.save();
+            this.garden.ctx.translate(this.p.x, this.p.y);
+            for (var i = 0; i < this.petals.length; i++) {
+                p = this.petals[i];
+                p.render();
+                isfinished *= p.isfinished;
+            }
+            this.garden.ctx.restore();
+            if (isfinished == true) {
+                this.garden.removeBloom(this);
+            }
+        },
+        init: function () {
+            var angle = 360 / this.pc;
+            var startAngle = Garden.randomInt(0, 90);
+            for (var i = 0; i < this.pc; i++) {
+                this.petals.push(new Petal(Garden.random(Garden.options.petalStretch.min, Garden.options.petalStretch.max), Garden.random(Garden.options.petalStretch.min, Garden.options.petalStretch.max), startAngle + i * angle, angle, Garden.random(Garden.options.growFactor.min, Garden.options.growFactor.max), this));
+            }
+        }
+    }
+
+    function Garden(ctx, element) {
+        this.blooms = [];
+        this.element = element;
+        this.ctx = ctx;
+    }
+    Garden.prototype = {
+        render: function () {
+            for (var i = 0; i < this.blooms.length; i++) {
+                this.blooms[i].draw();
+            }
+        },
+        addBloom: function (b) {
+            this.blooms.push(b);
+        },
+        removeBloom: function (b) {
+            var bloom;
+            for (var i = 0; i < this.blooms.length; i++) {
+                bloom = this.blooms[i];
+                if (bloom === b) {
+                    this.blooms.splice(i, 1);
+                    return this;
+                }
+            }
+        },
+        createRandomBloom: function (x, y) {
+            this.createBloom(x, y, Garden.randomInt(Garden.options.bloomRadius.min, Garden.options.bloomRadius.max), Garden.randomrgba(Garden.options.color.rmin, Garden.options.color.rmax, Garden.options.color.gmin, Garden.options.color.gmax, Garden.options.color.bmin, Garden.options.color.bmax, Garden.options.color.opacity), Garden.randomInt(Garden.options.petalCount.min, Garden.options.petalCount.max));
+        },
+        createBloom: function (x, y, r, c, pc) {
+            new Bloom(new Vector(x, y), r, c, pc, this);
+        },
+        clear: function () {
+            this.blooms = [];
+            this.ctx.clearRect(0, 0, this.element.width, this.element.height);
+        }
+    }
+
+    Garden.options = {
+        petalCount: {
+            min: 8,
+            max: 15
+        },
+        petalStretch: {
+            min: 0.1,
+            max: 3
+        },
+        growFactor: {
+            min: 0.1,
+            max: 1
+        },
+        bloomRadius: {
+            min: 8,
+            max: 10
+        },
+        density: 10,
+        growSpeed: 1000 / 60,
+        color: {
+			rmin: 128,
+			rmax: 255,
+			gmin: 0,
+			gmax: 128,
+			bmin: 0,
+			bmax: 128,
+            opacity: 0.1
+        },
+        tanAngle: 60
+    };
+    Garden.random = function (min, max) {
+        return Math.random() * (max - min) + min;
+    };
+    Garden.randomInt = function (min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    };
+    Garden.circle = 2 * Math.PI;
+    Garden.degrad = function (angle) {
+        return Garden.circle / 360 * angle;
+    };
+    Garden.raddeg = function (angle) {
+        return angle / Garden.circle * 360;
+    };
+    Garden.rgba = function (r, g, b, a) {
+        return 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
+    };
+    Garden.randomrgba = function (rmin, rmax, gmin, gmax, bmin, bmax, a) {
+		var r = Math.round(Garden.random(rmin, rmax));
+		var g = Math.round(Garden.random(gmin, gmax));
+		var b = Math.round(Garden.random(bmin, bmax));
+		var limit = 5;
+		if (Math.abs(r - g) <= limit && Math.abs(g - b) <= limit && Math.abs(b - r) <= limit) {
+			return Garden.rgba(rmin, rmax, gmin, gmax, bmin, bmax, a);
+		} else {
+			return Garden.rgba(r, g, b, a);
+		}
+    };
+</script>
+
+</head>
+
+<body>
+<!-- 音乐 -->
+<audio src='/images/201511/1000.mp3' autoplay='autoplay' loop="loop"></audio>
+
+<!-- 花瓣div -->
+<div id="leaf"></div>
+
+
+<!-- 花瓣js -->
+<script>
+(function(){
+
+	function piao(left,height,src){
+
+	var div = document.createElement("div");
+
+	var img = document.createElement("img");
+
+	div.appendChild(img);
+
+	img.className = "roll";
+
+	img.src = src;
+
+	div.style.left=left+"px";
+
+	div.style.height=height+"px";
+
+	div.className="div";
+
+	document.getElementById("leaf").appendChild(div);
+
+	setTimeout(function(){
+
+	document.getElementById("leaf").removeChild(div);
+
+
+	},5000);
+
+	}
+
+	setInterval(function(){
+
+	var left = Math.random()*window.innerWidth;
+
+	var height = Math.random()*window.innerHeight;
+
+	var src = "http://img1.tuniucdn.com/site/file/zt/baby2/taiwan/images/hua"+Math.floor(Math.random()*4+1)+".png";
+
+	piao(left,height,src);
+
+	},1000);
+
+	})();
+</script>
+
+<!-- 爱心内容 -->
+<div id="mainDiv">
+	<div id="content">
+		<div id="loveHeart">
+			<canvas id="garden"></canvas>
+			<div id="words">
+
+				<div class="messages">
+					2012年，只是因为在人群中多看了你一眼
+				</div>
+				<div class="loveu">
+					“Hi,你好”
+				</div>
+				<!--  2013-->
+				<div class="messages">
+					2013年，再大的心都装不下我的喜悦
+				</div>
+				<div class="loveu">
+					“愿意做我女朋友就把你的手交给我”
+				</div>
+				<!--  2014-->
+				<div class="messages">
+					2014年，我们的足迹踏上了泰山之巅
+				</div>
+				<div class="loveu">
+					“我要带你游遍全世界”
+				</div>
+				<!--  2015-->
+				<div class="messages">
+					2015，我们相爱的1000个日日夜夜
+				</div>
+				<div class="loveu">
+					有了你，便有了期盼
+				</div>
+				<!--  2016-->
+				<div class="messages messages2016">
+					岁月在变，唯爱不变
+					<div id="elapseClock"></div>
+				</div>
+				<div class="loveu loveu2016">
+					I love you forever
+					<div class="signature">- Mr.yu</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>			
+
+<!-- 计时器 -->
+<script type="text/javascript">
+
+var offsetX = $("#loveHeart").width() / 2;
+var offsetY = $("#loveHeart").height() / 2 - 55;
+var together = new Date();
+together.setFullYear(2013, 2, 20);
+together.setHours(19);
+together.setMinutes(0);
+together.setSeconds(0);
+together.setMilliseconds(0);
+
+if (!document.createElement('canvas').getContext) {
+	var msg = document.createElement("div");
+	msg.id = "errorMsg";
+	msg.innerHTML = "Your browser doesn't support HTML5!<br/>Recommend use Chrome 14+/IE 9+/Firefox 7+/Safari 4+"; 
+	document.body.appendChild(msg);
+	$("#copyright").css("position", "absolute");
+	$("#copyright").css("bottom", "10px");
+	document.execCommand("stop");
+} else {
+	setTimeout(function () {
+		startHeartAnimation();
+	}, 1000);
+
+	timeElapse(together);
+	setInterval(function () {
+		timeElapse(together);
+	}, 500);
+
+}
+</script>
+
+
+
+
+</body>
+</html>
