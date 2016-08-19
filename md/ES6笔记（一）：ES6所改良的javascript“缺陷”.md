@@ -131,9 +131,108 @@ ES6是是向后兼容的，而保持向后兼容性意味着永不改变JS代码
 
 - 不能用call()、apply()、bind()这些方法去改变this的指向
 
+
+## 类与继承 ##
+
+传统ECMAScript没类的概念，它描述了原型链的概念，并将原型链作为实现继承的主要方法。其基本思想是利用原型让一个引用类型继承另一个引用类型的属性和方法。而实现这一行为的传统方法便是通过构造函数：
+	function Point(x, y) {
+	  this.x = x;
+	  this.y = y;
+	}
+	
+	Point.prototype.toString = function () {
+	  return '(' + this.x + ', ' + this.y + ')';
+	};
+	
+	var p = new Point(1, 2);
+
+在这里，构造函数Point会有一个原型对象（prototype），这个原型对象包含一个指向Point的指针(constructor)，而实例p包含一个指向原型对象的内部指针(_prop_)。所以整个的继承是通过原型链来实现的。详情可见我的这篇文章：[javascript中的prototype和constructor](http://www.cnblogs.com/yzg1/p/5688722.html)
+
+### class ###
+
+ES6提供了更接近传统语言的写法，引入了Class（类）这个概念，作为对象的模板。通过class关键字，可以定义类。但是类只是基于原型的面向对象模式的语法糖。对于`class`的引入，褒贬不一，很多人认为它反而是一大缺陷，但对我来说，这是一个好的语法糖，因为往常的原型链继承的方式往往能把我绕那么一会儿。
+
+	//定义类
+	class Point {
+	  constructor(x, y) {
+	    this.x = x;
+	    this.y = y;
+	  }
+	
+	  toString() {
+	    return '(' + this.x + ', ' + this.y + ')';
+	  }
+	}
+	var p = new Point(1, 2);
+
+- 类里面有一个constructor方法，它是类的默认方法，通过new命令生成对象实例时，自动调用该方法。一个类必须有constructor方法，如果没有显式定义，一个空的constructor方法会被默认添加。
+
+- constructor方法中的this关键字代表实例对象，
+
+- 定义“类”的方法(如上例的toString)的时候，前面不需要加上function这个关键字，直接把函数定义放进去了就可以了。另外，方法之间不需要逗号分隔，加了会报错。
+
+- 使用的时候，也是直接对类使用new命令，跟构造函数的用法完全一致
+
+- 类的所有方法都定义在类的prototype属性上面
+
+### class的继承——extend ###
+Class之间可以通过extends关键字实现继承，这比ES5的通过修改原型链实现继承，要清晰和方便很多。
+
+	class ColorPoint extends Point {
+	  constructor(x, y, color) {
+	    super(x, y); // 调用父类的constructor(x, y)
+	    this.color = color;
+	  }
+	
+	  toString() {
+	    return this.color + ' ' + super.toString(); // 调用父类的toString()
+	  }
+	}
+
+- super关键字，作为函数调用时（即super(...args)），它代表父类的构造函数；作为对象调用时（即super.prop或super.method()），它代表父类。在这里，它表示父类的构造函数，用来新建父类的this对象。
+- 子类必须在constructor方法中调用super方法，否则新建实例时会报错。这是因为子类没有自己的this对象，而是继承父类的this对象，然后对其进行加工。如果不调用super方法，子类就得不到this对象。
+
+
+## 模块化 ##
+历史上，JavaScript一直没有模块（module）体系，无法将一个大程序拆分成互相依赖的小文件，再用简单的方法拼装起来，这对开发大型的、复杂的项目形成了巨大障碍。为了适应大型模块的开发，社区制定了一些模块加载方案，比如CMD和AMD。
+
+ES6的模块化写法：
+
+	import { stat, exists, readFile } from 'fs';
+
+上面代码的实质是从fs模块加载3个方法，其他方法不加载。这种加载称为“编译时加载”，即ES6可以在编译时就完成模块加载，效率要比CommonJS模块的加载方式高。当然，这也导致了没法引用ES6模块本身，因为它不是对象。
+
+模块功能主要由两个命令构成：
+
+- export
+
+	用于规定模块的对外接口，对外的接口，必须与模块内部的变量建立一一对应关系。
+
+		// 写法一
+		export var m = 1;
+		//错误
+		export 1;
+		
+		// 写法二
+		var m = 1;
+		export {m};
+		//错误
+		export m;
+		
+		// 写法三  重命名
+		var n = 1;
+		export {n as m}; 
+
+- import
+	
+	用于输入其他模块提供的功能，它接受一个对象（用大括号表示），里面指定要从其他模块导入的变量名（也可以使用*号整体加载）
+
+	
+
 ## 字符串插值 ##
 
-在开发中，我们常常需要输出这样的代码：
+在javascript的开发中，我们常常需要这样来输出模板：
+
 	function sayHello(name){
 		return "hello,my name is "+name+" I am "+getAge(18);
 	}
@@ -142,7 +241,7 @@ ES6是是向后兼容的，而保持向后兼容性意味着永不改变JS代码
 	}
 	sayHello("brand") //"hello,my name is brand I am 18"
 
-我们需要使用+来连接字符串和变量（或者表达式）。例子比较简单，所以看上去无伤大雅，但是一旦在比较复杂的情况下，这一用法让我们不厌其烦。对此，ES6引入了`模板字符串`,可以方便优雅地将 JS 的值插入到字符串中。
+我们需要使用+来连接字符串和变量（或者表达式）。例子比较简单，所以看上去无伤大雅，但是一旦在比较复杂的情况下，就会显得相当繁琐不方便，这一用法也让我们不厌其烦。对此，ES6引入了`模板字符串`,可以方便优雅地将 JS 的值插入到字符串中。
 
 ### 模板字符串 ###
 
@@ -153,7 +252,7 @@ ES6是是向后兼容的，而保持向后兼容性意味着永不改变JS代码
 - ${}里的内容可以是任何 JavaScript 表达式，所以函数调用和算数运算等都是合法的；
 - 如果一个值不是字符串，它将被转换为字符串；
 - 保留所有的空格、换行和缩进，并输出到结果字符串中（可以书写多行字符串）
-- 内部转义使用反斜杠`\`
+- 内部使用反引号和大括号需要转义，转义使用反斜杠`\`
 
 对于上面的例子，模板字符串的写法是：
 
