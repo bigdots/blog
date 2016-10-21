@@ -1,8 +1,8 @@
-# 第一次react-native项目实践要点总结：
+# 第一次react-native项目实践要点总结
 
-**注意：阅读需要语法基础： ES6 、react 、JSX**
+今天完成了我的第一个react-native项目的封包，当然其间各种环境各种坑，同时，成就感也是满满的。这里总结一下使用react-native的一些入门级重要点（不涉及环境）。**注意：阅读需要语法基础： ES6 、react 、JSX**
 
-我对react-native的理解 ：**react的语法** ＋ **native的组件**
+我对react-native的理解简而言之就是 ：**react的语法** ＋ **native的组件**
 
 ## 组件的创建声明
 ```
@@ -75,10 +75,15 @@ import ｛ HelloWorldApp ｝ from "../.."
 
 实例解释上述：
 现在有以下五个文件：
-index.ios.js  
+
+index.ios.js 
+ 
 index.android.js
+
 say.android.js
+
 say.ios.js
+
 HelloWorldApp.android.js   
 
 我们想要分别在index.ios.js 和 index.android.js引入其他三个模块。我们只要在index.ios.js 和 index.android.js文件中如下写法就行：
