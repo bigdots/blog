@@ -140,3 +140,19 @@ getInitialState这俩个函数是ES5的写法了，ES6语法中，constructor方
 	RCTDeviceEventEmitter.addListener(notifName,callback)
 	
 
+## native 事件对象
+
+在项目中，遇到一个控制scrollview组件滚动的需求，需要获取当前滚动的坐标，当时找了好久的文档，没找到解决方案，后来发现可以通过这样来传入一个事件对象
+
+```
+<ScrollView ref='scrollView' onScroll = {(e) => {this.scrollhShow(e);}}>
+```
+
+然后在函数中读取：
+
+```
+scrollhShow(e) {
+	console.log(e.nativeEvent)
+}
+```
+当当当当，我要的滚动视图的坐标值就在里面了。
