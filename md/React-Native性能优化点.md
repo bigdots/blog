@@ -5,7 +5,7 @@
 确保组件在渲染之后不需要再更新的，即静态组件，尽量在其中增加shouldComponentUpdate方法,防止二次消耗所产生的性能消耗
 
 ```
-shouldComponentUpdate() {    //完全静态的组件,无需更新 
+shouldComponentUpdate() {    //完全静态的组件,无需更新
     return false;}
 ```
 
@@ -49,4 +49,3 @@ React Native 里面的 shadow 相关的样式，是非常耗性能的css属性
 
 参考文章：
 [React Native 性能优化建议](http://www.tuicool.com/articles/biUNriA)
-
