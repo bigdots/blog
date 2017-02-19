@@ -101,10 +101,52 @@ import 模块名 from "./HelloWorldApp"
 
 ## react组件的生命周期
 
-![](../images/201601/react-component.jpg)
+![](https://raw.githubusercontent.com/bigdots/blog/master/images/201601/react-component.jpg)
 
 项目中使用组件的时候，纠结于componentWillMount,componentDidMount...，直到看到这张图豁然开朗(so，图是盗的)。需要注意的是，这张图应该比较老了，其中的getDefaultProps和
 getInitialState这俩个函数是ES5的写法了，ES6语法中，constructor方法中代替了getDefaultProps／getInitialState，我们可以在其内直接初始化props和state。
+
+生命周期：
+
+1. 实例化（初始化）
+	- constructor
+
+		设置默认的props->设置默认的state
+	- componentWillMount
+		
+		完成渲染之前执行，此时可以设置state
+		
+	- render
+
+		创建虚拟DOM，此时不能修改state
+		
+	- componentDidMount
+
+		真实的DOM渲染完毕，此时可以更改组件props及state
+
+2. 存在期：(这个时候的主要行为是状态的改变导致组件更新)
+	- componentWillReceiveProps
+
+		组件接收到新的props,此时可以更改组件props及state
+		
+	- shouldComponentUpdate
+
+		操作组件是否应当渲染新的props或state，返回布尔值，首次渲染该方法不会被调用。
+		
+	- componentWillUpdate
+
+		接收到新的props或者state后，进行渲染之前调用，此时不允许更新props或state。
+		
+	- render
+
+		创建（更新）虚拟DOM
+		
+	- componentDidUpdate
+	 组件真实的DOM更新完成
+	 
+3. 销毁期：
+	- componentWillUnmount
+	组件被移除之前，主要用于做一些清理工作，比如事件监听
 
 
 ## react 的 props 和 state
