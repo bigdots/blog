@@ -66,11 +66,40 @@ const EAT_APPLE = 'EAT_APPLE'
 
 reducer根据action操作来做出不同的数据响应，指明应用如何更新 state。它是一个纯函数，只做数据处理。
 
+```
+(previousState, action) => newState
+```
+
 它接收俩个参数：action和state，并return一个新的state。
 
-由于redux单一数据源，整个应用只有一个单一的 store，所以当需要拆分数据处理逻辑时，你应该使用 reducer 组合 而不是创建多个 store。
+纯函数(同样的输入，必定得到同样的输出)：
 
-合并reducer：
++ 修改传入参数；
++ 执行有副作用的操作，如 API 请求和路由跳转；
++ 调用非纯函数，如 Date.now() 或 Math.random()。
+
+
+```
+ //使用ES6参数默认值语法初始化state
+function toEat(state = {behavior: ""}, action) {
+  if (typeof state === 'EAT_APPLE') {
+    return Object.assign({}, state,{
+    	behavior: action.text
+    }}
+  }
+  
+  return state；
+}
+```
+
+**注意：**
+
++ 不要修改 state，Object.assign() 新建了一个副本
++ 在无匹配action的情况下返回旧的 state
+
+由于redux单一数据源，所以整个应用只有一个单一的 store，所以当需要拆分数据处理逻辑时，你应该使用 reducer 组合 而不是创建多个 store。
+
+Redux 提供了一个combineReducers方法，用于 Reducer 的合并：
 
 ```
 combineReducers({reducer,...})
@@ -83,9 +112,9 @@ combineReducers({reducer,...})
  
  store有以下方法：
    
- - createStore(reducer)  
+ - createStore(reducer,[preloadedState])  
 
- 	根据传入的reducer创建一个store。
+ 	根据传入的reducer创建一个store。这个函数的第二个参数是可选的，用于设置 state 初始状态。
  	
  - store.getState()
 
@@ -100,19 +129,27 @@ combineReducers({reducer,...})
 	注册监听器，监听store，一旦store变化，会触发listener。该函数会返回一个函数用于注销该监听器。
 
 
-### 总结
+### 工作流程
 
  一个清晰明了的流程图能帮我们更好的理解：
  ![](https://raw.githubusercontent.com/bigdots/blog/master/images/201601/redux.png)
 
-从上图可以看出redux处理的是一个单向数据流，它的流程：
+从上图可以看出redux处理的是一个单向数据流：
 
 + 用户行为或者程序调用 store.dispatch(action)，向store派遣action；
 
-+ store在接收到action后，会自动呼起reducer来处理action，这里reducer可以依据数据处理逻辑拆分成多个,但是数据源store只能是一个；
++ store在接收到action后，会自动呼起reducer来处理action，并且会传入俩个参数（当前 State 和收到的 Action），这里reducer可以依据数据处理逻辑拆分成多个,但是数据源store只能是一个；
 
 + combineReducers函数会将多个多个子 reducer 输出合并成一个单一的 state 树
 
 + 生成新的UI
+
+
+## 总结
+1. 并不总是需要redux，如果你的应用没那么复杂，就没必要用它；
+2. redux通过限制数据更新发生的时间和方式来达到管理state的目的；
+3. redux三大原则：单一store、reducer纯函数、state只读
+4. 在 createStore 和 reducer 函数中都可以初始化state。
+5. redux通过dispatch、subscribe、getState实现数据的发送、监听、获取，从而实现单向数据流的流动
 
 
