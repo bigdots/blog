@@ -1,9 +1,4 @@
-title: touch触摸事件
-date: 2016-01-15 15:27:19
-tags: [javascript]
-description: touch触摸事件
-
----
+# touch触摸事件
 
 ## 事件对象
 事件对象是用来记录一些事件发生时的相关信息的对象。事件对象只有事件发生时才会产生，并且只能是事件处理函数内部访问，在所有事件处理函数运行结束后，事件对象就被销毁！
@@ -20,7 +15,7 @@ $(window).on("touchstart","body",function(e){
 	console.log(e)
 })
 ```
-![](/images/201601/touchclass1.png)
+![](https://raw.githubusercontent.com/bigdots/blog/master/images/201601/touchclass1.png)
 
 上面例子中event中有一个originalEvent属性，而这才是真正的touch事件。jQuery.Event 是一个构造函数，其创建一个可读写的jQuery事件对象，并在event 对象保留了对这个原生事件对象 event 的引用($event.originalEvent)。我们绑定的事件处理程序所处理的事件对象都是 $event。该方法也可以传递一个自定义事件的类型名，用于生成用户自定义事件对象。
 
@@ -44,7 +39,7 @@ window.addEventListener("touchstart",function(event){
 	console.log(event);
 })
 ```
-![](/images/201601/touch.png)
+![](https://raw.githubusercontent.com/bigdots/blog/master/images/201601/touch.png)
 ## 触摸事件对象属性
 touches、targetTou、changeTouches都包含以下属性值
 
@@ -58,4 +53,4 @@ touches、targetTou、changeTouches都包含以下属性值
 + target：触摸的DOM节点目标。
 
 还是上面的那个例子，changeTouches对象在控制台输出如下：
-![](/images/201601/touchclass.png)
+![](https://raw.githubusercontent.com/bigdots/blog/master/images/201601/touchclass.png)
