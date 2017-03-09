@@ -87,15 +87,19 @@ eslint --init
 	"indent": ["error","tab"]
 	```
 	这里`indent`就是规则名，它定义了缩进应该使用tab，规则内的第一个值`error`指的是错误等级，它有三个等级，分别是：
-	
+
 	| error level | 数值表示   | 涵义       |
 	| ----------- |:---------:| ---------:|
 	| error       | 2         | 作为错误    |
 	| warn        | 1         | 作为提醒    |
 	| off         | 0         | 关闭该规则  |
 更多的规则可以参考[官网](http://eslint.org/docs/rules/)的rules。
-	
+
 4. Globals ：指定脚本执行过程中访问的附加全局变量（比如jquery）
+
+**PS:**
+
+您可以配置全局的.eslint文件，而不至于要每个工程中都创建一个独有的.eslint文件，烹制方法是将您的.eslintr文件放在当前用户的根目录下，类Unix系统的当前用户目录是`~`，而Windows系统的话则是类似于`C:\Windows\Users\Username`这样的地方
 
 ### 检测文件
 在你的工程目录下执行：
@@ -106,5 +110,58 @@ eslint yourfile.js
 
 它会在命令后输出你的所有报错信息。这样就ok了。个人感觉它的最大优势就是完全可配置，而且配置文件一次构建，可以通过粘贴复制的方式无数次使用。甚至整个团队可以通过使用一份配置文件来达到规范代码的作用，还是很强大的。
 
+## 使用现有的通用规则
+eslint官方提供了3种预安装包：
 
+1. [eslint-config-google](https://www.npmjs.com/package/eslint-config-google)
+
+	Google标准
+	
+	执行安装：
+	
+	```
+	npm install eslint eslint-config-google -g
+	```
+	
+2. [eslint-config-airbnb](https://www.npmjs.com/package/eslint-config-airbnb)
+
+	Airbnb标准,它依赖eslint, eslint-plugin-import, eslint-plugin-react, and eslint-plugin-jsx-a11y等插件，并且对各个插件的版本有所要求。
+	
+	你可以执行以下命令查看所依赖的各个版本：
+
+	```
+	npm info "eslint-config-airbnb@latest" peerDependencies
+	```
+	你会看到以下输出信息，包含每个了每个plugins的版本要求
+	
+	```
+	{ eslint: '^3.15.0',
+	  'eslint-plugin-jsx-a11y': '^3.0.2 || ^4.0.0',
+	  'eslint-plugin-import': '^2.2.0',
+	  'eslint-plugin-react': '^6.9.0' }
+	```
+	知道了每个plugins的版本要求后，代入以下命令执行安装即可使用：
+	
+	```
+	npm install eslint-config-airbnb eslint@^#.#.# eslint-plugin-jsx-a11y@^#.#.# eslint-plugin-import@^#.#.# eslint-plugin-react@^#.#.# -g
+	```
+	
+3. [eslint-config-standard](https://www.npmjs.com/package/eslint-config-standard)
+
+	Standard标准，它是一些前端工程师自定的标准。
+	
+	执行安装：
+	
+	```
+	npm install eslint-config-standard eslint-plugin-standard eslint-plugin-promise -g
+	```
+
+目前来看，公认的最好的标准是Airbnb标准。建议全局安装这些标准，然后在你的.eslint配置文件中直接使用：
+
+```
+{
+  "extends": "Airbnb/standard/Google/"
+}
+
+```
 
