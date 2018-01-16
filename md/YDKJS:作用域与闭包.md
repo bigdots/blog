@@ -558,8 +558,26 @@ for (var i = 1; i <= 5; i++) {
 }
 ```
 
-我们使用IIFE为每次迭代创建新的作用域，并且保存每次迭代需要的值。
+我们使用 IIFE 为每次迭代创建新的作用域，并且保存每次迭代需要的值。
 
 其实这里主要用到的原理是使用块级作用域，所以，理论上还有其他方式可以实现，比如：with，try/catch,let/const，大家都可以尝试下哦。
 
 ### 模块
+
+模块也利用了闭包的力量。
+
+```js
+function coolModule() {
+    var something = "cool";
+    function doSomething() {
+        console.log(something);
+    }
+
+    return {
+        doSomething: doSomething
+    };
+}
+
+var foo = coolModule()
+foo.doSomething() // cool
+```
