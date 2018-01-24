@@ -16,6 +16,11 @@
         - [语法](#语法)
         - [类型](#类型)
         - [内容](#内容)
+        - [计算型属性名](#计算型属性名)
+        - [属性(Property) vs 方法(Method)](#属性property-vs-方法method)
+        - [数组](#数组)
+        - [复制对象](#复制对象)
+        - [属性描述符](#属性描述符)
         - [遍历](#遍历)
     - [混淆“类”的对象](#混淆类的对象)
     - [原型](#原型)
@@ -31,17 +36,17 @@
 
 1. 目标：
 
-   允许函数对多个环境对象进行复用，而不是针对不同的环境重复定义。
+    允许函数对多个环境对象进行复用，而不是针对不同的环境重复定义。
 
 2. 实现：
 
-   * 明确地将环境对象传递给函数。
+    * 明确地将环境对象传递给函数。
 
-   * 通过 this 机制自动引用恰当的执行环境
+    * 通过 this 机制自动引用恰当的执行环境
 
 3. 比较：
 
-   this 机制提供了更优雅的方式来隐含地传递一个对象引用。实现了更加干净的 API 设计和更容易的复用。
+    this 机制提供了更优雅的方式来隐含地传递一个对象引用。实现了更加干净的 API 设计和更容易的复用。
 
 ### 困惑
 
@@ -49,40 +54,40 @@
 
 1. this 是函数自身的引用
 
-   第一种常见的错误倾向是认为 this 指向函数自己。
+    第一种常见的错误倾向是认为 this 指向函数自己。
 
-   ```js
-   function foo() {
-       this.count++;
-   }
+    ```js
+    function foo() {
+        this.count++;
+    }
 
-   foo.count = 0;
+    foo.count = 0;
 
-   for (var i = 1; i <= 5; i++) {
-       console.log(i); // 1,2,3,4,5
-       foo();
-   }
+    for (var i = 1; i <= 5; i++) {
+        console.log(i); // 1,2,3,4,5
+        foo();
+    }
 
-   console.log(foo.count); //0
-   ```
+    console.log(foo.count); //0
+    ```
 
-   上面 foo 被执行了五次，但是 foo.count 的值依然为 0，这说明 this 根本就不指向那个函数对象。
+    上面 foo 被执行了五次，但是 foo.count 的值依然为 0，这说明 this 根本就不指向那个函数对象。
 
 2. this 是函数词法作用域的引用
 
-   第二种常见的对 this 指向的误解是认为它指向当前的函数作用域。这是一种严重的误导，this 不会以任何方式指向函数的词法作用域。
+    第二种常见的对 this 指向的误解是认为它指向当前的函数作用域。这是一种严重的误导，this 不会以任何方式指向函数的词法作用域。
 
-   ```js
-   var a = 3;
-   function foo() {
-       var a = 2;
-       console.log(this.a);
-   }
+    ```js
+    var a = 3;
+    function foo() {
+        var a = 2;
+        console.log(this.a);
+    }
 
-   foo(); // 3
-   ```
+    foo(); // 3
+    ```
 
-   如果 this 指向的是函数的词法作用域，那么执行 foo 的结果应该输出 2，但是显而易见，输出的并不是 3，这说明**this 和词法作用域之间没有桥**，不能使用 this 在词法作用域中查找东西。
+    如果 this 指向的是函数的词法作用域，那么执行 foo 的结果应该输出 2，但是显而易见，输出的并不是 3，这说明**this 和词法作用域之间没有桥**，不能使用 this 在词法作用域中查找东西。
 
 ### 什么是 this
 
@@ -131,19 +136,19 @@ baz(); // baz的调用点
 
 1. 默认绑定
 
-   **独立函数**调用时，适用于这种规则。
+    **独立函数**调用时，适用于这种规则。
 
-   ```js
-   var a = 2;
-   function foo() {
-       console.log(this.a);
-   }
-   foo(); // 2
-   ```
+    ```js
+    var a = 2;
+    function foo() {
+        console.log(this.a);
+    }
+    foo(); // 2
+    ```
 
-   上述代码，this 指向了全局对象，这是为什么？
+    上述代码，this 指向了全局对象，这是为什么？
 
-   这是因为对于默认绑定来说：如果没有在严格模式下运行，**全局对象是唯一合法的**。
+    这是因为对于默认绑定来说：如果没有在严格模式下运行，**全局对象是唯一合法的**。
 
 ```js
 var a = 2;
@@ -158,101 +163,101 @@ foo(); // TypeError: this is undefined
 
 2. 隐含绑定
 
-   适用于调用者拥有一个环境对象（也称拥有者对象或容器对象）的情况。
+    适用于调用者拥有一个环境对象（也称拥有者对象或容器对象）的情况。
 
-   ```js
-   function foo() {
-       console.log(this.a);
-   }
+    ```js
+    function foo() {
+        console.log(this.a);
+    }
 
-   var obj = {
-       a: 2,
-       foo: foo
-   };
+    var obj = {
+        a: 2,
+        foo: foo
+    };
 
-   obj.foo(); // 2
-   ```
+    obj.foo(); // 2
+    ```
 
-   在这里，函数 foo 作为属性被添加到对象 obj 上，可以说这个函数被 obj 所“拥有”或“包含”。在函数 foo 调用的位置上，它被冠以一个指向 obj 的对象引用。
+    在这里，函数 foo 作为属性被添加到对象 obj 上，可以说这个函数被 obj 所“拥有”或“包含”。在函数 foo 调用的位置上，它被冠以一个指向 obj 的对象引用。
 
-   隐含绑定的规则：当一个函数引用一个环境对象时，这个对象应当被用于函数调用的 this 绑定。
+    隐含绑定的规则：当一个函数引用一个环境对象时，这个对象应当被用于函数调用的 this 绑定。
 
-   **隐含丢失**
+    **隐含丢失**
 
-   ```js
-   function foo() {
-       console.log(this.a);
-   }
+    ```js
+    function foo() {
+        console.log(this.a);
+    }
 
-   var obj = {
-       a: 2,
-       foo: foo
-   };
+    var obj = {
+        a: 2,
+        foo: foo
+    };
 
-   var bar = obj.foo;
+    var bar = obj.foo;
 
-   var a = "global";
+    var a = "global";
 
-   bar(); // global
-   ```
+    bar(); // global
+    ```
 
-   尽管 bar 似乎是 obj.foo 的引用，但实际上它只是一个 foo 的 引用而已。另外从调用点看来，是独立函数调用，因此默认绑定规则起了作用。
+    尽管 bar 似乎是 obj.foo 的引用，但实际上它只是一个 foo 的 引用而已。另外从调用点看来，是独立函数调用，因此默认绑定规则起了作用。
 
 3. 明确绑定
 
-   1. `call` 和 `apply` 提供了一种直接指明函数 this 的方法。
+    1. `call` 和 `apply` 提供了一种直接指明函数 this 的方法。
 
-      ```js
-      function foo() {
-          console.log(this.a);
-      }
+        ```js
+        function foo() {
+            console.log(this.a);
+        }
 
-      var obj = {
-          a: 2
-      };
+        var obj = {
+            a: 2
+        };
 
-      foo.call(obj); //2
-      foo.apply(obj); //2
-      ```
+        foo.call(obj); //2
+        foo.apply(obj); //2
+        ```
 
-      这里使用了`call` 和 `apply`强制函数的 this 指向 obj 。
+        这里使用了`call` 和 `apply`强制函数的 this 指向 obj 。
 
-      如果第参数传递的是简单原始类型，那么这个原始类型会被包装在它的对象类型中。
+        如果第参数传递的是简单原始类型，那么这个原始类型会被包装在它的对象类型中。
 
-      `call` 和 `apply` 在绑定 this 的角度上没有任何区别。它们只是在参数的传递上有所区别。
+        `call` 和 `apply` 在绑定 this 的角度上没有任何区别。它们只是在参数的传递上有所区别。
 
-   2. 硬绑定
+    2. 硬绑定
 
-      明确绑定仍存在一个问题：它还是无法解决隐含丢失。而硬绑定正是为了解决这一问题。
+        明确绑定仍存在一个问题：它还是无法解决隐含丢失。而硬绑定正是为了解决这一问题。
 
-      **ES5 提供了 bind 这一工具用于硬绑定。**
+        **ES5 提供了 bind 这一工具用于硬绑定。**
 
-      ```js
-      function foo() {
-          console.log(this.a);
-      }
+        ```js
+        function foo() {
+            console.log(this.a);
+        }
 
-      var obj = {
-          a: 2
-      };
+        var obj = {
+            a: 2
+        };
 
-      var bar = foo.bind(obj);
+        var bar = foo.bind(obj);
 
-      bar(); // 2
-      ```
+        bar(); // 2
+        ```
 
-      bind 返回一个硬编码的新函数，它使用你指定的 this 环境来调用原本的函数。
+        bind 返回一个硬编码的新函数，它使用你指定的 this 环境来调用原本的函数。
 
-      **硬绑定其实是 明确绑定 的变种。**
+        **硬绑定其实是 明确绑定 的变种。**
 
-      ```js
-      // 简单的bind函数
-      function bind(fn, obj) {
-          return function() {
-              return fn.apply(obj);
-          };
-      }
-      ```
+        ```js
+        // 简单的bind函数
+        function bind(fn, obj) {
+            return function() {
+                return fn.apply(obj);
+            };
+        }
+        ```
 
 4. new 绑定
 
@@ -302,37 +307,147 @@ new 绑定 > 明确绑定 > 隐含绑定 > 默认绑定
 
 1. 字面量形式
 
-   ```js
-   var myObj = {};
-   ```
+    ```js
+    var myObj = {};
+    ```
 
 2. 构造形式
 
-   ```js
-   var myObj = new Object();
-   ```
+    ```js
+    var myObj = new Object();
+    ```
 
 ### 类型
 
-Javscript中的一切皆对象的理解是存在错误的。
+Javscript 中的一切皆对象的理解是存在错误的。
 
-简单基本类型自身不是 object。typeof null 返回 object 是语言中的一个bug，实际上null是它自己的基本类型。
+简单基本类型自身不是 object。typeof null 返回 object 是语言中的一个 bug，实际上 null 是它自己的基本类型。
 
-内建对象
+**内建对象**
 
-内建对象仅仅只是函数，每一个都可以被用作构造器。
+* String
+* Number
+* Boolean
+* Object
+* Function
+* Array
+* Date
+* RegExp
+* Error
+
+内建对象仅仅只是函数，每一个都可以被用作构造器。new 一个内建对象的结果是一个新构建的相应**子类型的对象**。
+
+```js
+var strObj = new String("I am a string");
+Object.prototype.toString.call(strObj); // [object String]
+```
+
+`Object.prototype.toString`方法可以考察自类型的内部。
+
+**内建对象与基本类型的关系？**
+
+基本类型不是一个对象，它是一个不可变的基本字面值。为了对它进行操作都需要一个相应的对象。
+
+在 js 中，必要的时候会将基本类型值转化为相应的对象类型，比如：
+
+```js
+var str = "I am a string";
+console.log(str.length); // 13
+```
+
+这里调用`str.length`，js 会先将 str 转化成 `new String('I am a string')`，再进行属性读取。
+
+**特殊： null 和 undefined 没有基本包装类型。Date 没有字面量值。**
+
+**注意：仅在必要时使用构建形式，推荐使用字面形式**
 
 ### 内容
 
-1. 可计算属性名
+对象的内容是由属性构成的，属性就是储存在特定位置上（任意类型）的值。
 
-2. 属性与方法
+引擎会根据自己的实现来存储属性值，而且通常都不是把它们存储在对象内部。储存在对象内部的是这些对象的名称，它们像指针一样指向值存储的地方。
 
-3. 数组
+**访问方式：**
 
-4. 复制对象
+* 属性（property）访问
 
-5. 属性描述符
+    使用 `.` 操作符。后面接一个`标识符`。
+
+* 键（key）访问
+
+    使用 `[]` 操作符。可以接受任何兼容`UTF-8/unicode`的字符串。可以使用动态键（表达式）。
+
+属性名总是字符串。使用字符串以外的值，它会首先被转化为字符串。
+
+```js
+var myObj = {};
+myObj[true] = "foo";
+myObj[3] = "bar";
+myObj[myObj] = "baz";
+
+myObj["true"]; // foo
+myObj["3"]; // bar
+myObj["[object Object]"]; //baz
+```
+
+### 计算型属性名
+
+`[]`提供了使用表达式作为键名的方法。但这种方式并不支持使用字面量语法。
+
+ES6 加入了计算型属性名，可以在字面量声明时通过`[]`指定表达式属性。
+
+```js
+var prefix = "foo";
+
+var myObj = {
+    [prefix + "bar"]: "hello"
+};
+myObj["foobar"]; // hello
+```
+
+### 属性(Property) vs 方法(Method)
+
+人们喜欢将属性进行区分，把属于对象（类）的函数称为方法。但从技术上讲，函数不会属于对象 ，因为 this 是在运行时动态绑定的，说明它与对象的关系至多是间接的。
+
+```js
+function foo() {
+    console.log("foo");
+}
+
+var someFoo = foo;
+
+var myObj = {
+    someFoo: foo
+};
+
+foo; // ƒ foo(){...}
+someFoo; // ƒ foo(){...}
+myObj.someFoo; // ƒ foo(){...}
+```
+
+`myObj.someFoo` 和 `someFoo` 都是对foo函数的分离引用，它们并不意味着很特别或者被某个对象所拥有。
+
+### 数组
+
+跟对象采用键来存储值一样，数组采用数字索引（数字小标）来存储值。
+
+数组的索引都是非负整数。
+
+如果在数组上添加一个似数字属性，那么它会称为一个数组索引。
+
+```js
+var foo = ['foo',123];
+foo['3'] = 'bar';
+foo[3] // bar
+```
+
+### 复制对象
+
+浅拷贝 和 深拷贝。
+
+使用 JSON 安全对象来进行神拷贝。
+
+### 属性描述符
 
 6. 不变性
 
