@@ -1,32 +1,28 @@
-# YDKJS:this与对象原型(二)
+# YDKJS:this 与对象原型(二)
 
 <!-- TOC -->
 
-- [YDKJS:this与对象原型(二)](#ydkjsthis与对象原型二)
-    - [对象](#对象)
-        - [语法](#语法)
-        - [类型](#类型)
-        - [内容](#内容)
+- [YDKJS:this 与对象原型(二)](#ydkjsthis-与对象原型二)
+    - [语法](#语法)
+    - [类型](#类型)
+    - [内容](#内容)
         - [计算型属性名](#计算型属性名)
         - [属性(Property) vs 方法(Method)](#属性property-vs-方法method)
         - [数组](#数组)
         - [复制对象](#复制对象)
         - [属性描述符](#属性描述符)
-        - [实现属性／对象的不可变性](#实现属性／对象的不可变性)
+        - [不变性](#不变性)
         - [[[Get]]](#get)
         - [[[Put]]](#put)
         - [Getter 和 Setter](#getter-和-setter)
         - [存在性](#存在性)
-        - [遍历](#遍历)
-    - [混淆“类”的对象](#混淆类的对象)
+    - [遍历](#遍历)
 
 <!-- /TOC -->
 
-## 对象
-
 什么是对象？this 为什么需要指向对象？
 
-### 语法
+## 语法
 
 对象主要来源于俩种形式：
 
@@ -42,7 +38,7 @@
     var myObj = new Object();
     ```
 
-### 类型
+## 类型
 
 Javscript 中的一切皆对象的理解是存在错误的。
 
@@ -86,7 +82,7 @@ console.log(str.length); // 13
 
 **注意：仅在必要时使用构建形式，推荐使用字面形式**
 
-### 内容
+## 内容
 
 对象的内容是由属性构成的，属性就是储存在特定位置上（任意类型）的值。
 
@@ -195,7 +191,46 @@ Object.getOwnPropertyDescriptor(obj, "a");
 
     可枚举性。它控制对象属性能否被枚举，比如 for...in 循环。
 
-* configurable
+    ```js
+    var myObject = {};
+    Object.defineProperty(
+        myObject,
+        "a",
+        // 让 a 像普通属性一样可以枚举
+        { enumerable: true, value: 2 }
+    );
+    Object.defineProperty(
+        myObject,
+        "b",
+        // 让 b 不可枚举
+        { enumerable: false, value: 3 }
+    );
+
+    for (var k in myObject) {
+        console.log(k, myObject[k]);
+    }
+    // a 2
+    ```
+
+    可以看到，myObject.b 不会出现在 for..in 循环中。
+
+    其他检验属性是否可枚举的方法：
+
+    1. `propertyIsEnumerable(..)` 会检查给定的属性名是否直接存在于对象中(而不是在原型链 上)并且满足 `enumerable:true`。
+
+        ```js
+        myObject.propertyIsEnumerable("a"); //true
+        myObject.propertyIsEnumerable("b"); // false
+        ```
+
+    2. `Object.keys(..)` 会返回一个数组，包含所有可枚举属性，`Object.getOwnPropertyNames(..)` 会返回一个数组，包含所有属性，无论它们是否可枚举。
+
+        ```js
+        Object.keys(myObject); // ["a"]
+        Object.getOwnPropertyNames(myObject); //  ["a", "b"]
+        ```
+
+- configurable
 
     可配置性。将它设为 false：
 
@@ -204,7 +239,9 @@ Object.getOwnPropertyDescriptor(obj, "a");
 
 我们可以使用`Object.defineProperty`来添加和修改属性。
 
-### 实现属性／对象的不可变性
+### 不变性
+
+如何实现属性/对象的不可变性？
 
 1. 对象常量
 
@@ -231,23 +268,121 @@ Object.getOwnPropertyDescriptor(obj, "a");
 
 ### [[Get]]
 
-属性访问实际上执行了一个 `[[Get]]` 操作。它会首先检查对象，寻找一个拥有被请求的名称的属性，找到，则返回相应的值。
+属性访问实际上执行了一个 `[[Get]]` 操作。它会首先检查对象，查找是否有名称相同的属性：
 
-1. 找到，返回相应的值。
-2. 未找到，遍历链 返回 `undefined`。
+1. 存在，返回相应的值。
+2. 不存在，返回 `undefined`。（这个查找会遍历原型链）
+
+```js
+var myObject = {
+    a: 2
+};
+myObject.a; // 2
+myObject.b; // undefined
+```
+
 
 ### [[Put]]
 
-相应于 `[[Get]]` 操作，js有个相应的 `[[Put]]` 操作用于对象属性赋值。
+相应于 `[[Get]]` 操作，js 有个相应的 `[[Put]]` 操作。
 
-1. 这个属性是访问器描述符吗？
-2. 是`writable: false`的数据描述符吗？
-3. 否则。
+[[Put]] 操作的实际行为取决于许多因素，包括对象中是否已经存在这个属性(这是最重要的因素)。
+
+如果已经存在这个属性：
+
+1. 属性是否是访问描述符(参见 Getter 和 Setter)?如果是并且存在 setter 就调用 setter。
+2. 属性的数据描述符中 writable 是否是 false?如果是，在非严格模式下静默失败，在严格模式下抛出 TypeError 异常。
+3. 如果都不是，将该值设置为属性的值。
+
+如果不存在，更复杂，详见[原型]()
 
 ### Getter 和 Setter
 
+对象默认的 [[Put]] 和 [[Get]] 操作分别可以控制属性值的设置和获取。
+
+在 ES5 中可以使用 getter 和 setter 部分改写默认操作，但是只能应用在单个属性上，无法应用在整个对象上。
+
+getter 是一个隐藏函数，会在获取属性值时调用。setter 也是一个隐藏函数，会在设置属性值时调用。
+
+当你给一个属性定义 getter、setter 或者两者都有时，这个属性会被定义为“访问描述符”
+
+JavaScript 会忽略访问描述符的 value 和 writable 特性，取而代之的是关心 set 和 get(还有 configurable 和 enumerable)特性。
+
+```js
+var myObject = {
+    // 给 a 定义一个 getter
+    get a() {
+        return 2;
+    }
+};
+
+Object.defineProperty(
+    myObject, // 目标对象 "b", // 属性名
+    "b",
+    {
+        // 给 b 设置一个 getter
+        get: function() {
+            return this.a * 2;
+        },
+        // 确保 b 会出现在对象的属性列表中
+        enumerable: true
+    }
+);
+
+myObject.a; // 2
+myObject.b; // 4
+```
+
+`get a() { .. }`和`defineProperty(..)`都会在对象中创建一个不包含值的属性, 对于这个属性的访问会自动调用一个隐藏函数，它的返回值会被当作属性访问的返回值。
+
+通常来说 getter 和 setter 是成对出现的(只定义一个的话 通常会产生意料之外的行为):
+
+```js
+var myObject = {
+    // 给 a 定义一个 getter
+    get a() {
+        return this._a_;
+    },
+    // 给 a 定义一个 setter
+    set a(val) {
+        this._a_ = val * 2;
+    }
+};
+myObject.a = 2;
+myObject.a; // 4
+```
+
 ### 存在性
 
-### 遍历
+```js
+var myObject = {
+    a: undefined
+};
+myObject.a; //undefined
+myObject.b; //undefined
+```
 
-## 混淆“类”的对象
+一个属性值有可能 是属性中存储的 undefined，也可能是因为属性不存在所以返回 undefined。那么如何区分 这两种情况呢?
+
+1. in
+   in 操作符会检查**属性名**在对象及其 [[Prototype]] 原型链中是否存在
+
+    ```js
+    "a" in myObject; //true
+    "b" in myObject; //false
+    ```
+
+2. hasOwnProperty
+   只会检查属性是否在 myObject 对象中，不会检查 [[Prototype]] 链。
+
+    ```js
+    myObject.hasOwnProperty("a"); //true
+    myObject.hasOwnProperty("b"); //false
+    ```
+
+## 遍历
+
+1. for..in
+2. for 循环
+3. forEach(..)、every(..) 和 some(..)
+4. for..of
