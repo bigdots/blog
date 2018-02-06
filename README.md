@@ -1,12 +1,14 @@
 
-# 个人博客技术随笔。
+# 个人技术博客。
 
 强烈欢迎各种批评指正和 star。
 
 ## ECMAScript基础进阶
 
-[对象、原型与原型链](https://github.com/bigdots/blog/issues/1)
+- [对象、原型与原型链](https://github.com/bigdots/blog/issues/1)
 
+
+所有文章均为个人原创，欢迎转载（注明出处），拒绝抄袭。
 
 
 <!-- ```
