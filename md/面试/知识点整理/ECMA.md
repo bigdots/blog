@@ -1,23 +1,33 @@
 ## 严格模式
 
+`use strict`
+
+[Javascript 严格模式详解](http://www.ruanyifeng.com/blog/2013/01/javascript_strict_mode)
+
 ## this 机制
 
+new 绑定 > 明确绑定（apply,call,bind） > 隐含绑定(调用者) > 默认绑定(全局对象)
+
 ## call 、 apply 和 bind
+```js
+fn.call(obj , 100 , 200);
+fn.apply(obj , [100, 200]);
+fn.bind(obj , 100 , 200);fn();
+```
 
-## let、var 和 const
+## let 和 const
 
-### let & const
 
 - 在代码块`{}`内有效；
 - 不允许重复声明；
 - 不存在变量提升；
 - 存在暂时性死区；
 
-#### let
+### let
 
 声明一个局部变量，不用多说。
 
-#### const
+### const
 
 声明一个常量，但**const 实际上保证的，并不是变量的值不得改动，而是变量指向的那个内存地址不得改动。**
 
@@ -38,7 +48,98 @@ b = { a: 2 }; // 报错
 
 ## 继承
 
+- 利用原型 (包括Object.create)
+
+- 利用call和apply
+
 ## AMD、CMD 和 ES6 Module
+
+
+## 自执行函数
+
+```js
+
+(function($){
+    return {
+         hello: function(){}
+    }
+})(Jquery)
+```
+
+## CommonJs
+
+产生背景：
+node的产生，js走向服务端，需要一个模块系统。
+
+```js
+var http = require('http'); //会阻塞
+
+//...
+```
+
+**同步／阻塞**执行，时间为I/O的时间。
+
+## AMD 和 CMD
+
+产生背景：想要将模块系统应用于浏览器。**异步模块加载机制**，利用回调。
+
+无争议：浏览器的特性需要js文件提前加载
+
+异议：执行时机
+
+
+[前端模块化开发那点历史](https://github.com/seajs/seajs/issues/588)
+
+### AMD
+
+因为依赖前置，模块代码会被提前执行，造成性能浪费。
+
+最佳实践：requireJS;
+
+
+
+
+```js
+// hello.js
+// a,b依赖前置，会提前执行
+define(['a', 'b'], function(a, ,b){
+    // ...
+    
+    return{
+        hello: function(){}
+    }
+})
+```
+
+
+
+### CMD
+
+最佳实践：seajs
+
+就近依赖，按需执行。
+
+```js
+// hello.js
+define(function(require, exports, module){
+    var a = require('a'); // 就近依赖
+    // do a
+
+    var b = require( 'b' );
+    // do b
+
+    module.exports.hello = hello; // 对外输出hello
+})
+```
+
+
+## ES6 模块标准
+
+第一版标准。
+
+`export`
+
+`import`
 
 ## 箭头函数
 
