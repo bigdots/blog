@@ -9,6 +9,8 @@
 
 ## 算法学习（JS实现）
 - [快速排速](https://github.com/bigdots/blog/issues/2)
+- [二分查找](https://github.com/bigdots/blog/issues/3)
+- [搜索算法](https://github.com/bigdots/blog/issues/4)
 
 
 所有文章均为个人原创，欢迎转载（注明出处），拒绝抄袭。
