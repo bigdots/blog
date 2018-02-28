@@ -3,9 +3,10 @@
 
 强烈欢迎各种批评指正和 star。
 
-## ECMAScript基础进阶
+## JavaScript基础进阶
 - [对象、原型与原型链](https://github.com/bigdots/blog/issues/1)
-- [面向对象编程]()
+<!-- - [面向对象编程]() -->
+- [运行机制：事件队列与调用栈](https://github.com/bigdots/blog/issues/5)
 
 ## 算法学习（JS实现）
 - [快速排速](https://github.com/bigdots/blog/issues/2)
