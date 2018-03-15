@@ -1,3 +1,6 @@
+
+[HTTP,HTTP2.0,SPDY,HTTPS你应该知道的一些事](http://web.jobbole.com/87695/)
+
 ## 分层
 
 1. 应用层
@@ -9,11 +12,11 @@
     TCP
 
 3. 网络层
-    
+
     IP
 
 4. 数据链路层
-    
+
     硬件部分。
 
 ## TCP
