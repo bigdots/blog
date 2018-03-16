@@ -10,6 +10,7 @@
 
 ## 算法学习（JS实现）
 - [快速排速](https://github.com/bigdots/blog/issues/2)
+- [冒泡排序](https://github.com/bigdots/blog/issues/6)
 - [二分查找](https://github.com/bigdots/blog/issues/3)
 - [搜索算法](https://github.com/bigdots/blog/issues/4)
 
