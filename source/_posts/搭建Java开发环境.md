@@ -1,8 +1,10 @@
+---
 title: 搭建Java开发环境
-tags: [java基础]
+categories: [js]
 date: 2016-03-28 11:25:02
 description: 搭建Java开发环境
 ---
+
 Java 开发环境的搭建相对其他语言可能有些复杂，因为Java 本身提供了很多机制，从而方便学习。Java的开发环境可以用JDK 来代表，本章主要记录如何下载、安装和配置JDK。
 <!-- more -->
 ## 安装配置JDK
@@ -17,7 +19,7 @@ JDK是java的SDK（软件开发工具包Software Development Kit）。它是Sun 
 配置步骤：
  + 在“计算机”桌面图标上，单击鼠标右键，在弹出菜单中选择“属性”→“高级系统设置”→“环境变量”命令，弹出“环境变量”窗口，在该窗口中就可以进行环境变量的设置
  + 单击“系统变量”选项组中的“新建”按钮，新建环境变量，变量名为JAVA_HOME，变量值为JDK安装路径,默认为C:\Program Files (x86)\Java\jdk1.8.0_77;
- + PATH中新添%JAVA_HOME%\bin;
+ + PATH中新添%JAVA_HOME%in;
 
 在完成了上诉环境配置后，打开cmd命令行，输入java -version,不报错则表示成功。
 

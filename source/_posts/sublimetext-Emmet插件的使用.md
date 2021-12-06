@@ -1,9 +1,10 @@
+---
 title: sublimetext Emmet插件的使用
 date: 2015-05-06 22:53:0
 tags: [web,工具]
 description:
 
----
+---categories: [js]
 
 ### 1. 省略div，插件会默认元素为div
 

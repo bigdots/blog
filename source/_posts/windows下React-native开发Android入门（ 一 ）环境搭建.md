@@ -1,4 +1,10 @@
-windows下React-native 环境搭建
+---
+title: windows下React-native 环境搭建
+date: 2016-01-12 15:40:43
+tags:
+description:
+categories: [js]
+---
 
 公司决定试水react-native，mac审批还没下来，没办法，先用windows硬着头皮上吧。
 

@@ -1,7 +1,9 @@
+---
 title: 在github中创建演示demo
 tags: [其他]
 date: 2016-03-30 15:36:40
 description:
+categories: [js]
 ---
 
 

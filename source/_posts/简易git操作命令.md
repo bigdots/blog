@@ -1,4 +1,10 @@
-# git常用操作命令
+---
+title: git常用操作命令
+date: 2016-01-12 15:40:43
+tags:
+description:
+categories: [js]
+---
 
 ### 新建本地仓库（俩种方式）
 1. 本地新建文件夹，然后初始化
@@ -51,4 +57,3 @@ git push origin master
 
  
  
-

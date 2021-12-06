@@ -1,3 +1,4 @@
+---
 title: Java继承
 tags: [java面向对象]
 date: 2016-03-31 14:19:14

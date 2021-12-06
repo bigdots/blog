@@ -1,7 +1,9 @@
+---
 title: github+hexo构建静态博客（一）
 date: 2015-11-23 17:40:57
 description: 静态建站 hexo github 免费建站 自己的博客
 tags: [其他]
+categories: [js]
 ---
 
 ## 一、GithubPages

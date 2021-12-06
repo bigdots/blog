@@ -1,3 +1,4 @@
+---
 title: Java封装
 tags: [java面向对象]
 date: 2016-04-05 15:52:54

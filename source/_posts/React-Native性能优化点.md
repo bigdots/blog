@@ -1,12 +1,20 @@
-# React-Native性能优化点
+---
+title: React-Native性能优化点
+date: 2016-01-12 15:40:43
+tags:
+description:
+categories: [js]
+---
 
 ## shouldComponentUpdate
 
 确保组件在渲染之后不需要再更新的，即静态组件，尽量在其中增加shouldComponentUpdate方法,防止二次消耗所产生的性能消耗
 
 ```
-shouldComponentUpdate() {    //完全静态的组件,无需更新
-    return false;}
+shouldComponentUpdate() {
+    //完全静态的组件,无需更新
+    return false;
+}
 ```
 
 

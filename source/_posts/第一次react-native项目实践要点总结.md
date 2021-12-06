@@ -1,4 +1,9 @@
-# 第一次react-native项目实践要点总结
+---
+title: 第一次react-native项目实践要点总结
+date: 2016-01-12 15:40:43
+tags: [js]
+description: react-native项目实践
+---
 
 今天完成了我的第一个react-native项目的封包，当然其间各种环境各种坑，同时，成就感也是满满的。这里总结一下使用react-native的一些入门级重要点（不涉及环境）。**注意：阅读需要语法基础： ES6 、react 、JSX**
 

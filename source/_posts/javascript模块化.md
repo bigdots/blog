@@ -1,7 +1,9 @@
+---
 title: javascript模块化
 tags: [javascript]
 date: 2016-03-25 15:49:58
 description: javascript模块化
+categories: [js]
 ---
 
 

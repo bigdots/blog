@@ -1,8 +1,9 @@
+---
 title: jquery对javascript事件的封装一览
 date: 2015-10-16 14:22:21
 tags: [web,javascript]
 description: 事件绑定，事件封装
-
+categories: [js]
 ---
 
 javaScript 与HTML 之间的交互是通过事件实现的。事件，就是文档或浏览器窗口中发生的一些特定的交互瞬间。可以使用侦听器（或处理程序）来预订事件，以便事件发生时执行相应的代码。这种在传统软件工程中被称为观察员模式的模型，支持页面的行为（JavaScript 代码）与页面的外观（HTML 和CSS 代码）之间的松散耦合。

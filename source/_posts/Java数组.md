@@ -1,3 +1,4 @@
+---
 title: Java数组
 tags: [java基础]
 date: 2016-03-29 13:37:06

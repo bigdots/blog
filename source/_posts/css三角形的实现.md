@@ -1,8 +1,9 @@
+---
 title: css三角形的实现
 date: 2015-07-07 18:22:32
 tags: [css]
 description: css三角形
-
+categories: [css]
 ---
 
 ### 实心三角形

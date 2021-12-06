@@ -1,4 +1,10 @@
-# YDKJS:this 与对象原型(四)
+---
+title: YDKJS:this 与对象原型(四)
+date: 2016-01-12 15:40:43
+tags:
+description:
+categories: [js]
+---
 
 
 ## 原型

@@ -1,4 +1,10 @@
-# 使用gulp构建自动化工作流
+---
+title: 使用gulp构建自动化工作流
+date: 2016-01-12 15:40:43
+tags:
+description:
+categories: [js]
+--- 
 
 + 简单易用
 + 高效构建
@@ -174,4 +180,3 @@ gulp.task('connect',function () {
 
 gulp.task("default",['connect','watch'])
 ```
-

@@ -1,4 +1,10 @@
-# Node.js学习笔记（四）: 全局对象
+---
+title: Node.js学习笔记（四）_全局对象
+date: 2016-01-12 15:40:43
+tags:
+description:
+categories: [js]
+---
 
 在浏览器 JavaScript 中，通常 window 是全局对象， 而 Node.js 中的全局对象是 global，所有全局变量（除了 global 本身以外）都是 global 对象的属性。
 

@@ -1,8 +1,9 @@
+---
 title: 探究TCP
 tags: [计算机网络]
 date: 2016-03-16 11:00:52
 description: TCP
-
+categories: [js]
 ---
 
 我的博客:[http://bigdots.github.io](http://bigdots.github.io)、[http://www.cnblogs.com/yzg1/](http://www.cnblogs.com/yzg1/)

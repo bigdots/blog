@@ -1,4 +1,10 @@
-# ES6笔记（一）：ES6所改良的javascript“缺陷” #
+---
+title: ES6笔记（一）：ES6所改良的javascript“缺陷”
+date: 2016-01-12 15:40:43
+tags:
+description:
+categories: [js]
+---
 
 ## 块级作用域 ##
 

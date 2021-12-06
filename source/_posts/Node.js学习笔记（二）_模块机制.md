@@ -1,5 +1,10 @@
-# Node.js学习笔记（二）：模块
-
+---
+title: Node.js学习笔记（二）_模块
+date: 2021-12-06 19:57:35
+tags:
+description:
+categories: [js]
+---
 
 模块是 Node.js 应用程序的基本组成部分,文件和模块是一一对应的。一个 Node.js 文件就是一个模块,这个文件可能是 JavaScript 代码、JSON 或者编译过的 C/C++ 扩展。
 
@@ -15,8 +20,10 @@
 	事实上,exports 本身仅仅是一个普通的空对象,即 {},它专门用来声明接口。例如：
 	
 	```
-	//module.js	exports.sayHello = function(name) { 
-		console.log('Hello ' 	+ name);	};
+	//module.js
+	exports.sayHello = function(name) { 
+		console.log('Hello ' 	+ name);
+	};
 	```	
 2.  require
 
@@ -32,8 +39,10 @@
 	通过module对象可以访问到当前模块的一些相关信息，但最多的用途是覆盖 exports。例如模块导出对象默认是一个普通对象，如果想改成一个函数的话：
 	
 	```
-	//module.js	module.exports = function(name) { 
-		console.log('Hello ' 	+ name);	};
+	//module.js
+	module.exports = function(name) { 
+		console.log('Hello ' 	+ name);
+	};
 	
 	//index.js
 	var sayHello = require('./module');
@@ -139,4 +148,3 @@ function Module(id, parent) {
 2. 为什么require、__filename、__dirname、module、exports等几个变量并没有定义在app.js 文件中，但是这个方法却存在的原因。
 
 	答：这里提到的所有属性均是_load方法中我们编写的js文件外层包裹函数提供给我们的，因此可以直接调用。
-

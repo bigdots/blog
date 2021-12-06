@@ -1,8 +1,9 @@
+---
 title: lazyload.js详解
 date: 2015-12-16 14:23:21
 tags: [插件]
 description:
-
+categories: [js]
 ---
 
 ## 简介

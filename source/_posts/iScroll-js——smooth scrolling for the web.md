@@ -1,8 +1,9 @@
+---
 title: iScroll-js—"smooth scrolling for the web"
 date: 2015-12-15 15:09:11
 tags: [插件,移动端开发]
 description: iScroll
-
+categories: [js]
 ---
 
 ## 一、什么是iScroll

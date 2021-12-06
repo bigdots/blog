@@ -1,4 +1,10 @@
-# ESLint--定制你的代码规则
+---
+title: ESLint--定制你的代码规则
+date: 2016-01-12 15:40:43
+tags:
+description:
+categories: [js]
+---
 
 ## 简介
 ESLint是一个开源的项目，由Nicholas C. Zakas（《JavaScript高级程序设计》作者）于2013年六月创建。它的目标是为JavaScript提供一个完全可配置的实用lint工具。
@@ -164,4 +170,3 @@ eslint官方提供了3种预安装包：
 }
 
 ```
-

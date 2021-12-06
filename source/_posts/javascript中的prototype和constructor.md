@@ -1,4 +1,10 @@
-# javascript中的prototype和constructor #
+---
+title: javascript中的prototype和constructor
+date: 2016-01-12 15:40:43
+tags:
+description:
+categories: [js]
+---
 
 ## 构造函数 ##
 我们知道，ECMAScript5中的Object、Array、Date、RegExp、Function等引用类型都是基于构造函数的,他们本身就是ECMAScript5原生的构造函数。比如，我们可以这样申明一个对象：

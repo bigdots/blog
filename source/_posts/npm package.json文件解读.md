@@ -1,4 +1,10 @@
-# npm package.json文件解读
+---
+title: npm package.json文件解读
+date: 2016-01-12 15:40:43
+tags:
+description:
+categories: [js]
+---
 
 每个Nodejs项目的根目录下面，一般都会有一个package.json文件。该文件可以由`npm init`生成，定义了项目所需要的各种模块，以及项目的配置信息（比如名称、版本、许可证等元数据）。
 

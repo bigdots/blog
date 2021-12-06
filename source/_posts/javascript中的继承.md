@@ -1,8 +1,9 @@
+---
 title: javascript中的继承
 tags: [javascript]
 date: 2016-03-18 10:36:42
 description:
-
+categories: [js]
 ---
 
 继承有什么好处？很简单，继承了你爸的财产，自己就可以少奋斗点嘛。开玩笑，言归正传，继承使子类拥有超类的作用域、属性与方法，可以节省程序设计的时间。ECMAScript实现继承主要方式是依靠原型链。

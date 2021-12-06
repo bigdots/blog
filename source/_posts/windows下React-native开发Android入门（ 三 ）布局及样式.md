@@ -1,4 +1,10 @@
-# windows下React-native开发Android入门（ 三 ）布局及样式 #
+---
+title: windows下React-native开发Android入门（ 三 ）布局及样式
+date: 2016-01-12 15:40:43
+tags:
+description:
+categories: [js]
+---
 
 ## Flexbox布局 ##
 

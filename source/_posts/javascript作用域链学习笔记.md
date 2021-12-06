@@ -1,8 +1,9 @@
+---
 title: javascript作用域链学习笔记
 date: 2016-03-14 14:54:41
 tags: [javascript]
 description: javascript作用域链
-
+categories: [js]
 ---
 
 我的博客地址:[http://bigdots.github.io](http://bigdots.github.io)、[http://www.cnblogs.com/yzg1/](http://www.cnblogs.com/yzg1/)

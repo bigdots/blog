@@ -1,8 +1,9 @@
+---
 title: canvas初探(内含时钟)
 date: 2015-12-04 13:06:50
 tags: [web,H5]
 description: html5,Canvas,时钟范例
-
+categories: [js]
 ---
 
 ## 一、了解Canvas

@@ -1,4 +1,10 @@
-# redux 初识
+---
+title: redux 初识
+date: 2016-01-12 15:40:43
+tags:
+description:
+categories: [js]
+---
 
 ## 前言
 
@@ -151,5 +157,3 @@ combineReducers({reducer,...})
 3. redux三大原则：单一store、reducer纯函数、state只读
 4. 在 createStore 和 reducer 函数中都可以初始化state。
 5. redux通过dispatch、subscribe、getState实现数据的发送、监听、获取，从而实现单向数据流的流动
-
-

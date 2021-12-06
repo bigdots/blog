@@ -1,7 +1,9 @@
+---
 title: Java抽象类
 tags: [java面向对象]
 date: 2016-04-05 14:56:32
 description: Java抽象类
+categories: [js]
 ---
 
 

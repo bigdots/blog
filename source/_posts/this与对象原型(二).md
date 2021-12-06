@@ -1,22 +1,27 @@
-# YDKJS:this 与对象原型(二)
+---
+title: YDKJS:this 与对象原型(二)
+date: 2016-01-12 15:40:43
+tags:
+description:
+categories: [js]
+---
 
 <!-- TOC -->
 
-- [YDKJS:this 与对象原型(二)](#ydkjsthis-与对象原型二)
-    - [语法](#语法)
-    - [类型](#类型)
-    - [内容](#内容)
-        - [计算型属性名](#计算型属性名)
-        - [属性(Property) vs 方法(Method)](#属性property-vs-方法method)
-        - [数组](#数组)
-        - [复制对象](#复制对象)
-        - [属性描述符](#属性描述符)
-        - [不变性](#不变性)
-        - [[[Get]]](#get)
-        - [[[Put]]](#put)
-        - [Getter 和 Setter](#getter-和-setter)
-        - [存在性](#存在性)
-    - [遍历](#遍历)
+- [语法](#语法)
+- [类型](#类型)
+- [内容](#内容)
+  - [计算型属性名](#计算型属性名)
+  - [属性(Property) vs 方法(Method)](#属性property-vs-方法method)
+  - [数组](#数组)
+  - [复制对象](#复制对象)
+  - [属性描述符](#属性描述符)
+  - [不变性](#不变性)
+  - [[[Get]]](#get)
+  - [[[Put]]](#put)
+  - [Getter 和 Setter](#getter-和-setter)
+  - [存在性](#存在性)
+- [遍历](#遍历)
 
 <!-- /TOC -->
 

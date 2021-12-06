@@ -1,8 +1,9 @@
+---
 title: JavaScript原型学习笔记
 date: 2016-03-15 10:49:29
 tags: [javascript]
 description:
-
+categories: [js]
 ---
 
 我的博客:[http://bigdots.github.io](http://bigdots.github.io)、[http://www.cnblogs.com/yzg1/](http://www.cnblogs.com/yzg1/)

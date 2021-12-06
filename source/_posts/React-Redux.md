@@ -1,4 +1,10 @@
-# React-Redux
+---
+title: React-Redux
+date: 2016-01-12 15:40:43
+tags:
+description:
+categories: [js]
+---
 
 ## 序
 Redux的作者友情赞助，封装了一个 React 专用的库 `React-Redux`，为 React + Redux 提供了一种更科学的代码组织方式。
@@ -120,9 +126,3 @@ Provider.childContextTypes = {
 也就是说：指定数据并要将数据传递下去的父组件要定义 `childContextTypes` 和 getChildContext() ；想要接收到数据的子组件 必须定义 `contextTypes` 来使用传递过来的 context 。
 
 所以，上面代码的意思就是：`Provider`组件通过`getChildContext`方法指定向下传递的数据为store，并通过`childContextType`属性使该属性得以传递。`Provider`的子组件可以通过`this.context`取到数据。
-
-
-
-
-
-

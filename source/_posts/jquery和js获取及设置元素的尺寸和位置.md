@@ -1,7 +1,9 @@
+---
 title: jquery和js控制元素的尺寸和位置
 date: 2015-04-28 22:38:14
 description: jquery和js控制样式，位置，尺寸
 tags: [web,javascript]
+categories: [js]
 ---
 
 ### 1.偏移量

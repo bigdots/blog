@@ -1,3 +1,4 @@
+---
 title: Java接口
 tags: [java面向对象]
 date: 2016-04-06 15:52:57

@@ -1,5 +1,10 @@
-# redux中间价与副作用的理解
-
+---
+title: redux中间价与副作用的理解
+date: 2016-01-12 15:40:43
+tags:
+description:
+categories: [js]
+---
 
 ## redux副作用
 

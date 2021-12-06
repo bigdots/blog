@@ -1,4 +1,11 @@
-# Jquery属性获取——attr()与prop()
+---
+title: Jquery属性获取——attr()与prop()
+date: 2016-01-12 15:40:43
+tags:
+description:
+categories: [js]
+---
+
 今天在项目中使用`<select></select>`下拉菜单时，使用juery操作，使页面加载完菜单默认选中的值为2,我一开始的操作如下：
 
 	<!--html部分-->

@@ -1,7 +1,9 @@
+---
 title: rem在响应式布局中的应用
 tags: [web]
 date: 2016-03-30 10:33:44
 description: rem在响应式布局中的应用
+categories: [js]
 ---
 
 ## rem/em/px/pt的基友关系

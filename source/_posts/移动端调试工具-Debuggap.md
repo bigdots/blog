@@ -1,8 +1,9 @@
+---
 title: 移动端调试工具-Debuggap
 tags: [工具]
 date: 2016-03-16 14:06:17
 description: 移动端调试工具,Debuggap
-
+categories: [js]
 ---
 
 我的博客:[http://bigdots.github.io](http://bigdots.github.io)、[http://www.cnblogs.com/yzg1/](http://www.cnblogs.com/yzg1/)
@@ -65,4 +66,3 @@ description: 移动端调试工具,Debuggap
 ![](http://images2015.cnblogs.com/blog/733894/201603/733894-20160316132210037-1723401607.png)
 
 如果觉得本文不错的话，帮忙点击下面的推荐哦,谢谢！
-

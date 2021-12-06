@@ -1,3 +1,4 @@
+---
 title: Java基本语言
 tags: [java基础]
 date: 2016-03-28 14:27:08

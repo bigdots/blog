@@ -1,4 +1,10 @@
-# jsonp 演示实例 —— 基于node
+---
+title: jsonp 演示实例 —— 基于node
+date: 2016-01-12 15:40:43
+tags:
+description:
+categories: [js]
+---
 
 ## 序
 

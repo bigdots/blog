@@ -1,8 +1,9 @@
+---
 title: sublimeText插件推荐
 date: 2016-01-11 16:59:55
 tags: [工具]
 description: sublimeText，插件，sublimeText插件，前端工具
-
+categories: [js]
 ---
 
 工欲善其事必先利其器。sublimeText是前端开发工程师的一把利器，它的优点包含：

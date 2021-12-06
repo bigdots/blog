@@ -1,7 +1,9 @@
+---
 title: Java的类和对象
 tags: [java面向对象]
 date: 2016-03-31 09:25:25
 description: Java的类和对象
+categories: [js]
 ---
 
 ## 类

@@ -1,17 +1,22 @@
-# YDKJS:this 与对象原型(一)
+---
+title: YDKJS:this 与对象原型(一)
+date: 2016-01-12 15:40:43
+tags:
+description:
+categories: [js]
+---
 
 <!-- TOC -->
 
-- [YDKJS:this 与对象原型(一)](#ydkjsthis-与对象原型一)
-    - [this 还是 that](#this-还是-that)
-        - [为什么要使用 this](#为什么要使用-this)
-        - [困惑](#困惑)
-        - [什么是 this](#什么是-this)
-    - [this 豁然开朗](#this-豁然开朗)
-        - [调用点](#调用点)
-        - [this 绑定规则](#this-绑定规则)
-        - [一切皆有顺序](#一切皆有顺序)
-        - [判定 this](#判定-this)
+- [this 还是 that](#this-还是-that)
+  - [为什么要使用 this](#为什么要使用-this)
+  - [困惑](#困惑)
+  - [什么是 this](#什么是-this)
+- [this 豁然开朗](#this-豁然开朗)
+  - [调用点](#调用点)
+  - [this 绑定规则](#this-绑定规则)
+  - [一切皆有顺序](#一切皆有顺序)
+  - [判定 this](#判定-this)
 
 <!-- /TOC -->
 

@@ -1,5 +1,10 @@
-
-# IO
+---
+title: IO
+date: 2016-01-12 15:40:43
+tags:
+description:
+categories: [js]
+---
 
 I/O： 输入/输出(Input/Output)。
 

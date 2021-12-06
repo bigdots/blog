@@ -1,6 +1,10 @@
-
-
-# javascript 基础
+---
+title: javascript 基础
+date: 2016-01-12 15:40:43
+tags:
+description:
+categories: [js]
+---
 
 ## [内存](http://www.jianshu.com/p/996671d4dcc4)
 

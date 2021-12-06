@@ -1,4 +1,11 @@
-# mysql环境搭建 #
+---
+title: mysql环境搭建
+date: 2016-01-12 15:40:43
+tags:
+description:
+categories: [js]
+---
+
 最近决定学习数据库，在比较了各个数据库之后，选择从mysql入手，主要原因：
 
 - 开源
@@ -80,24 +87,4 @@ mysql官网有俩种版本可供下载，分别是客户端版本（Recommended 
 依次执行这三个命令后，打开data文件夹，找到其下error文件类型的文件打开，该文件是本次mysql初始化的log日志，包括初始化密码。如果显示“root@localhost is created with an empty password !”，则为空。然后执行
 
 	mysql -uroot -p
-输入用户名和密码，显示“ Type 'help;' or '\h' for help. Type '\c' to clear the current input statement. ”，则表示连接成功。
-
-
-
-
-## 登录出错 ##
-如果登录的时候存在问题，显示“ Access denied for user 'root'@'localhost'”，可以尝试重新设置设置root密码:
-
-1. 修改/my.ini文件,在[mysqld]下添加 skip-grant-tables , 再启动mysql
-
-2. 然后用空密码方式使用root用户登录 MySQL；
- 
-		mysql -u root
-
-3. 修改root用户的密码；
-
-		mysql> update mysql.user set password=PASSWORD（'新密码'） where User='root'
-		mysql> flush privileges；
-		mysql> quit
-
-4. 重新启动MySQL，就可以使用新密码登录了。
+输入用户名和密码，显示“ Type 'help;' or '\h' for help. Type '

@@ -1,4 +1,10 @@
-# return、break和continue
+---
+title: return、break和continue
+date: 2016-01-12 15:40:43
+tags:
+description:
+categories: [js]
+---
 
 ## return
 

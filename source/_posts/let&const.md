@@ -1,3 +1,10 @@
+---
+title: ES6深入理解
+date: 2016-01-12 15:40:43
+tags:
+description:
+categories: [js]
+---
 
 # ES6深入理解
 

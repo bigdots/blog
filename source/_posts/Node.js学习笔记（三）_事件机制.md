@@ -1,4 +1,10 @@
-# Node.js学习笔记（三）: 事件机制
+---
+title: Node.js学习笔记（三）_事件机制
+date: 2016-01-12 15:40:43
+tags:
+description:
+categories: [js]
+---
 
 
 大部分的nodejs核心api都建立在异步的事件驱动架构之上，所以events是Node.js 最重要的模块,它提供了唯一的接口。events 模块不仅用于用户代码与 Node.js 下层事件循环的交互,还几乎被所有的模块依赖。
@@ -23,7 +29,14 @@ myEmitter.emit('event');
 以上例 中, myEmitter 为事件 event 注册了一个事件监听器, 后发射了 event 事件。运行结果中可以看到这个事件监听器的回调函数被调用。
 
 
-+ EventEmitter.on(event, listener) 为指定事件注册一个监听器,接受一个字符串 event 和一个回调函数listener。+ EventEmitter.emit(event, [arg1], [arg2], [...]) 发射 event 事件,传递若干可选参数到事件监听器的参数表。+ EventEmitter.once(event, listener) 为指定事件注册一个单次监听器, 监听听器最多只会触发一次,触发后立刻解除该监听器。+ EventEmitter.removeListener(event, listener)  移除指定事件的某个监听器,listener必须是该事件已经注册过的监听器。
++ EventEmitter.on(event, listener) 为指定事件注册一个监听器,接受一个字
+符串 event 和一个回调函数listener。
++ EventEmitter.emit(event, [arg1], [arg2], [...]) 发射 event 事件,传
+递若干可选参数到事件监听器的参数表。
++ EventEmitter.once(event, listener) 为指定事件注册一个单次监听器, 监听
+听器最多只会触发一次,触发后立刻解除该监听器。
++ EventEmitter.removeListener(event, listener)  移除指定事件的某个监听
+器,listener必须是该事件已经注册过的监听器。
 
 
 

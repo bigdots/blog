@@ -1,8 +1,9 @@
+---
 title: 关于viewport
 date: 2015-12-03 11:25:31
 tags: [web,H5]
 description: 响应式布局,viewport.html5
-
+categories: [js]
 ---
 
 本文是我学习了无双的【[移动前端开发之viewport的深入理解](http://www.cnblogs.com/2050/p/3877280.html)】后，所做的学习笔记。
@@ -46,5 +47,3 @@ css的px并不等于物理的px。css中的像素只是一个抽象的单位，�
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
  因为（initial-scale=1 ）（width=device-width）虽然都能把当前的viewport宽度变成 ideal viewport 的宽度，但（width=device-width）在iphone和ipad上，无论是竖屏还是横屏，宽度都是竖屏时ideal viewport的宽度，（initial-scale=1 ）在windows phone 上的IE 无论是竖屏还是横屏都把宽度设为竖屏时ideal viewport的宽度。<b style="color:red">但当俩者同时出现时，浏览器会取它们两个中较大的那个值。</b>
-
-

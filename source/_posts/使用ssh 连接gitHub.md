@@ -1,4 +1,11 @@
-# 使用ssh连接gitHub
+---
+title: 使用ssh连接gitHub
+date: 2016-01-12 15:40:43
+tags:
+description:
+categories: [js]
+--- 
+
 github每次pull/push代码时要求推送代码的用户是合法的，所以每次推送时候都要输入账号密码用以验证用户是否为合法用户，而ssh是一种安全的传输模式，可以代替用户的这一“输入账号密码”的行为来验证用户。
 
 ##github的俩种操作方式

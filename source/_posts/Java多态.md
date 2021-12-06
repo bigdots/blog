@@ -1,7 +1,9 @@
+---
 title: Java多态
 tags: [java面向对象]
 date: 2016-04-01 16:37:47
 description: java面向对象
+categories: [js]
 ---
 
 ## 万物皆对象

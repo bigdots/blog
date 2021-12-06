@@ -1,8 +1,9 @@
+---
 title: Backbone学习笔记（一）
 date: 2015-12-01 16:02:22
 tags: [web,Backbone]
 description: Backbone Backbone.js MVC
-
+categories: [js]
 ---
 
 # ——Backbone中的MVC
@@ -211,4 +212,3 @@ HTML代码，只要把backbone的代码放入其<script></script>内运行即可
 3. 实例化视图类GistView，在集合类上绑定监听事件
 4. fetch()触发监听事件，执行render函数，遍历所有models
 5. 在render函数中实例化视图类GistRow,，渲染每行
-

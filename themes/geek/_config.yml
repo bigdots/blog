@@ -9,7 +9,7 @@ menu:
   域名: /domain
   友联: /links
   关于: /about
-  Github: https://github.com/sanjinhub
+  Github: https://github.com/bigdots/blog
 
 # 做了域名限制，请改成自己的 KEY
 # 若关闭valine 设置enable为false
