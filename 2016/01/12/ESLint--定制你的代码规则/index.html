@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>
+        yzg的个人站
+    </title>
+    
+<link rel="stylesheet" href="/libs/highlight/styles/monokai-sublime.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body id="bodyx">
+    <div class="hd posts">
+    <a href="/index.html"><i class="fa fa-reply replay-btn" aria-hidden="true"></i></a>
+    <div class="post-title">
+        <p>
+            ESLint--定制你的代码规则
+        </p>
+        <hr>
+    </div>
+    <div class="post-content">
+        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>ESLint是一个开源的项目，由Nicholas C. Zakas（《JavaScript高级程序设计》作者）于2013年六月创建。它的目标是为JavaScript提供一个完全可配置的实用lint工具。</p>
+<p>JavaScript是一种动态的、松散型的语言，是特别容易受到开发人员的错误使用。而ESLint可以在不执行JavaScript代码的情况下发现代码的问题。</p>
+<p>ESLint由Node.js编写，通过NPM提供快速的运行环境，并且安装方便。</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><ol>
+<li><p>全局安装</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install -g eslint</span><br></pre></td></tr></table></figure></li>
+<li><p>本地安装</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install eslint --save-dev</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><h3 id="生成配置文件"><a href="#生成配置文件" class="headerlink" title="生成配置文件"></a>生成配置文件</h3><p>在你想要使用ESLint的工程根目录下执行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eslint --init</span><br></pre></td></tr></table></figure>
+<p>这个命令的目的是创建一个eslint配置文件。如果你是全局安装的eslint，那么可以在任意文件中使用该命令，否则，你必须在使用该命令之前在该项目中安装eslint。</p>
+<p>执行该命令后，一般会出现三个选项可供选择，他们分别是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">❯ Answer questions about your style</span><br><span class="line">  Use a popular style guide</span><br><span class="line">  Inspect your JavaScript file(s)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>通过询问你来定制你的配置文件；</li>
+<li>使用通用的配置文件；</li>
+<li>通过审查你写的JavaScript文件来生成一个配置文件；</li>
+</ul>
+<p>在这之后， 在你的目录中会有一个.eslintrc文件，这个.eslintrc的存在形式也是可选择的，它可以是JavaScript、YAML、JSON、package.json等等。</p>
+<h3 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h3><p>生成配置文件之后，打开.eslintrc文件（一般是隐藏的），可以看到以下格式的内容：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;env&quot;: &#123;</span><br><span class="line">        &quot;browser&quot;: true</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;extends&quot;: &quot;eslint:recommended&quot;,</span><br><span class="line">    &quot;rules&quot;: &#123;</span><br><span class="line">        &quot;indent&quot;: [</span><br><span class="line">            &quot;error&quot;,</span><br><span class="line">            &quot;tab&quot;</span><br><span class="line">        ],</span><br><span class="line">        &quot;linebreak-style&quot;: [</span><br><span class="line">            &quot;error&quot;,</span><br><span class="line">            &quot;unix&quot;</span><br><span class="line">        ],</span><br><span class="line">        &quot;quotes&quot;: [</span><br><span class="line">            &quot;error&quot;,</span><br><span class="line">            &quot;double&quot;</span><br><span class="line">        ],</span><br><span class="line">        &quot;semi&quot;: [</span><br><span class="line">            &quot;error&quot;,</span><br><span class="line">            &quot;always&quot;</span><br><span class="line">        ]</span><br><span class="line">    &#125;,</span><br><span class="line">    Globals: &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我这个是json格式的，这里解释一下这个文件里各个参数的意思：</p>
+<ol>
+<li><p>env ：指定你的js代码在哪个运行环境中检测（每个运行环境都有一组预定义的全局变量）；</p>
+</li>
+<li><p>extends ：扩展配置规则（），我这里扩展的是eslint的推荐规则；</p>
+</li>
+<li><p>rules ：指定检测规则；</p>
+<p> 这是最重要的部分，也是你的自定义js代码监测规则的地方，他的格式是：规则名: 规则。比如：</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;indent&quot;: [&quot;error&quot;,&quot;tab&quot;]</span><br></pre></td></tr></table></figure>
+<p> 这里<code>indent</code>就是规则名，它定义了缩进应该使用tab，规则内的第一个值<code>error</code>指的是错误等级，它有三个等级，分别是：</p>
+<table>
+<thead>
+<tr>
+<th>error level</th>
+<th align="center">数值表示</th>
+<th align="right">涵义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>error</td>
+<td align="center">2</td>
+<td align="right">作为错误</td>
+</tr>
+<tr>
+<td>warn</td>
+<td align="center">1</td>
+<td align="right">作为提醒</td>
+</tr>
+<tr>
+<td>off</td>
+<td align="center">0</td>
+<td align="right">关闭该规则</td>
+</tr>
+<tr>
+<td>更多的规则可以参考<a target="_blank" rel="noopener" href="http://eslint.org/docs/rules/">官网</a>的rules。</td>
+<td align="center"></td>
+<td align="right"></td>
+</tr>
+</tbody></table>
+</li>
+<li><p>Globals ：指定脚本执行过程中访问的附加全局变量（比如jquery）</p>
+</li>
+</ol>
+<p><strong>PS:</strong></p>
+<p>您可以配置全局的.eslint文件，而不至于要每个工程中都创建一个独有的.eslint文件，烹制方法是将您的.eslintr文件放在当前用户的根目录下，类Unix系统的当前用户目录是<code>~</code>，而Windows系统的话则是类似于<code>C:\Windows\Users\Username</code>这样的地方</p>
+<h3 id="检测文件"><a href="#检测文件" class="headerlink" title="检测文件"></a>检测文件</h3><p>在你的工程目录下执行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eslint yourfile.js</span><br></pre></td></tr></table></figure>
+
+<p>它会在命令后输出你的所有报错信息。这样就ok了。个人感觉它的最大优势就是完全可配置，而且配置文件一次构建，可以通过粘贴复制的方式无数次使用。甚至整个团队可以通过使用一份配置文件来达到规范代码的作用，还是很强大的。</p>
+<h2 id="使用现有的通用规则"><a href="#使用现有的通用规则" class="headerlink" title="使用现有的通用规则"></a>使用现有的通用规则</h2><p>eslint官方提供了3种预安装包：</p>
+<ol>
+<li><p><a target="_blank" rel="noopener" href="https://www.npmjs.com/package/eslint-config-google">eslint-config-google</a></p>
+<p> Google标准</p>
+<p> 执行安装：</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install eslint eslint-config-google -g</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://www.npmjs.com/package/eslint-config-airbnb">eslint-config-airbnb</a></p>
+<p> Airbnb标准,它依赖eslint, eslint-plugin-import, eslint-plugin-react, and eslint-plugin-jsx-a11y等插件，并且对各个插件的版本有所要求。</p>
+<p> 你可以执行以下命令查看所依赖的各个版本：</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm info &quot;eslint-config-airbnb@latest&quot; peerDependencies</span><br></pre></td></tr></table></figure>
+<p> 你会看到以下输出信息，包含每个了每个plugins的版本要求</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123; eslint: &#x27;^3.15.0&#x27;,</span><br><span class="line">  &#x27;eslint-plugin-jsx-a11y&#x27;: &#x27;^3.0.2 || ^4.0.0&#x27;,</span><br><span class="line">  &#x27;eslint-plugin-import&#x27;: &#x27;^2.2.0&#x27;,</span><br><span class="line">  &#x27;eslint-plugin-react&#x27;: &#x27;^6.9.0&#x27; &#125;</span><br></pre></td></tr></table></figure>
+<p> 知道了每个plugins的版本要求后，代入以下命令执行安装即可使用：</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install eslint-config-airbnb eslint@^#.#.# eslint-plugin-jsx-a11y@^#.#.# eslint-plugin-import@^#.#.# eslint-plugin-react@^#.#.# -g</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://www.npmjs.com/package/eslint-config-standard">eslint-config-standard</a></p>
+<p> Standard标准，它是一些前端工程师自定的标准。</p>
+<p> 执行安装：</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install eslint-config-standard eslint-plugin-standard eslint-plugin-promise -g</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>目前来看，公认的最好的标准是Airbnb标准。建议全局安装这些标准，然后在你的.eslint配置文件中直接使用：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;extends&quot;: &quot;Airbnb/standard/Google/&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+        <hr class="fhr">
+        <div id="vcomments"></div>
+    
+</div>
+    <div class="footer" id="footer">
+    <p>Copyright © 2020 <a class="flink" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>-<a class="flink" target="_blank" rel="noopener" href="https://github.com/sanjinhub/hexo-theme-geek">Geek</a>.
+        <label class="el-switch el-switch-green el-switch-sm" style="vertical-align: sub;">
+            <input type="checkbox" name="switch" id="update_style">
+            <span class="el-switch-style"></span>
+        </label>
+<!--         <script type="text/javascript">
+        var cnzz_protocol = (("https:" == document.location.protocol) ? "https://" : "http://");
+        document.write(unescape("%3Cspan id='cnzz_stat_icon_1278548644'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "v1.cnzz.com/stat.php%3Fid%3D1278548644%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+        </script> -->
+    </p>
+</div>
+<input type="hidden" id="web_style" value="black">
+<input type="hidden" id="valine_appid" value="cbTPc8u7ho07U6TmlFC0RjK7">
+<input type="hidden" id="valine_appKey" value="4hH8asmBIHG3iSVSUt8Hu5OP">
+
+<script src="/libs/jquery.min.js"></script>
+
+
+<script src="/libs/highlight/highlight.pack.js"></script>
+
+<script src='//cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+
+<script src="/js/js.js"></script>
+
+<style type="text/css">
+.v * {
+    color: #698fca;
+}
+
+.v .vlist .vcard .vhead .vsys {
+    color: #3a3e4a;
+}
+
+.v .vlist .vcard .vh .vmeta .vat {
+    color: #638fd5;
+}
+
+.v .vlist .vcard .vhead .vnick {
+    color: #6ba1ff;
+}
+
+.v a {
+    color: #8696b1;
+}
+
+.v .vlist .vcard .vhead .vnick:hover {
+    color: #669bfc;
+}
+</style>
+</body>
+
+</html>

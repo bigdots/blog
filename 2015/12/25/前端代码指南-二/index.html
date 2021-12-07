@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>
+        yzg的个人站
+    </title>
+    
+<link rel="stylesheet" href="/libs/highlight/styles/monokai-sublime.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body id="bodyx">
+    <div class="hd posts">
+    <a href="/index.html"><i class="fa fa-reply replay-btn" aria-hidden="true"></i></a>
+    <div class="post-title">
+        <p>
+            前端代码指南(二)
+        </p>
+        <hr>
+    </div>
+    <div class="post-content">
+        <p><a href="/2015/12/24/%E5%89%8D%E7%AB%AF%E4%BB%A3%E7%A0%81%E6%8C%87%E5%8D%97-%E4%B8%80/">前端代码指南(一)</a><br><a href="/2015/12/25/%E5%89%8D%E7%AB%AF%E4%BB%A3%E7%A0%81%E6%8C%87%E5%8D%97-%E4%BA%8C/">前端代码指南(二)</a><br><a href="/2015/12/25/%E5%89%8D%E7%AB%AF%E4%BB%A3%E7%A0%81%E6%8C%87%E5%8D%97-%E4%B8%89/">前端代码指南(三)</a></p>
+<h1 id="CSS"><a href="#CSS" class="headerlink" title="CSS"></a>CSS</h1><span id="more"></span>
+
+<h3 id="分号"><a href="#分号" class="headerlink" title="分号"></a>分号</h3><p>分号是CSS语句的分离器,请把它放在句尾。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">/* 糟糕的 */</span><br><span class="line">div &#123;</span><br><span class="line">  color: red</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/* 推荐的 */</span><br><span class="line">div &#123;</span><br><span class="line">  color: red;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="盒模型"><a href="#盒模型" class="headerlink" title="盒模型"></a>盒模型</h3><p>最理想的情况是盒模型在整个文档是一样的。全局设置* { box-sizing:border-box;}是可以的,但最好不要在特定的元素上改变默认的盒模型。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">/* 糟糕的 */</span><br><span class="line">div &#123;</span><br><span class="line">  width: 100%;</span><br><span class="line">  padding: 10px;</span><br><span class="line">  box-sizing: border-box;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/* 推荐的 */</span><br><span class="line">div &#123;</span><br><span class="line">  padding: 10px;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="文档流"><a href="#文档流" class="headerlink" title="文档流"></a>文档流</h3><p> 不要改变一个元素的默认样式，尽可能保持元素在自然的文档流中。例如,删除图像下面的空白不应该改变其默认显示:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">/* 糟糕的 */</span><br><span class="line">img &#123;</span><br><span class="line">  display: block;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/* 推荐的 */</span><br><span class="line">img &#123;</span><br><span class="line">  vertical-align: middle;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>同样的，尽可能不要使元素脱离文档流</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">/* 糟糕的 */</span><br><span class="line">div &#123;</span><br><span class="line">  width: 100px;</span><br><span class="line">  position: absolute;</span><br><span class="line">  right: 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/* 推荐的 */</span><br><span class="line">div &#123;</span><br><span class="line">  width: 100px;</span><br><span class="line">  margin-left: auto;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="定位"><a href="#定位" class="headerlink" title="定位"></a>定位</h3><p>css有很多方法来定位元素,但是最好不要使用下面的属性/值</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">display: block;</span><br><span class="line">display: flex;</span><br><span class="line">position: relative;</span><br><span class="line">position: sticky;</span><br><span class="line">position: absolute;</span><br><span class="line">position: fixed;</span><br></pre></td></tr></table></figure>
+
+<h3 id="选择器"><a href="#选择器" class="headerlink" title="选择器"></a>选择器</h3><p>减少选择器与DOM的耦合度。当你的选择器匹配的元素超过3层结构(伪类、后代或兄弟元素)。考虑添加一个类来匹配你想要的元素吧</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/* 糟糕的 */</span><br><span class="line">div:first-of-type :last-child &gt; p ~ *</span><br><span class="line"></span><br><span class="line">/* 推荐的 */</span><br><span class="line">div:first-of-type .info</span><br></pre></td></tr></table></figure>
+
+<p>避免过载你的选择器</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">/* 糟糕的 */</span><br><span class="line">img[src$=svg], ul &gt; li:first-child &#123;</span><br><span class="line">  opacity: 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/* 推荐的 */</span><br><span class="line">[src$=svg], ul &gt; :first-child &#123;</span><br><span class="line">  opacity: 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h3><p>不要让属性值和选择器难以被覆盖(应该是指优先级不要过高)，减少使用id和!important的使用</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">/* 糟糕的 */</span><br><span class="line">.bar &#123;</span><br><span class="line">  color: green !important;</span><br><span class="line">&#125;</span><br><span class="line">.foo &#123;</span><br><span class="line">  color: red;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/* 推荐的 */</span><br><span class="line">.foo.bar &#123;</span><br><span class="line">  color: green;</span><br><span class="line">&#125;</span><br><span class="line">.foo &#123;</span><br><span class="line">  color: red;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="覆盖"><a href="#覆盖" class="headerlink" title="覆盖"></a>覆盖</h3><p>覆盖样式会导致选择器和调试变得困难，请尽量避免</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">/* 糟糕的 */</span><br><span class="line">li &#123;</span><br><span class="line">  visibility: hidden;</span><br><span class="line">&#125;</span><br><span class="line">li:first-child &#123;</span><br><span class="line">  visibility: visible;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/* 推荐的 */</span><br><span class="line">li + li &#123;</span><br><span class="line">  visibility: hidden;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h3><p>不要重复书写可以继承的样式。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">/* 糟糕的 */</span><br><span class="line">div h1, div p &#123;</span><br><span class="line">  text-shadow: 0 1px 0 #fff;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/* 推荐的 */</span><br><span class="line">div &#123;</span><br><span class="line">  text-shadow: 0 1px 0 #fff;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="简洁"><a href="#简洁" class="headerlink" title="简洁"></a>简洁</h3><p>保持你的代码简洁，尽量使用简写属性,避免使用多个属性。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">/* 糟糕的 */</span><br><span class="line">div &#123;</span><br><span class="line">  transition: all 1s;</span><br><span class="line">  top: 50%;</span><br><span class="line">  margin-top: -10px;</span><br><span class="line">  padding-top: 5px;</span><br><span class="line">  padding-right: 10px;</span><br><span class="line">  padding-bottom: 20px;</span><br><span class="line">  padding-left: 10px;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/* 推荐的 */</span><br><span class="line">div &#123;</span><br><span class="line">  transition: 1s;</span><br><span class="line">  top: calc(50% - 10px);</span><br><span class="line">  padding: 5px 10px 20px;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="语言"><a href="#语言" class="headerlink" title="语言"></a>语言</h3><p>英文优于数学表达式</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">/* 糟糕的 */</span><br><span class="line">:nth-child(2n + 1) &#123;</span><br><span class="line">  transform: rotate(360deg);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/* 推荐的 */</span><br><span class="line">:nth-child(odd) &#123;</span><br><span class="line">  transform: rotate(1turn);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="前缀"><a href="#前缀" class="headerlink" title="前缀"></a>前缀</h3><p>积极删除过时的前缀。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">/* 糟糕的 */</span><br><span class="line">div &#123;</span><br><span class="line">  transform: scale(2);</span><br><span class="line">  -webkit-transform: scale(2);</span><br><span class="line">  -moz-transform: scale(2);</span><br><span class="line">  -ms-transform: scale(2);</span><br><span class="line">  transition: 1s;</span><br><span class="line">  -webkit-transition: 1s;</span><br><span class="line">  -moz-transition: 1s;</span><br><span class="line">  -ms-transition: 1s;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/* 推荐的 */</span><br><span class="line">div &#123;</span><br><span class="line">  -webkit-transform: scale(2);</span><br><span class="line">  transform: scale(2);</span><br><span class="line">  transition: 1s;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="动画"><a href="#动画" class="headerlink" title="动画"></a>动画</h3><p><code>animations</code>和<code>transitions</code> ，优先选择<code>transitions</code> 。除了 <code>opacity</code> 和 <code>transform</code>属性，其他属性避免使用<code>animations</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">/* 糟糕的 */</span><br><span class="line">div:hover &#123;</span><br><span class="line">  animation: move 1s forwards;</span><br><span class="line">&#125;</span><br><span class="line">@keyframes move &#123;</span><br><span class="line">  100% &#123;</span><br><span class="line">    margin-left: 100px;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/* 推荐的 */</span><br><span class="line">div:hover &#123;</span><br><span class="line">  transition: 1s;</span><br><span class="line">  transform: translateX(100px);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="单位"><a href="#单位" class="headerlink" title="单位"></a>单位</h3><p>不要对不需要使用单位的值使用单位；如果你要使用相对单位最好使用<code>rem</code>；使用秒而不是毫秒</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">/* 糟糕的 */</span><br><span class="line">div &#123;</span><br><span class="line">  margin: 0px;</span><br><span class="line">  font-size: .9em;</span><br><span class="line">  line-height: 22px;</span><br><span class="line">  transition: 500ms;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/* 推荐的 */</span><br><span class="line">div &#123;</span><br><span class="line">  margin: 0;</span><br><span class="line">  font-size: .9rem;</span><br><span class="line">  line-height: 1.5;</span><br><span class="line">  transition: .5s;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="颜色"><a href="#颜色" class="headerlink" title="颜色"></a>颜色</h3><p>如果你需要使用透明度，请使用<code>rgba</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">/* 糟糕的 */</span><br><span class="line">div &#123;</span><br><span class="line">  color: hsl(103, 54%, 43%);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/* 推荐的 */</span><br><span class="line">div &#123;</span><br><span class="line">  color: #5a3;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="绘制"><a href="#绘制" class="headerlink" title="绘制"></a>绘制</h3><p>如果资源文件可以轻易在css中绘制出来，就避免HTTP请求来加载</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">/* 糟糕的 */</span><br><span class="line">div::before &#123;</span><br><span class="line">  content: url(white-circle.svg);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/* 推荐的 */</span><br><span class="line">div::before &#123;</span><br><span class="line">  content: &quot;&quot;;</span><br><span class="line">  display: block;</span><br><span class="line">  width: 20px;</span><br><span class="line">  height: 20px;</span><br><span class="line">  border-radius: 50%;</span><br><span class="line">  background: #fff;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Hacks"><a href="#Hacks" class="headerlink" title="Hacks"></a>Hacks</h3><p>尽量不要使用Hacks</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">/* 糟糕的 */</span><br><span class="line">div &#123;</span><br><span class="line">  // position: relative;</span><br><span class="line">  transform: translateZ(0);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/* 推荐的 */</span><br><span class="line">div &#123;</span><br><span class="line">  /* position: relative; */</span><br><span class="line">  will-change: transform;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+        <hr class="fhr">
+        <div id="vcomments"></div>
+    
+</div>
+    <div class="footer" id="footer">
+    <p>Copyright © 2020 <a class="flink" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>-<a class="flink" target="_blank" rel="noopener" href="https://github.com/sanjinhub/hexo-theme-geek">Geek</a>.
+        <label class="el-switch el-switch-green el-switch-sm" style="vertical-align: sub;">
+            <input type="checkbox" name="switch" id="update_style">
+            <span class="el-switch-style"></span>
+        </label>
+<!--         <script type="text/javascript">
+        var cnzz_protocol = (("https:" == document.location.protocol) ? "https://" : "http://");
+        document.write(unescape("%3Cspan id='cnzz_stat_icon_1278548644'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "v1.cnzz.com/stat.php%3Fid%3D1278548644%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+        </script> -->
+    </p>
+</div>
+<input type="hidden" id="web_style" value="black">
+<input type="hidden" id="valine_appid" value="cbTPc8u7ho07U6TmlFC0RjK7">
+<input type="hidden" id="valine_appKey" value="4hH8asmBIHG3iSVSUt8Hu5OP">
+
+<script src="/libs/jquery.min.js"></script>
+
+
+<script src="/libs/highlight/highlight.pack.js"></script>
+
+<script src='//cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+
+<script src="/js/js.js"></script>
+
+<style type="text/css">
+.v * {
+    color: #698fca;
+}
+
+.v .vlist .vcard .vhead .vsys {
+    color: #3a3e4a;
+}
+
+.v .vlist .vcard .vh .vmeta .vat {
+    color: #638fd5;
+}
+
+.v .vlist .vcard .vhead .vnick {
+    color: #6ba1ff;
+}
+
+.v a {
+    color: #8696b1;
+}
+
+.v .vlist .vcard .vhead .vnick:hover {
+    color: #669bfc;
+}
+</style>
+</body>
+
+</html>

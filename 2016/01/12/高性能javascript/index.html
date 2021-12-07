@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>
+        yzg的个人站
+    </title>
+    
+<link rel="stylesheet" href="/libs/highlight/styles/monokai-sublime.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body id="bodyx">
+    <div class="hd posts">
+    <a href="/index.html"><i class="fa fa-reply replay-btn" aria-hidden="true"></i></a>
+    <div class="post-title">
+        <p>
+            高性能javascript
+        </p>
+        <hr>
+    </div>
+    <div class="post-content">
+        <h3 id="加载和运行"><a href="#加载和运行" class="headerlink" title="加载和运行"></a>加载和运行</h3><p>JavaScript 的阻塞特征：大多数浏览器使用单进程处理UI更新和 JavaScript运行等多个任务,而同一时间只能有一个任务被执行，这意味着<code>&lt;script&gt;</code>标签的出现使整个页面因脚本解析、运行而出现等待。</p>
+<p>由此而得来的几个优化点：</p>
+<ol>
+<li><p>脚本位置</p>
+<p> 由于浏览器在遇到<code>&lt;body&gt;</code>标签之前,不会渲染页面的任何部分，所以<br> 将脚本放在底部</p>
+</li>
+<li><p>合并脚本</p>
+<p> 将脚本成组打包。页面的<code>&lt;script&gt;</code>标签越少,页面的加载速度就越快,响应也更加迅速。不论外部脚本 文件还是内联代码都是如此。</p>
+</li>
+<li><p>非阻塞脚本（推荐使用<a target="_blank" rel="noopener" href="https://github.com/rgrove/lazyload/">lazyLoad库</a>）</p>
+<ul>
+<li>延迟脚本  为<code>&lt;script&gt;</code>标签添加 defer 属性</li>
+<li>动态脚本  动态创建<code>&lt;script&gt;</code>标签,并添加到页面中，用它下载并执行代码</li>
+<li>xhr脚本注入  用 XHR 对象下载代码,并注入到页面中</li>
+</ul>
+</li>
+</ol>
+<h3 id="数据访问"><a href="#数据访问" class="headerlink" title="数据访问"></a>数据访问</h3><p>在 JavaScript 中,数据存储位置可以对代码整体性能产生重要影响。有四种数据访问类型:直接量,变 量,数组项,对象成员。</p>
+<ol>
+<li><p>直接量和局部变量访问速度非常快,数组项和对象成员需要更长时间。</p>
+</li>
+<li><p>局部变量比域外变量快,因为它位于作用域链的第一个对象中。变量在作用域链中的位置越深,访问所需的时间就越长。全局变量总是最慢的,因为它们总是位于作用域链的最后一环。</p>
+</li>
+<li><p>避免使用 with 表达式,因为它改变了运行期上下文的作用域链。而且应当小心对待 try-catch 表达式的 catch 子句,因为它具有同样效果。</p>
+</li>
+<li><p>嵌套对象成员会造成重大性能影响,尽量少用</p>
+</li>
+<li><p>一个属性或方法在原形链中的位置越深,访问它的速度就越慢。</p>
+</li>
+<li><p>提高 JavaScript 代码的性能:将经常使用的对象成员,数组项,和域外变量存入局部变量中。然后,访问局部变量的速度会快于那些原始变量。（比如document 是一个全局对象。搜索此变量,必须遍历整个作用域链, 直到最后在全局变量对象中找到它，我们就可以使用局部变量代替它）</p>
+</li>
+</ol>
+<h3 id="DOM-操作"><a href="#DOM-操作" class="headerlink" title="DOM 操作"></a>DOM 操作</h3><p>文档对象模型(DOM)是一个独立于语言的，使用 XML 和 HTML 文档操作的应用程序接口(API)。</p>
+<p>天生就慢：两个独立的部分以功能接口连接就会带来性能损耗</p>
+<ol>
+<li><p>轻触DOM，最小化DOM操作</p>
+<ul>
+<li>不要使用循环访问和修改 DOM，可以使用局部变量存放需要反复使用的 DOM 引用</li>
+<li>使用innerHTML，而不是document.createElement ()［在老的浏览器效果明显，但新的差异不大］</li>
+<li>能clone节点就不要新建</li>
+<li>使用速度更快的api，例如querySelectorAll()和 firstElementChild</li>
+</ul>
+</li>
+<li><p>重绘和重排</p>
+<ul>
+<li><p>批量修改 DOM 样式</p>
+<p>  使用cssText集中修改样式</p>
+</li>
+<li><p>离线操作 DOM 树</p>
+<p>  需要对 DOM 元素进行多次修改时,通过以下步骤减少重绘和重排版的次数：</p>
+<ul>
+<li>从文档流中摘除该元素（隐藏，复制覆盖）</li>
+<li>对其应用多重改变</li>
+<li>将元素带回文档中</li>
+</ul>
+</li>
+<li><p>通过缓存布局信息来减少对 DOM 的访问，例如进行动画时，缓存初始位置</p>
+</li>
+</ul>
+</li>
+<li><p>动画脱离文档流</p>
+<p> 排版有时只影响渲染树的一小部分,但也可以影响很大的一部分,甚至整个渲染树。浏览器需要重排版的部分越小,应用程序的响应速度就越快。所以将动画提出文档流，减小渲染树重排的部分。</p>
+</li>
+<li><p>使用事件托管</p>
+<p> 事件句柄的负担：</p>
+<ul>
+<li><p>元素与每个句柄的链接增加了页面负担和运行时间（事件挂接过程都发生在onload(或 DOMContentReady)事件中）</p>
+</li>
+<li><p>浏览器需要保存每个句柄的记录,占用更多内存</p>
+</li>
+</ul>
+</li>
+</ol>
+<p>所以，使用事件托管（只需要在一个包装元素上挂接一个句柄,用于处理子元素发生的所有事件）来达到性能优化。</p>
+<h3 id="算法和流程控制"><a href="#算法和流程控制" class="headerlink" title="算法和流程控制"></a>算法和流程控制</h3><p>代码整体结构是执行速度的决定因素之一。代码量少不一定运行速度快,代码量多也不一定运行速度慢。 性能损失与代码组织方式和具体问题解决办法直接相关。</p>
+<ol>
+<li><p>循环</p>
+<p> JavaScript 提供了的四种循环类型:for、while、do-while、for-in，其中for-in 循环比其他循环明显要慢（由于每次迭代操作要搜索实例或原形的属性）。</p>
+<p> 除 for-in 循环外,其他循环类型性能相当,难以确定哪种循环更快。所以选择循环类型应基于需求而不是性能。</p>
+<p> 优化着力点：</p>
+<ul>
+<li>每次迭代的工作量</li>
+<li>迭代的次数</li>
+</ul>
+</li>
+<li><p>条件表达式</p>
+<p> 条件数量较大,使用 switch，条件数量小则使用if－else：</p>
+<ul>
+<li>易于阅读，如果条件较少时,if-else 容易阅读,而条件较多时 switch 更容易阅读。</li>
+<li>性能更佳，多数情况下 switch 表达式比 if-else 更快一点,但只有当条件体数量很大时这种性能差距才明显。</li>
+</ul>
+<p> 优化点：</p>
+<ul>
+<li><p>最小化找到正确分支之前所判断条件体的数量</p>
+<ul>
+<li>将最常见的条件体放在首位</li>
+<li>使用嵌套表达式缩小查找范围</li>
+</ul>
+</li>
+<li><p>查表法(测试的离散值数量非常大时）</p>
+<p>  消除所有条件判断。操作转换成一个数组项查询或者一个对象成员查询。</p>
+</li>
+</ul>
+</li>
+<li><p>递归（再学习，表示不懂）</p>
+<ul>
+<li>调用栈限制  JavaScript 引擎所支持的递归数量与 JavaScript 调用栈大小直接相关。当你使用了太多的递归,超过最大调用栈尺寸时,浏览器会出错</li>
+<li>递归模式</li>
+<li>迭代</li>
+<li>制表</li>
+</ul>
+</li>
+</ol>
+<h3 id="字符串和正则表达式（再看）"><a href="#字符串和正则表达式（再看）" class="headerlink" title="字符串和正则表达式（再看）"></a>字符串和正则表达式（再看）</h3><ol>
+<li>字符串链接<ul>
+<li>IE7 和它的早期版本上, jion性能更优</li>
+<li>现代浏览器，使用简单的+和+=性能更优，但是要避免使用临时字符串</li>
+</ul>
+</li>
+</ol>
+<h3 id="响应接口"><a href="#响应接口" class="headerlink" title="响应接口"></a>响应接口</h3>
+    </div>
+
+    
+        <hr class="fhr">
+        <div id="vcomments"></div>
+    
+</div>
+    <div class="footer" id="footer">
+    <p>Copyright © 2020 <a class="flink" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>-<a class="flink" target="_blank" rel="noopener" href="https://github.com/sanjinhub/hexo-theme-geek">Geek</a>.
+        <label class="el-switch el-switch-green el-switch-sm" style="vertical-align: sub;">
+            <input type="checkbox" name="switch" id="update_style">
+            <span class="el-switch-style"></span>
+        </label>
+<!--         <script type="text/javascript">
+        var cnzz_protocol = (("https:" == document.location.protocol) ? "https://" : "http://");
+        document.write(unescape("%3Cspan id='cnzz_stat_icon_1278548644'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "v1.cnzz.com/stat.php%3Fid%3D1278548644%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+        </script> -->
+    </p>
+</div>
+<input type="hidden" id="web_style" value="black">
+<input type="hidden" id="valine_appid" value="cbTPc8u7ho07U6TmlFC0RjK7">
+<input type="hidden" id="valine_appKey" value="4hH8asmBIHG3iSVSUt8Hu5OP">
+
+<script src="/libs/jquery.min.js"></script>
+
+
+<script src="/libs/highlight/highlight.pack.js"></script>
+
+<script src='//cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+
+<script src="/js/js.js"></script>
+
+<style type="text/css">
+.v * {
+    color: #698fca;
+}
+
+.v .vlist .vcard .vhead .vsys {
+    color: #3a3e4a;
+}
+
+.v .vlist .vcard .vh .vmeta .vat {
+    color: #638fd5;
+}
+
+.v .vlist .vcard .vhead .vnick {
+    color: #6ba1ff;
+}
+
+.v a {
+    color: #8696b1;
+}
+
+.v .vlist .vcard .vhead .vnick:hover {
+    color: #669bfc;
+}
+</style>
+</body>
+
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>
+        yzg的个人站
+    </title>
+    
+<link rel="stylesheet" href="/libs/highlight/styles/monokai-sublime.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body id="bodyx">
+    <div class="hd posts">
+    <a href="/index.html"><i class="fa fa-reply replay-btn" aria-hidden="true"></i></a>
+    <div class="post-title">
+        <p>
+            touch触摸事件
+        </p>
+        <hr>
+    </div>
+    <div class="post-content">
+        <h2 id="事件对象"><a href="#事件对象" class="headerlink" title="事件对象"></a>事件对象</h2><p>事件对象是用来记录一些事件发生时的相关信息的对象。事件对象只有事件发生时才会产生，并且只能是事件处理函数内部访问，在所有事件处理函数运行结束后，事件对象就被销毁！</p>
+<ul>
+<li>W3C DOM把事件对象作为事件处理函数的第一个参数传入进去</li>
+<li>IE将事件对象作为window对象的一个属性（相当于全局变量）</li>
+</ul>
+<span id="more"></span>
+
+<h2 id="originalEvent对象"><a href="#originalEvent对象" class="headerlink" title="originalEvent对象"></a>originalEvent对象</h2><p>在一次偶然的使用中，我发现当使用on()函数并且传入第二个选择器参数时,e.touches[0]的访问为undefined，打印e发现，它的事件对象不是原生的事件对象。经查阅发现它是jquery事件对象。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="built_in">window</span>).on(<span class="string">&quot;touchstart&quot;</span>,<span class="string">&quot;body&quot;</span>,<span class="function"><span class="keyword">function</span>(<span class="params">e</span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(e)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p><img src="https://raw.githubusercontent.com/bigdots/blog/master/images/201601/touchclass1.png"></p>
+<p>上面例子中event中有一个originalEvent属性，而这才是真正的touch事件。jQuery.Event 是一个构造函数，其创建一个可读写的jQuery事件对象，并在event 对象保留了对这个原生事件对象 event 的引用($event.originalEvent)。我们绑定的事件处理程序所处理的事件对象都是 $event。该方法也可以传递一个自定义事件的类型名，用于生成用户自定义事件对象。</p>
+<h2 id="touch事件"><a href="#touch事件" class="headerlink" title="touch事件"></a>touch事件</h2><p><code>touchmove</code>: 当手指在屏幕上滑动的时候连续地触发。<br><code>touchstart</code>: 当手指触摸屏幕时候触发，即使已经有一个手指放在屏幕上也会触发<br><code>touchend</code>:  当手指从屏幕上离开的时候触发。</p>
+<h2 id="TouchEvent对象"><a href="#TouchEvent对象" class="headerlink" title="TouchEvent对象"></a>TouchEvent对象</h2><p>每一个touch事件的触发都会产生一个TouchEvent对象，以下是TouchEvent对象三个比较常用的重要属性</p>
+<ul>
+<li>touches   当前位于屏幕上的所有手指的一个列表。</li>
+<li>targetTouches  特定于事件目标的Touch对象的数组。[当前手指]</li>
+<li>changeTouches  表示自上次触摸以来发生了什么改变的Touch对象的数组。</li>
+</ul>
+<p>在这里，我用js写了一个touch事件，点击屏幕可触发,将其事件事件对象在控制台打印出，结果如下（箭头指向的是上述三个属性）：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.addEventListener(<span class="string">&quot;touchstart&quot;</span>,<span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(event);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p><img src="https://raw.githubusercontent.com/bigdots/blog/master/images/201601/touch.png"></p>
+<h2 id="触摸事件对象属性"><a href="#触摸事件对象属性" class="headerlink" title="触摸事件对象属性"></a>触摸事件对象属性</h2><p>touches、targetTou、changeTouches都包含以下属性值</p>
+<ul>
+<li>clientX：触摸目标在视口中的x坐标。</li>
+<li>clientY：触摸目标在视口中的y坐标。</li>
+<li>identifier：标识触摸的唯一ID。</li>
+<li>pageX：触摸目标在页面中的x坐标。</li>
+<li>pageY：触摸目标在页面中的y坐标。</li>
+<li>screenX：触摸目标在屏幕中的x坐标。</li>
+<li>screenY：触摸目标在屏幕中的y坐标。</li>
+<li>target：触摸的DOM节点目标。</li>
+</ul>
+<p>还是上面的那个例子，changeTouches对象在控制台输出如下：<br><img src="https://raw.githubusercontent.com/bigdots/blog/master/images/201601/touchclass.png"></p>
+
+    </div>
+
+    
+        <hr class="fhr">
+        <div id="vcomments"></div>
+    
+</div>
+    <div class="footer" id="footer">
+    <p>Copyright © 2020 <a class="flink" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>-<a class="flink" target="_blank" rel="noopener" href="https://github.com/sanjinhub/hexo-theme-geek">Geek</a>.
+        <label class="el-switch el-switch-green el-switch-sm" style="vertical-align: sub;">
+            <input type="checkbox" name="switch" id="update_style">
+            <span class="el-switch-style"></span>
+        </label>
+<!--         <script type="text/javascript">
+        var cnzz_protocol = (("https:" == document.location.protocol) ? "https://" : "http://");
+        document.write(unescape("%3Cspan id='cnzz_stat_icon_1278548644'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "v1.cnzz.com/stat.php%3Fid%3D1278548644%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+        </script> -->
+    </p>
+</div>
+<input type="hidden" id="web_style" value="black">
+<input type="hidden" id="valine_appid" value="cbTPc8u7ho07U6TmlFC0RjK7">
+<input type="hidden" id="valine_appKey" value="4hH8asmBIHG3iSVSUt8Hu5OP">
+
+<script src="/libs/jquery.min.js"></script>
+
+
+<script src="/libs/highlight/highlight.pack.js"></script>
+
+<script src='//cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+
+<script src="/js/js.js"></script>
+
+<style type="text/css">
+.v * {
+    color: #698fca;
+}
+
+.v .vlist .vcard .vhead .vsys {
+    color: #3a3e4a;
+}
+
+.v .vlist .vcard .vh .vmeta .vat {
+    color: #638fd5;
+}
+
+.v .vlist .vcard .vhead .vnick {
+    color: #6ba1ff;
+}
+
+.v a {
+    color: #8696b1;
+}
+
+.v .vlist .vcard .vhead .vnick:hover {
+    color: #669bfc;
+}
+</style>
+</body>
+
+</html>

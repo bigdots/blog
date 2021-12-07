@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>
+        yzg的个人站
+    </title>
+    
+<link rel="stylesheet" href="/libs/highlight/styles/monokai-sublime.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body id="bodyx">
+    <div class="hd posts">
+    <a href="/index.html"><i class="fa fa-reply replay-btn" aria-hidden="true"></i></a>
+    <div class="post-title">
+        <p>
+            H5文件上传
+        </p>
+        <hr>
+    </div>
+    <div class="post-content">
+        <h2 id="序"><a href="#序" class="headerlink" title="序"></a>序</h2><p>以前做网站图片上传功能基本用的是百度的webupload插件，该插件功能十分强大，兼容性也很好。但是最近开始接触移动端的前端开发，就不想再使用这个插件了。原因有三：</p>
+<p>第一，插件的体积过大，消耗流量，影响页面打开速度；</p>
+<p>第二，移动端的兼容性问题已经几乎不需要考虑了；</p>
+<p>第三，h5的发展，足够强大，提供了FormData，可以帮助我们拼凑参数，乃至文件资源。</p>
+<p>于是开始研究h5来实现文件上传。</p>
+<p>##HTML</p>
+<p>html部分不用多说，肯定是一个file类型的input按钮。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;input type=&quot;file&quot;&gt;</span><br></pre></td></tr></table></figure>
+<p>这个按钮点击以后会弹出一个文件选择框，选择相应文件后会将文件暂存到原始数据缓冲区。接下来的活就交给FileReader了。</p>
+<h2 id="FileReader"><a href="#FileReader" class="headerlink" title="FileReader"></a>FileReader</h2><p>文档请戳这里<a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/API/FileReader">FileReader</a></p>
+<p>FileReader用来把文件读入内存，并且读取文件中的数据。FileReader接口提供了一个异步API，使用该API可以在浏览器主线程中异步访问文件系统，并通过file或者blog对象读取文件中的数据。</p>
+<h3 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h3><p>FileReader接口有4个方法，其中3个用来读取文件，另一个用来中断读取。无论读取成功或失败，方法并不会返回读取结果，这一结果存储在result属性中。</p>
+<table>
+<thead>
+<tr>
+<th>方法名</th>
+<th align="center">参数</th>
+<th align="right">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>readAsBinaryString</td>
+<td align="center">file</td>
+<td align="right">将文件读取为二进制编码</td>
+</tr>
+<tr>
+<td>readAsText</td>
+<td align="center">file,[encoding]</td>
+<td align="right">将文件读取为文本</td>
+</tr>
+<tr>
+<td>readAsDataURL</td>
+<td align="center">file</td>
+<td align="right">将文件读取为DataURL</td>
+</tr>
+<tr>
+<td>abort</td>
+<td align="center">(none)</td>
+<td align="right">终端读取操作</td>
+</tr>
+</tbody></table>
+<h3 id="事件"><a href="#事件" class="headerlink" title="事件"></a>事件</h3><p>FileReader接口包含了一套完整的事件模型，用于捕获读取文件时的状态。</p>
+<table>
+<thead>
+<tr>
+<th>事件名</th>
+<th align="right">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>onabort</td>
+<td align="right">中断</td>
+</tr>
+<tr>
+<td>onerror</td>
+<td align="right">出错</td>
+</tr>
+<tr>
+<td>onloadstart</td>
+<td align="right">开始</td>
+</tr>
+<tr>
+<td>onprogress</td>
+<td align="right">正在读取</td>
+</tr>
+<tr>
+<td>onload</td>
+<td align="right">成功读取</td>
+</tr>
+<tr>
+<td>onloadend</td>
+<td align="right">读取完成，无论成功失败</td>
+</tr>
+</tbody></table>
+<h2 id="FormData"><a href="#FormData" class="headerlink" title="FormData"></a>FormData</h2><p>文档请戳这里<a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/API/FormData">FormData</a></p>
+<p>平常我们提交form表单后，form会把form中的所有表格元素的name与value组成一个queryStrin提交到后台，这就是formdata。</p>
+<p>FormData接口提供了一种便捷构建一套键/值形式数据的方式，它可以被xhrhttprequest发送，使用formdata最大的优点就是可以上传二进制文件（将字符编码设置为“multipart/form-data“）。</p>
+<p>声明：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var f = new FormData()</span><br></pre></td></tr></table></figure>
+
+<p>添加数据：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">f.append(key,value)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>删除数据：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">f.delete(key,value)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+        <hr class="fhr">
+        <div id="vcomments"></div>
+    
+</div>
+    <div class="footer" id="footer">
+    <p>Copyright © 2020 <a class="flink" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>-<a class="flink" target="_blank" rel="noopener" href="https://github.com/sanjinhub/hexo-theme-geek">Geek</a>.
+        <label class="el-switch el-switch-green el-switch-sm" style="vertical-align: sub;">
+            <input type="checkbox" name="switch" id="update_style">
+            <span class="el-switch-style"></span>
+        </label>
+<!--         <script type="text/javascript">
+        var cnzz_protocol = (("https:" == document.location.protocol) ? "https://" : "http://");
+        document.write(unescape("%3Cspan id='cnzz_stat_icon_1278548644'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "v1.cnzz.com/stat.php%3Fid%3D1278548644%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+        </script> -->
+    </p>
+</div>
+<input type="hidden" id="web_style" value="black">
+<input type="hidden" id="valine_appid" value="cbTPc8u7ho07U6TmlFC0RjK7">
+<input type="hidden" id="valine_appKey" value="4hH8asmBIHG3iSVSUt8Hu5OP">
+
+<script src="/libs/jquery.min.js"></script>
+
+
+<script src="/libs/highlight/highlight.pack.js"></script>
+
+<script src='//cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+
+<script src="/js/js.js"></script>
+
+<style type="text/css">
+.v * {
+    color: #698fca;
+}
+
+.v .vlist .vcard .vhead .vsys {
+    color: #3a3e4a;
+}
+
+.v .vlist .vcard .vh .vmeta .vat {
+    color: #638fd5;
+}
+
+.v .vlist .vcard .vhead .vnick {
+    color: #6ba1ff;
+}
+
+.v a {
+    color: #8696b1;
+}
+
+.v .vlist .vcard .vhead .vnick:hover {
+    color: #669bfc;
+}
+</style>
+</body>
+
+</html>

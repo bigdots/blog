@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>
+        yzg的个人站
+    </title>
+    
+<link rel="stylesheet" href="/libs/highlight/styles/monokai-sublime.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body id="bodyx">
+    <div class="hd posts">
+    <a href="/index.html"><i class="fa fa-reply replay-btn" aria-hidden="true"></i></a>
+    <div class="post-title">
+        <p>
+            基础
+        </p>
+        <hr>
+    </div>
+    <div class="post-content">
+        <h2 id="类型判断"><a href="#类型判断" class="headerlink" title="类型判断"></a>类型判断</h2><p><code>typeof</code></p>
+<p><code>Object.prototype.toString</code>  [object NativeConstructorName]</p>
+<p>不能检测非原生构造函数的构造函数名。</p>
+<h2 id="作用域"><a href="#作用域" class="headerlink" title="作用域"></a>作用域</h2><h2 id="引用传递"><a href="#引用传递" class="headerlink" title="引用传递"></a>引用传递</h2><ul>
+<li>值传递: 实际参数把它的值传递给对应的形式参数，形参不会改变实参</li>
+<li>引用传递: 实际参数与形式参数指向同一个地址，形参会改变实参</li>
+</ul>
+<p>javascript 中实际上没有引用传递只是传递引用。直接修改形参不会改变实参，但是修改形参的内部属性则会改变实参。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">changeStuff</span>(<span class="params">a, b, c</span>)</span>&#123; <span class="comment">// 把10（值）传递给a,把&#123;item: &quot;unchanged&quot;&#125;（引用）传递给把b,c</span></span><br><span class="line">    a = a * <span class="number">10</span>; </span><br><span class="line">    b.item = <span class="string">&quot;changed&quot;</span>; <span class="comment">// 改变了引用内的属性，所以实参obj1也改变</span></span><br><span class="line">    c = &#123;<span class="attr">item</span>: <span class="string">&quot;changed&quot;</span>&#125;;  <span class="comment">// 把新的引用传递给了c，所以实参不变</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> num = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">var</span> obj1 = &#123;<span class="attr">item</span>: <span class="string">&quot;unchanged&quot;</span>&#125;;</span><br><span class="line"><span class="keyword">var</span> obj2 = &#123;<span class="attr">item</span>: <span class="string">&quot;unchanged&quot;</span>&#125;;</span><br><span class="line"></span><br><span class="line">changeStuff(num, obj1, obj2);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(num);</span><br><span class="line"><span class="built_in">console</span>.log(obj1.item);    </span><br><span class="line"><span class="built_in">console</span>.log(obj2.item); </span><br></pre></td></tr></table></figure>
+
+<h2 id="内存释放"><a href="#内存释放" class="headerlink" title="内存释放"></a>内存释放</h2><blockquote>
+<p>内存泄露指程序中己动态分配的堆内存由于某种原因程序未释放或无法释放。即一块被分配的内存既不能使用，又不能回收</p>
+</blockquote>
+<p>GC（garbage collection）是一种自动管理应用内存的机制。GC 的工作是回收被未使用的对象所占用的内存。它判断对象不再使用的方式是没有其他的对象引用它们。</p>
+<ol>
+<li><p>易导致内存泄漏的情景：</p>
+<ul>
+<li><p>全局变量</p>
+</li>
+<li><p>闭包</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> theThing = <span class="literal">null</span>  </span><br><span class="line"><span class="keyword">var</span> replaceThing = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line"><span class="keyword">var</span> originalThing = theThing</span><br><span class="line"><span class="keyword">var</span> unused = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (originalThing)</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;hi&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line">theThing = &#123;</span><br><span class="line">    <span class="attr">longStr</span>: <span class="keyword">new</span> <span class="built_in">Array</span>(<span class="number">1000000</span>).join(<span class="string">&#x27;*&#x27;</span>),</span><br><span class="line">    <span class="attr">someMethod</span>: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(someMessage)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="built_in">setInterval</span>(replaceThing, <span class="number">1000</span>)</span><br></pre></td></tr></table></figure>
+<p>  replaceThing函数的操作是赋予theThing新的值， setInterval每次循环都新建一个作用域对象，theThing的引用地址不断在变化，正常情况下旧的引用对象就应该被垃圾回收了，<br>  但由于unused引用了旧的对象originalThing，originalThing又一个私有变量，所以旧的作用域对象无法被垃圾回收，就造成了内存泄露。</p>
+</li>
+</ul>
+</li>
+</ol>
+<ol start="2">
+<li><p>以下操作是否爆内存：</p>
+ <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> arr = [];</span><br><span class="line"><span class="keyword">while</span>(<span class="literal">true</span>)</span><br><span class="line">arr.push(<span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+<p> 会一直执行，数组长度无限增加，内存会爆。</p>
+ <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> arr = [];</span><br><span class="line"><span class="keyword">while</span>(<span class="literal">true</span>)</span><br><span class="line">arr.push();</span><br></pre></td></tr></table></figure>
+<p> 待定</p>
+ <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> arr = [];</span><br><span class="line"><span class="keyword">while</span>(<span class="literal">true</span>)</span><br><span class="line">arr.push(<span class="keyword">new</span> Buffer(<span class="number">1000</span>));</span><br></pre></td></tr></table></figure>
+<p> Buffer 在 V8 堆外分配物理内存。所以内存会在服務器内存被全部占掉的时候爆掉。</p>
+</li>
+</ol>
+<h2 id="ES6-新特性"><a href="#ES6-新特性" class="headerlink" title="ES6 新特性"></a>ES6 新特性</h2><ol>
+<li><p>新增数据结构：</p>
+<ul>
+<li><p>Set： 类似于数组，但是成员的值都是唯一的，没有重复的值。</p>
+<p>  内部利用类似于<code>===</code>来判断值是否相等（唯一区别是这里NaN等于自身）。</p>
+</li>
+<li><p>Map： 类似于对象，但是“键”的范围不限于字符串，各种类型的值（包括对象）都可以当作键，提供了“值—值”的对应。</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> map = <span class="keyword">new</span> <span class="built_in">Map</span>();</span><br><span class="line"></span><br><span class="line">map.set(<span class="number">1</span>, <span class="string">&#x27;aaa&#x27;</span>);</span><br><span class="line">map.get(<span class="number">1</span>) <span class="comment">//&quot;aaa&quot;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>扩展运算符</p>
+<p> <code>...</code>： 将一个数组转为用逗号分隔的参数序列，主要用于函数调用。</p>
+ <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">add</span>(<span class="params">x,y,z</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> x+y+z</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">add(...[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]) <span class="comment">//6 会转化成 add(1,2,3)</span></span><br></pre></td></tr></table></figure></li>
+<li><p>第七种数据类型：</p>
+<p> symbol： 表示独一无二的值。基本上，它是一种类似于字符串的数据类型。</p>
+ <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> s1 = <span class="built_in">Symbol</span>(<span class="string">&#x27;foo&#x27;</span>);</span><br></pre></td></tr></table></figure></li>
+<li><p>箭头函数 与 function 的区别：</p>
+<ul>
+<li>箭头函数内的this对象，就是定义时所在的对象，而不是使用时所在的对象。</li>
+<li>不可以当作构造函数</li>
+<li>不可以使用arguments对象</li>
+<li>不可以使用yield命令</li>
+</ul>
+</li>
+</ol>
+<p>实现数据的私有</p>
+<p>const 定义的 Array 中间元素能否被修改? 如果可以, 那 const 修饰对象有什么意义?</p>
+<p>class, </p>
+
+    </div>
+
+    
+        <hr class="fhr">
+        <div id="vcomments"></div>
+    
+</div>
+    <div class="footer" id="footer">
+    <p>Copyright © 2020 <a class="flink" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>-<a class="flink" target="_blank" rel="noopener" href="https://github.com/sanjinhub/hexo-theme-geek">Geek</a>.
+        <label class="el-switch el-switch-green el-switch-sm" style="vertical-align: sub;">
+            <input type="checkbox" name="switch" id="update_style">
+            <span class="el-switch-style"></span>
+        </label>
+<!--         <script type="text/javascript">
+        var cnzz_protocol = (("https:" == document.location.protocol) ? "https://" : "http://");
+        document.write(unescape("%3Cspan id='cnzz_stat_icon_1278548644'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "v1.cnzz.com/stat.php%3Fid%3D1278548644%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+        </script> -->
+    </p>
+</div>
+<input type="hidden" id="web_style" value="black">
+<input type="hidden" id="valine_appid" value="cbTPc8u7ho07U6TmlFC0RjK7">
+<input type="hidden" id="valine_appKey" value="4hH8asmBIHG3iSVSUt8Hu5OP">
+
+<script src="/libs/jquery.min.js"></script>
+
+
+<script src="/libs/highlight/highlight.pack.js"></script>
+
+<script src='//cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+
+<script src="/js/js.js"></script>
+
+<style type="text/css">
+.v * {
+    color: #698fca;
+}
+
+.v .vlist .vcard .vhead .vsys {
+    color: #3a3e4a;
+}
+
+.v .vlist .vcard .vh .vmeta .vat {
+    color: #638fd5;
+}
+
+.v .vlist .vcard .vhead .vnick {
+    color: #6ba1ff;
+}
+
+.v a {
+    color: #8696b1;
+}
+
+.v .vlist .vcard .vhead .vnick:hover {
+    color: #669bfc;
+}
+</style>
+</body>
+
+</html>

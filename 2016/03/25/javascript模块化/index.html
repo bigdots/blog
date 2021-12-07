@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>
+        yzg的个人站
+    </title>
+    
+<link rel="stylesheet" href="/libs/highlight/styles/monokai-sublime.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body id="bodyx">
+    <div class="hd posts">
+    <a href="/index.html"><i class="fa fa-reply replay-btn" aria-hidden="true"></i></a>
+    <div class="post-title">
+        <p>
+            javascript模块化
+        </p>
+        <hr>
+    </div>
+    <div class="post-content">
+        <p>模块化是一个通用的编程最佳实践。程序的模块化使我们可以更方便地使用别人的代码，想要什么功能，就加载什么模块，从而提高代码的利用效率，增加开发速度。</p>
+<p>模块就像积木，有了它，我们可以搭出各种各种功能样式的程序。积木有什么特点？小而简单。同样的，我们程序中的模块也要做到这一点，确保自己创建的函数一次只完成一个工作，这样其他开发者可以简单地调试与修改你的代码，而不需浏览所有代码才能弄清每一个代码块执行了什么功能。只有做到像这样地小而简单，才能实现其通用功能。</p>
+<span id="more"></span>
+
+<h2 id="javascript模块化的方法"><a href="#javascript模块化的方法" class="headerlink" title="javascript模块化的方法"></a>javascript模块化的方法</h2><p><strong>函数封装</strong><br>JavaScript的作用域就是基于函数的，所以我们可以把函数作为模块。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fn1</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="comment">//code</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fn2</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="comment">//code</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>缺点：”污染”了全局变量，无法保证不与其他模块发生变量名冲突</p>
+<p><strong>对象</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> myModule1 = &#123;</span><br><span class="line">    <span class="attr">fn1</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="comment">//code</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">fn2</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="comment">//code</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>缺点：会暴露所有模块成员，内部状态可以被外部改写</p>
+<p><strong>立即自执行函数——推荐</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> myModule = (<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">fn1</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="comment">//code</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">fn2</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="comment">//code</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="attr">fn1</span>: fn1,</span><br><span class="line">        <span class="attr">fn2</span>: fn2</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+
+<h2 id="小而简单"><a href="#小而简单" class="headerlink" title="小而简单"></a>小而简单</h2><p>关于小而简单，我们看一个例子，比如我们现在想编写一个创建新链接的函数，并且为类型是”mailto”超链接添加一个class。可以这样做：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">addLink</span>(<span class="params">text, url, parentElement</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> newLink = <span class="built_in">document</span>.createElement(<span class="string">&#x27;a&#x27;</span>);<span class="comment">//创建a标签</span></span><br><span class="line">    newLink.setAttribute(<span class="string">&#x27;href&#x27;</span>, url);<span class="comment">//为a标签设置href属性</span></span><br><span class="line">    newLink.appendChild(<span class="built_in">document</span>.createTextNode(text));<span class="comment">//为a标签添加文本</span></span><br><span class="line">    <span class="keyword">if</span>(url.indexOf(<span class="string">&quot;mailto:&quot;</span>)==-<span class="number">1</span>)&#123;</span><br><span class="line">        newLink.className = <span class="string">&#x27;mail&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    parentElement.appendChild(newLink);<span class="comment">//将a标签添加到页面</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样写能够工作，但你或许会发现自己又不得进行其他的功能添加，于是，这个函数又不适用了。所以，函数越特殊，越难以适用于不同情形。<br>这里的函数写法没有达到模块化的要求——一个函数只干一件事。我们将函数改编下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">function createLink(text,url) &#123;</span><br><span class="line">    var newLink = document.createElement(&#x27;a&#x27;);</span><br><span class="line">    newLink.setAttribute(&#x27;href&#x27;, url);</span><br><span class="line">    newLink.appendChild(document.createTextNode(text));</span><br><span class="line">    return newLink;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里createLink函数只做一件事——创建并返回要添加到页面中的a标签（小而简单），这样我们就可以在任何需要创建超链接的情况下调用这样函数。</p>
+<h2 id="CommonJS"><a href="#CommonJS" class="headerlink" title="CommonJS"></a>CommonJS</h2><p>在浏览器环境下，没有模块也不是特别大的问题，毕竟网页程序的复杂性有限；但是在服务器端，一定要有模块与操作系统和其他应用程序互动，否则根本没法编程。虽然JavaScript在web端发展这么多年，但是第一个流行的模块化规范却由服务器端的JavaScript应用带来，CommonJS规范是由NodeJS发扬光大，这标志着JavaScript模块化编程正式登上舞台。<br>node.js的模块系统，就是依据CommonJS规范实现的。在CommonJS中，有一个全局性方法require()，用于加载模块。<br>加载模块：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> math = <span class="built_in">require</span>(<span class="string">&#x27;math&#x27;</span>);</span><br></pre></td></tr></table></figure>
+<p>调用模块：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">math.add(2,3)</span><br></pre></td></tr></table></figure>
+<p>CommonJS规范不适用于浏览器环境，因为它存在一个重大的局限，上例中第二行math.add(2, 3)必须要在math.js加载完成后才能运行，而模块都放在服务器端，所以可能要等很长时间，等待时间取决于网速的快慢。</p>
+<p>CommonJS规范适用于服务器端，因为对于服务端来说，所有的模块都存放在本地硬盘，可以同步加载完成，等待时间就是硬盘的读取时间</p>
+<h2 id="模块应该怎么定义和怎么加载"><a href="#模块应该怎么定义和怎么加载" class="headerlink" title="模块应该怎么定义和怎么加载?"></a>模块应该怎么定义和怎么加载?</h2><p><strong><a target="_blank" rel="noopener" href="https://github.com/amdjs/amdjs-api/wiki/AMD">AMD</a></strong><br><code>Asynchronous Module Definition</code>异步模块定义,主要代表：<a target="_blank" rel="noopener" href="http://requirejs.org/docs/">require.js</a><br>目的：<br>（1）实现js文件的异步加载，避免网页失去响应；<br>（2）管理模块之间的依赖性，便于代码的编写和维护。</p>
+<ol>
+<li>定义模块<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">define([&quot;./cart&quot;, &quot;./inventory&quot;], function(cart, inventory) &#123;</span><br><span class="line">        //通过[]引入依赖</span><br><span class="line">        return &#123;</span><br><span class="line">            color: &quot;blue&quot;,</span><br><span class="line">            size: &quot;large&quot;,</span><br><span class="line">            addToCart: function() &#123;</span><br><span class="line">                inventory.decrement(this);</span><br><span class="line">                cart.add(this);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+<li>加载模块<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">require( [&quot;some/module&quot;, &quot;my/module&quot;, &quot;a.js&quot;, &quot;b.js&quot;],</span><br><span class="line">    function(someModule,    myModule) &#123;</span><br><span class="line">        //This function will be called when all the dependencies</span><br><span class="line">        //listed above are loaded. Note that this function could</span><br><span class="line">        //be called before the page is loaded.</span><br><span class="line">        //This callback is optional.</span><br><span class="line">    &#125;</span><br><span class="line">  );</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p><strong><a target="_blank" rel="noopener" href="https://github.com/cmdjs/specification/blob/master/draft/module.md">CMD</a></strong><br><code>Common Module Definition</code>通用模块定义，CMD规范是国内发展出来的。主要代表：<a target="_blank" rel="noopener" href="http://seajs.org/docs/">sea.js</a></p>
+<ol>
+<li>定义模块<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">define(function(require, exports, module) &#123;</span><br><span class="line"></span><br><span class="line">  // 通过 require 引入依赖</span><br><span class="line">  var $ = require(&#x27;jquery&#x27;);</span><br><span class="line">  var Spinning = require(&#x27;./spinning&#x27;);</span><br><span class="line"></span><br><span class="line">  // 通过 exports 对外提供接口</span><br><span class="line">  exports.doSomething = ...</span><br><span class="line"></span><br><span class="line">  // 或者通过 module.exports 提供整个接口</span><br><span class="line">  module.exports = ...</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></li>
+<li>加载模块<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">seajs.use(&quot;../static/hello/src/main&quot;)</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>区别：</p>
+<ol>
+<li><p>对于依赖的模块，AMD 是提前执行，CMD 是延迟执行。不过 RequireJS 从 2.0 开始，也改成可以延迟执行（根据写法不同，处理方式不同）。CMD 推崇 as lazy as possible.</p>
+</li>
+<li><p>CMD 推崇依赖就近，AMD 推崇依赖前置。</p>
+</li>
+</ol>
+<p>我的博客:<a target="_blank" rel="noopener" href="http://bigdots.github.io/">http://bigdots.github.io</a>、<a target="_blank" rel="noopener" href="http://www.cnblogs.com/yzg1/">http://www.cnblogs.com/yzg1/</a></p>
+<p>如果觉得本文不错的话，帮忙点击下面的推荐哦,谢谢！</p>
+
+    </div>
+
+    
+        <hr class="fhr">
+        <div id="vcomments"></div>
+    
+</div>
+    <div class="footer" id="footer">
+    <p>Copyright © 2020 <a class="flink" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>-<a class="flink" target="_blank" rel="noopener" href="https://github.com/sanjinhub/hexo-theme-geek">Geek</a>.
+        <label class="el-switch el-switch-green el-switch-sm" style="vertical-align: sub;">
+            <input type="checkbox" name="switch" id="update_style">
+            <span class="el-switch-style"></span>
+        </label>
+<!--         <script type="text/javascript">
+        var cnzz_protocol = (("https:" == document.location.protocol) ? "https://" : "http://");
+        document.write(unescape("%3Cspan id='cnzz_stat_icon_1278548644'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "v1.cnzz.com/stat.php%3Fid%3D1278548644%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+        </script> -->
+    </p>
+</div>
+<input type="hidden" id="web_style" value="black">
+<input type="hidden" id="valine_appid" value="cbTPc8u7ho07U6TmlFC0RjK7">
+<input type="hidden" id="valine_appKey" value="4hH8asmBIHG3iSVSUt8Hu5OP">
+
+<script src="/libs/jquery.min.js"></script>
+
+
+<script src="/libs/highlight/highlight.pack.js"></script>
+
+<script src='//cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+
+<script src="/js/js.js"></script>
+
+<style type="text/css">
+.v * {
+    color: #698fca;
+}
+
+.v .vlist .vcard .vhead .vsys {
+    color: #3a3e4a;
+}
+
+.v .vlist .vcard .vh .vmeta .vat {
+    color: #638fd5;
+}
+
+.v .vlist .vcard .vhead .vnick {
+    color: #6ba1ff;
+}
+
+.v a {
+    color: #8696b1;
+}
+
+.v .vlist .vcard .vhead .vnick:hover {
+    color: #669bfc;
+}
+</style>
+</body>
+
+</html>

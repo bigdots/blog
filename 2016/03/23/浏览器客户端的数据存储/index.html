@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>
+        yzg的个人站
+    </title>
+    
+<link rel="stylesheet" href="/libs/highlight/styles/monokai-sublime.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body id="bodyx">
+    <div class="hd posts">
+    <a href="/index.html"><i class="fa fa-reply replay-btn" aria-hidden="true"></i></a>
+    <div class="post-title">
+        <p>
+            浏览器客户端的数据存储
+        </p>
+        <hr>
+    </div>
+    <div class="post-content">
+        <p>属于某个特定用户的信息应该存在该用户的机器上,无论是登录信息、偏好设定或其他数据,这是一个很重要的用户体验，它避免了用户重复多次的简单操作。</p>
+<h2 id="一、Cookie"><a href="#一、Cookie" class="headerlink" title="一、Cookie"></a>一、Cookie</h2><p>cookie 是原来的网景公司创造的。一份题为“Persistent Client State: HTTP Cookes”（持久客户端状态： HTTP Cookies ） 的标准中对cookie 机制进行了阐述。</p>
+<span id="more"></span>
+
+<blockquote>
+<p>cookie标准要求服务器对任意HTTP 请求发送Set-Cookie HTTP 头作为响应的一部分，其中包含会话信息</p>
+</blockquote>
+<p><strong>过程：</strong><br>1.设置cookie，发送至服务器端；<br>2.服务器对该请求发送带有<code>Set-Cookie</code> 的HTTP响应给浏览器；<br>3.浏览器会存储这样的会话信息，并在这之后，通过为每个请求添加Cookie HTTP 头将信息发送回服务器</p>
+<p><strong>cookie的限制</strong></p>
+<ul>
+<li>域限制：浏览器会存储这样的会话信息，并在这之后，通过为每个请求添加Cookie HTTP 头将信息发送回服务器</li>
+<li>大小限制：大多数浏览器都有大约4096B（加减1）的长度限制。为了最佳的浏览器兼容性，最好将整个cookie 长度限制在4095B（含4095）以内</li>
+<li>个数限制：每个域的cookie 总数是有限的，不过浏览器之间各有不同：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>浏览器</th>
+<th>个数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>IE7+</td>
+<td>50</td>
+</tr>
+<tr>
+<td>Firefox</td>
+<td>50</td>
+</tr>
+<tr>
+<td>Opera</td>
+<td>30</td>
+</tr>
+<tr>
+<td>Safari 和Chrome</td>
+<td>没有硬性规定</td>
+</tr>
+</tbody></table>
+<p><strong>cookie的构成</strong><br>比如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Set-Cookie: name=value; expires=Mon, 22-Jan-07 07:10:24 GMT; domain=.wrox.com;secure</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>name = value</code> [必须参数]; 名值对，不区分大小写，必须是URL 编码</li>
+<li><code>domain</code>  设定cookie的有效域，所有向该域发送的请求中都会包含这个cookie 信息</li>
+<li><code>path</code>  指定cookie在有效域中的有效路径，即使请求都是来自同一个域的，不是该键制定的路径，也不会发送cookie</li>
+<li><code>expires</code>  表示cookie 何时应该被删除的时间戳（这个值是个GMT 格式的日期），默认情况下，浏览器会话结束时即将所有cookie 删除</li>
+<li><code>secure</code>  指定后，cookie 只有在使用SSL 连接的时候才发送到服务器</li>
+</ul>
+<p><strong>js处理cookie</strong><br><code>document.cookie</code> 返回当前页面可用的所有cookie的字符串，一系列由分号隔开的名值对儿。<br>cookie的操作无非是获取、设置和删除，我们把这三种方法封装在一个<code>var CookieUtil = &#123;&#125;</code>对象中。分别对应其get，set，unset属性。</p>
+<blockquote>
+<p>cookie的name和value都是经过URL 编码的，所以必须使用encodeURIComponent，decodeURIComponent()来编解码。</p>
+</blockquote>
+<p>1.<strong>get</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">get: <span class="function"><span class="keyword">function</span> (<span class="params">name</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> cookieName = <span class="built_in">encodeURIComponent</span>(name) + <span class="string">&quot;=&quot;</span>,</span><br><span class="line">    cookieStart = <span class="built_in">document</span>.cookie.indexOf(cookieName),</span><br><span class="line">    cookieValue = <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">if</span> (cookieStart &gt; -<span class="number">1</span>)&#123;</span><br><span class="line">        <span class="keyword">var</span> cookieEnd = <span class="built_in">document</span>.cookie.indexOf(<span class="string">&quot;;&quot;</span>, cookieStart);</span><br><span class="line">        <span class="keyword">if</span> (cookieEnd == -<span class="number">1</span>)&#123;</span><br><span class="line">            cookieEnd = <span class="built_in">document</span>.cookie.length;</span><br><span class="line">        &#125;</span><br><span class="line">        cookieValue = <span class="built_in">decodeURIComponent</span>(<span class="built_in">document</span>.cookie.substring(cookieStart + cookieName.length, cookieEnd));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> cookieValue;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>2.<strong>set</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">set: function (name, value, expires, path, domain, secure) &#123;</span><br><span class="line">    var cookieText = encodeURIComponent(name) + &quot;=&quot; +</span><br><span class="line">    encodeURIComponent(value);</span><br><span class="line">    if (expires instanceof Date) &#123;</span><br><span class="line">        cookieText += &quot;; expires=&quot; + expires.toGMTString();</span><br><span class="line">    &#125;</span><br><span class="line">    if (path) &#123;</span><br><span class="line">        cookieText += &quot;; path=&quot; + path;</span><br><span class="line">    &#125;</span><br><span class="line">    if (domain) &#123;</span><br><span class="line">        cookieText += &quot;; domain=&quot; + domain;</span><br><span class="line">    &#125;</span><br><span class="line">    if (secure) &#123;</span><br><span class="line">        cookieText += &quot;; secure&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">    document.cookie = cookieText;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>3.<strong>unset</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">unset: function (name, path, domain, secure)&#123;</span><br><span class="line">    this.set(name, &quot;&quot;, new Date(0), path, domain, secure);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p><strong>子cookie</strong></p>
+<blockquote>
+<p>子cookie可以绕开浏览器的单域名下的cookie 数限制。子cookie 是存放在单个cookie 中的更小段的数据。也就是使用cookie 值来存储多个名称值对，如：name=name1=value1&amp;name2=value2&amp;name3=value3&amp;name4=value4&amp;name5=value5</p>
+</blockquote>
+<p><strong>所有的cookie 都会由浏览器作为请求头发送，所以在cookie 中存储大量信息会影响到特定域的请求性能。cookie 信息越大，完成对服务器请求的时间也就越长。尽管浏览器对cookie 进行了大小限制，不过最好还是尽可能在cookie 中少存储信息，以避免影响性能</strong></p>
+<h2 id="二、IE用户数据"><a href="#二、IE用户数据" class="headerlink" title="二、IE用户数据"></a>二、IE用户数据</h2><p>在IE5.0 中，微软通过一个自定义行为引入了持久化用户数据的概念。用户数据允许每个文档最多<br>128KB 数据，每个域名最多1MB 数据。</p>
+<p><strong>使用</strong>：</p>
+<ul>
+<li>使用CSS 在某个元素上指定userData 行为：<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="selector-tag">div</span> style=&quot;behavior:<span class="built_in">url</span>(<span class="string">#default#userData</span>)<span class="string">&quot; id=&quot;</span>dataStore<span class="string">&quot;&gt;&lt;/div&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li>使用setAttribute()方法在上面保存数据<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dataStore.setAttribute(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;Nicholas&quot;</span>);</span><br></pre></td></tr></table></figure></li>
+<li>调用save()方法保存数据，参数为数据空间名字，数据空间名字可以完全任意，仅用于区分不同的数据集<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dataStore.save(<span class="string">&quot;BookInfo&quot;</span>);</span><br></pre></td></tr></table></figure></li>
+<li>使用load()方法来获取数据，参数为数据空间名字<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dataStore.load(<span class="string">&quot;BookInfo&quot;</span>);</span><br></pre></td></tr></table></figure></li>
+<li>使用removeAttribute()删除数据，并使用save()保存修改<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dataStore.removeAttribute(<span class="string">&quot;name&quot;</span>);</span><br><span class="line">dataStore.save(<span class="string">&quot;BookInfo&quot;</span>);</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p><strong>限制</strong></p>
+<ul>
+<li>同cookie，需要同域名，同路径，并使用与进行存储的脚本同样的协议；</li>
+<li>无法将用户数据访问限制扩展到更多的客户</li>
+</ul>
+<p><strong>用户数据默认是可以跨越会话持久存在的，不会过期；数据需要通过removeAttribute()方法专门进行删除以释放空间。</strong></p>
+<h2 id="三、web存储机制——Web-Storage"><a href="#三、web存储机制——Web-Storage" class="headerlink" title="三、web存储机制——Web Storage"></a>三、web存储机制——Web Storage</h2><p>Web Storage 的目的是克服由cookie 带来的一些限制，提供一种存储大量可以跨会话的在cookie 之外的存储会话数据的途径。</p>
+<p><strong>Storage对象（以windows 对象属性的形式存在）</strong></p>
+<ul>
+<li><p>sessionStorage对象<br>存储特定于某个会话的数据，该数据只保持到浏览器关闭</p>
+</li>
+<li><p>globalStorage对象<br>这个对象可以跨越会话存储数据，但有特定的访问限制。要使用globalStorage，首先要指定哪些域可以访问该数据。可以通过方括号标记使用属性来实现。如果不使用removeItem() 或者delete 删除该对象， 或者用户未清除浏览器缓存， 存储在globalStorage 属性中的数据会一直保留在磁盘上。这让globalStorage 非常适合在客户端存储文档或者长期保存用户偏好设置。</p>
+</li>
+<li><p>localStorage对象<br>该对象在修订过的HTML 5 规范中作为持久保存客户端数据的方案取代了globalStorage。与globalStorage 不同，不能给localStorage 指定任何访问规则；规则事先就设定好了。要访问同一个localStorage 对象，页面必须来自同一个域名（子域名无效），使用同一种协议，在同一个端口上。这相当于globalStorage[location.host]。<br>同globalStorage对象一样，localStorage对象数据保留到通过JavaScript 删除或者是用户清除浏览器缓存。</p>
+</li>
+</ul>
+<p><strong>浏览器支持：</strong><br>IE8+、Firefox 3.5+、Chrome 4+和Opera 10.5+</p>
+<p><strong>Storage对象方法：</strong></p>
+<ul>
+<li>clear()： 删除所有值；Firefox 中没有实现 。</li>
+<li>getItem(name)：根据指定的名字name 获取对应的值。</li>
+<li>key(index)：获得index 位置处的值的名字。</li>
+<li>removeItem(name)：删除由name 指定的名值对儿。</li>
+<li>setItem(name, value)：为指定的name 设置一个对应的值。</li>
+</ul>
+<blockquote>
+<p>Storage 类型只能存储字符串。非字符串的数据在存储之前会被转换成字符串。</p>
+</blockquote>
+<p><strong>Storage对象事件</strong><br>对Storage 对象进行任何修改，都会在文档上触发storage 事件。这个事件的event 对象有以下属性：</p>
+<ul>
+<li>domain：发生变化的存储空间的域名。</li>
+<li>key：设置或者删除的键名。</li>
+<li>newValue：如果是设置值，则是新值；如果是删除键，则是null。</li>
+<li>oldValue：键被更改之前的值。</li>
+</ul>
+<p><strong>数据操作</strong><br>存储数据：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//使用属性存储数据</span><br><span class="line">sessionStorage/globalStorage[&quot;www.wrox.com&quot;]/localStorage.name = &quot;brand&quot;;</span><br><span class="line">//使用方法存储数据</span><br><span class="line">sessionStorage/globalStorage[&quot;www.wrox.com&quot;]/localStorage.setItem(&quot;name&quot;,&quot;brand&quot;);</span><br></pre></td></tr></table></figure>
+<p>读取数据：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//使用属性存储数据</span><br><span class="line">var name = sessionStorage/globalStorage[&quot;www.wrox.com&quot;]/localStorage.name;</span><br><span class="line">//使用方法存储数据</span><br><span class="line">var name = sessionStorage/globalStorage[&quot;www.wrox.com&quot;]/localStorage.getItem((&quot;name&quot;,&quot;brand&quot;);</span><br></pre></td></tr></table></figure>
+<p>删除数据：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sessionStorage/globalStorage[&quot;www.wrox.com&quot;]/localStorage.removeItem(&quot;name&quot;)</span><br></pre></td></tr></table></figure>
+<p><strong>限制</strong><br>每个来源都有固定大小的空间用于保存自己的数据，一般限制在2.5M—5M左右。</p>
+<p>参考书籍：<a href="#">《javascript高级程序设计》</a></p>
+<p>我的博客:<a target="_blank" rel="noopener" href="http://bigdots.github.io/">http://bigdots.github.io</a>、<a target="_blank" rel="noopener" href="http://www.cnblogs.com/yzg1/">http://www.cnblogs.com/yzg1/</a></p>
+<p>如果觉得本文不错的话，帮忙点击下面的推荐哦,谢谢！</p>
+
+    </div>
+
+    
+        <hr class="fhr">
+        <div id="vcomments"></div>
+    
+</div>
+    <div class="footer" id="footer">
+    <p>Copyright © 2020 <a class="flink" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>-<a class="flink" target="_blank" rel="noopener" href="https://github.com/sanjinhub/hexo-theme-geek">Geek</a>.
+        <label class="el-switch el-switch-green el-switch-sm" style="vertical-align: sub;">
+            <input type="checkbox" name="switch" id="update_style">
+            <span class="el-switch-style"></span>
+        </label>
+<!--         <script type="text/javascript">
+        var cnzz_protocol = (("https:" == document.location.protocol) ? "https://" : "http://");
+        document.write(unescape("%3Cspan id='cnzz_stat_icon_1278548644'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "v1.cnzz.com/stat.php%3Fid%3D1278548644%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+        </script> -->
+    </p>
+</div>
+<input type="hidden" id="web_style" value="black">
+<input type="hidden" id="valine_appid" value="cbTPc8u7ho07U6TmlFC0RjK7">
+<input type="hidden" id="valine_appKey" value="4hH8asmBIHG3iSVSUt8Hu5OP">
+
+<script src="/libs/jquery.min.js"></script>
+
+
+<script src="/libs/highlight/highlight.pack.js"></script>
+
+<script src='//cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+
+<script src="/js/js.js"></script>
+
+<style type="text/css">
+.v * {
+    color: #698fca;
+}
+
+.v .vlist .vcard .vhead .vsys {
+    color: #3a3e4a;
+}
+
+.v .vlist .vcard .vh .vmeta .vat {
+    color: #638fd5;
+}
+
+.v .vlist .vcard .vhead .vnick {
+    color: #6ba1ff;
+}
+
+.v a {
+    color: #8696b1;
+}
+
+.v .vlist .vcard .vhead .vnick:hover {
+    color: #669bfc;
+}
+</style>
+</body>
+
+</html>

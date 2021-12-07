@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>
+        yzg的个人站
+    </title>
+    
+<link rel="stylesheet" href="/libs/highlight/styles/monokai-sublime.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body id="bodyx">
+    <div class="hd posts">
+    <a href="/index.html"><i class="fa fa-reply replay-btn" aria-hidden="true"></i></a>
+    <div class="post-title">
+        <p>
+            Node.js学习笔记（一）_快速开始
+        </p>
+        <hr>
+    </div>
+    <div class="post-content">
+        <p>最近接了一个node项目，虽然最后顺利完成了，但是由于第一次实战，整个过程是赶出来的，许多地方一知半解。现在项目结束了，就静下心来系统地学一学，理一理，读书不忘拿笔，既然读书了，当然就要记点东西。一方面：能帮助自己加深印象，更好的理解，另一方面：能有幸帮助到别人也是不甚欢喜的。本人大部分的学习内容来自于以下书籍。</p>
+<ul>
+<li>《Node入门》</li>
+<li>《Node.js开发指南》</li>
+<li>《深入浅出Node.js》</li>
+<li><a target="_blank" rel="noopener" href="http://nqdeng.github.io/7-days-nodejs/">《七天学会NodeJS》</a></li>
+</ul>
+<h2 id="Node-js简介"><a href="#Node-js简介" class="headerlink" title="Node.js简介"></a>Node.js简介</h2><blockquote>
+<p>Node.js不是JS应用、而是JS运行平台 –《深入浅出Node.js》</p>
+</blockquote>
+<p>Node.js采用C++语言编写而成,是一个后端的Javascript的运行环境。它使用了Google的V8虚拟机(Google的Chrome浏览器使用的 JavaScript执行环境),来解释和执行JavaScript代码。</p>
+<h2 id="Node-js特性"><a href="#Node-js特性" class="headerlink" title="Node.js特性"></a>Node.js特性</h2><ol>
+<li><p>基于事件驱动的异步I/O（非阻塞）</p>
+<p> 线程在执行中如果遇到磁盘读写或网络通信(统称为 I/O 操作), 通常要耗费较长的时间,这时操作系统会剥夺这个线程的 CPU 控制权,使其暂停执行,同时将资源让给其他的工作线程,这种线程调度方式称为阻塞。</p>
+<p> Node.js的设计思想中以事件驱动为核心的异步I/O（非阻塞）。所有的磁盘 I/O、网络通信、数据库查询都以非阻塞的方式请求,返回的结果由事件循环来处理</p>
+<p> Node.js 在执行的过程中会维护一个事件队列,程序在执行时进入事件循环等待下一个事件到来,每个异步式 I/O 请求完成后会被推送到事件队列,等待程序进程进行处理。</p>
+</li>
+<li><p>支持的编程语言是javascript<br> Javascript的匿名函数和闭包特性非常适合事件驱动、异步编程。同时Javascript在动态语言中性能较好，再加上V8引擎也是同类的佼佼者，所以Node.js的性能也受益其中。</p>
+</li>
+</ol>
+<h2 id="Node-js-amp-npm的安装与配置"><a href="#Node-js-amp-npm的安装与配置" class="headerlink" title="Node.js &amp; npm的安装与配置"></a>Node.js &amp; npm的安装与配置</h2><p>Node.js的安装方法很简单，直接上<a target="_blank" rel="noopener" href="https://nodejs.org/en/download/">官网</a>或者百度一个选择相应版本下载安装就行，就不多说了。安装完后可以通过输入 “node -v” 来测试是否成功安装。</p>
+<p><em>tips: 工作中可能会需要多个node版本之间的相互切换，推荐使用nvm工具（but,暂不支持windows）</em></p>
+<p>Nodejs自身提供了基本的模块。但是在这些基本模块上开发实际应用需要较多的工作,npm的存在解决了该问题，它是Nodejs的包管理器:</p>
+<ul>
+<li>允许用户从NPM服务器下载别人编写的第三方包到本地使用。</li>
+<li>允许用户从NPM服务器下载并安装别人编写的命令行程序到本地使用。</li>
+<li>允许用户将自己编写的包或命令行程序上传到NPM服务器供别人使用。</li>
+</ul>
+<p>新版的nodejs已经集成了npm，所以不需要再进行安装操作。同样可以通过输入 “npm -v” 来测试是否成功安装。</p>
+<h2 id="Hello-World"><a href="#Hello-World" class="headerlink" title="Hello World"></a>Hello World</h2><p>至此，我们的node开发环境就基本搭建完成了，我们来开始实现第一个 Node.js 程序。打开你常用的文本编辑器,在其中输入: </p>
+<p><code>console.log(&#39;Hello World&#39;);</code></p>
+<p>将文件保存为 helloworld.js,打开终端,进入 helloworld.js 所在的目录,执行以下命令: </p>
+<p><code>node helloworld.js</code></p>
+<p>如果一切正常,你将会在终端中看到输出 <code>Hello World</code>。</p>
+
+    </div>
+
+    
+        <hr class="fhr">
+        <div id="vcomments"></div>
+    
+</div>
+    <div class="footer" id="footer">
+    <p>Copyright © 2020 <a class="flink" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>-<a class="flink" target="_blank" rel="noopener" href="https://github.com/sanjinhub/hexo-theme-geek">Geek</a>.
+        <label class="el-switch el-switch-green el-switch-sm" style="vertical-align: sub;">
+            <input type="checkbox" name="switch" id="update_style">
+            <span class="el-switch-style"></span>
+        </label>
+<!--         <script type="text/javascript">
+        var cnzz_protocol = (("https:" == document.location.protocol) ? "https://" : "http://");
+        document.write(unescape("%3Cspan id='cnzz_stat_icon_1278548644'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "v1.cnzz.com/stat.php%3Fid%3D1278548644%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+        </script> -->
+    </p>
+</div>
+<input type="hidden" id="web_style" value="black">
+<input type="hidden" id="valine_appid" value="cbTPc8u7ho07U6TmlFC0RjK7">
+<input type="hidden" id="valine_appKey" value="4hH8asmBIHG3iSVSUt8Hu5OP">
+
+<script src="/libs/jquery.min.js"></script>
+
+
+<script src="/libs/highlight/highlight.pack.js"></script>
+
+<script src='//cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+
+<script src="/js/js.js"></script>
+
+<style type="text/css">
+.v * {
+    color: #698fca;
+}
+
+.v .vlist .vcard .vhead .vsys {
+    color: #3a3e4a;
+}
+
+.v .vlist .vcard .vh .vmeta .vat {
+    color: #638fd5;
+}
+
+.v .vlist .vcard .vhead .vnick {
+    color: #6ba1ff;
+}
+
+.v a {
+    color: #8696b1;
+}
+
+.v .vlist .vcard .vhead .vnick:hover {
+    color: #669bfc;
+}
+</style>
+</body>
+
+</html>

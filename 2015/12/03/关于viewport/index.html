@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>
+        yzg的个人站
+    </title>
+    
+<link rel="stylesheet" href="/libs/highlight/styles/monokai-sublime.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body id="bodyx">
+    <div class="hd posts">
+    <a href="/index.html"><i class="fa fa-reply replay-btn" aria-hidden="true"></i></a>
+    <div class="post-title">
+        <p>
+            关于viewport
+        </p>
+        <hr>
+    </div>
+    <div class="post-content">
+        <p>本文是我学习了无双的【<a target="_blank" rel="noopener" href="http://www.cnblogs.com/2050/p/3877280.html">移动前端开发之viewport的深入理解</a>】后，所做的学习笔记。</p>
+<h2 id="1-什么是viewport？"><a href="#1-什么是viewport？" class="headerlink" title="1.什么是viewport？"></a>1.什么是viewport？</h2><p>移动设备上的viewport就是设备的屏幕上能用来显示我们的网页的那一块区域，在具体一点，就是浏览器上(也可能是一个app中的webview)用来显示网页的那部分区域，但viewport又不局限于浏览器可视区域的大小，它可能比浏览器的可视区域要大，也可能比浏览器的可视区域要小。</p>
+<span id="more"></span>
+
+<h2 id="2-css中的px与设备物理px的关系"><a href="#2-css中的px与设备物理px的关系" class="headerlink" title="2.css中的px与设备物理px的关系"></a>2.css中的px与设备物理px的关系</h2><p>css的px并不等于物理的px。css中的像素只是一个抽象的单位，在不同的设备或不同的环境中，css中的1px所代表的设备物理像素是不同的。这个因素在为桌面浏览器设计的网页中影响不大，但在移动设备中，就要考虑这个因素了。</p>
+<h2 id="3-三个viewport概念"><a href="#3-三个viewport概念" class="headerlink" title="3.三个viewport概念"></a>3.三个viewport概念</h2><ul>
+<li><p>layout viewport：浏览器默认的viewport。这个layout viewport的宽度可以通过 document.documentElement.clientWidth 来获取。</p>
+</li>
+<li><p>visual viewport：浏览器可视区域的大小</p>
+</li>
+<li><p>ideal viewport：能完美适配移动设备的viewport。</p>
+<ul>
+<li>所谓的完美适配指的是，首先不需要用户缩放和横向滚动条就能正常的查看网站的所有内容；第二，显示的文字的大小是合适，比如一段14px大小的文字，不会因为在一个高密度像素的屏幕里显示得太小而无法看清，理想的情况是这段14px的文字无论是在何种密度屏幕，何种分辨率下，显示出来的大小都是差不多的。当然，不只是文字，其他元素像图片什么的也是这个道理。</li>
+<li>每个移动设备浏览器中都有一个理想的宽度，这个理想的宽度是指css中的宽度，跟设备的物理宽度没有关系，在css中，这个宽度就相当于100%的所代表的那个宽度</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/201511/3.jpg"></p>
+<h2 id="4-viewport控制"><a href="#4-viewport控制" class="headerlink" title="4.viewport控制"></a>4.viewport控制</h2><p>下面这段代码可以实现对浏览器viewport的控制</p>
+<pre><code>&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0&quot;&gt;
+</code></pre>
+<p>属性参数：</p>
+<ul>
+<li>width:设置layout viewport  的宽度，为一个正整数，或字符串”width-device”</li>
+<li>initial-scale:设置页面的初始缩放值，为一个数字，可以带小数。</li>
+<li>minimum-scale:允许用户的最小缩放值，为一个数字，可以带小数</li>
+<li>maximum-scale:允许用户的最大缩放值，为一个数字，可以带小数</li>
+<li>height    设置layout viewport  的高度，这个属性对我们并不重要，很少使用</li>
+<li>user-scalable:是否允许用户进行缩放，值为”no”或”yes”, no 代表不允许，yes代表允许</li>
+</ul>
+<p><b style="color:red">initial-scale缩放是相对于 ideal viewport来进行缩放，即width值。</b></p>
+<p>把当前的viewport宽度设置为 ideal viewport 的宽度并兼容所有设备的写法：</p>
+<pre><code>&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+</code></pre>
+<p> 因为（initial-scale=1 ）（width=device-width）虽然都能把当前的viewport宽度变成 ideal viewport 的宽度，但（width=device-width）在iphone和ipad上，无论是竖屏还是横屏，宽度都是竖屏时ideal viewport的宽度，（initial-scale=1 ）在windows phone 上的IE 无论是竖屏还是横屏都把宽度设为竖屏时ideal viewport的宽度。<b style="color:red">但当俩者同时出现时，浏览器会取它们两个中较大的那个值。</b></p>
+
+    </div>
+
+    
+        <hr class="fhr">
+        <div id="vcomments"></div>
+    
+</div>
+    <div class="footer" id="footer">
+    <p>Copyright © 2020 <a class="flink" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>-<a class="flink" target="_blank" rel="noopener" href="https://github.com/sanjinhub/hexo-theme-geek">Geek</a>.
+        <label class="el-switch el-switch-green el-switch-sm" style="vertical-align: sub;">
+            <input type="checkbox" name="switch" id="update_style">
+            <span class="el-switch-style"></span>
+        </label>
+<!--         <script type="text/javascript">
+        var cnzz_protocol = (("https:" == document.location.protocol) ? "https://" : "http://");
+        document.write(unescape("%3Cspan id='cnzz_stat_icon_1278548644'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "v1.cnzz.com/stat.php%3Fid%3D1278548644%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+        </script> -->
+    </p>
+</div>
+<input type="hidden" id="web_style" value="black">
+<input type="hidden" id="valine_appid" value="cbTPc8u7ho07U6TmlFC0RjK7">
+<input type="hidden" id="valine_appKey" value="4hH8asmBIHG3iSVSUt8Hu5OP">
+
+<script src="/libs/jquery.min.js"></script>
+
+
+<script src="/libs/highlight/highlight.pack.js"></script>
+
+<script src='//cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+
+<script src="/js/js.js"></script>
+
+<style type="text/css">
+.v * {
+    color: #698fca;
+}
+
+.v .vlist .vcard .vhead .vsys {
+    color: #3a3e4a;
+}
+
+.v .vlist .vcard .vh .vmeta .vat {
+    color: #638fd5;
+}
+
+.v .vlist .vcard .vhead .vnick {
+    color: #6ba1ff;
+}
+
+.v a {
+    color: #8696b1;
+}
+
+.v .vlist .vcard .vhead .vnick:hover {
+    color: #669bfc;
+}
+</style>
+</body>
+
+</html>

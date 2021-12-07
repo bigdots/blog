@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>
+        yzg的个人站
+    </title>
+    
+<link rel="stylesheet" href="/libs/highlight/styles/monokai-sublime.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body id="bodyx">
+    <div class="hd posts">
+    <a href="/index.html"><i class="fa fa-reply replay-btn" aria-hidden="true"></i></a>
+    <div class="post-title">
+        <p>
+            Flexbox布局
+        </p>
+        <hr>
+    </div>
+    <div class="post-content">
+        <p>Flexbox布局（ Flexible Box 或CSS3 弹性布局），是CSS3中的一种新的布局模式，是可以自动调整子元素的高和宽，来很好的填充任何不同屏幕大小的显示设备中的可用显示空间，收缩内容防止内容溢出，确保元素拥有恰当的行为的布局方式。使用Flexbox来布局更容易，可以使用更少的代码，更简单的方式实现更复杂的布局。它可以实现：</p>
+<span id="more"></span>
+
+<ul>
+<li>如果元素容器没有足够的空间，我们无需计算每个元素的宽度，就可以设置他们在同一行；</li>
+<li>可以快速让他们布局在一列；</li>
+<li>可以方便让他们对齐容器的左、右、中间等；</li>
+<li>无需修改结构就可以改变他们的显示顺序；</li>
+<li>如果元素容器设置百分比和视窗大小改变，不用提心未指定元素的确切宽度而破坏布局，因为容器中的每个子元素都可以自动分配容器的宽度或高度的比例。</li>
+</ul>
+<h2 id="浏览器兼容性"><a href="#浏览器兼容性" class="headerlink" title="浏览器兼容性"></a>浏览器兼容性</h2><p><img src="/images/201601/flexbox1.png"></p>
+<p>红色代表不支持，绿色代表支持，暗绿色代表部分支持，其中IE10、IE11目前使用中出现了大量的bug，Android4.3只支持老的flexbox规范。<br>可以发现该属性在移动端的使用还是可能的，不过要加上老的规范写法。</p>
+<h2 id="容器属性（父元素属性）"><a href="#容器属性（父元素属性）" class="headerlink" title="容器属性（父元素属性）"></a>容器属性（父元素属性）</h2><p><code>主轴</code> ：项目排列方向的轴（可以是水平或者垂直），每一行（列）项目代表一条轴<br><code>交叉轴</code>： 与主轴垂直的轴（可以是水平或者垂直）；<br>可以通过访问<a target="_blank" rel="noopener" href="http://www.htmllion.com/css-flexbox.html">flexBox</a>测试以下属性</p>
+<h3 id="1-display"><a href="#1-display" class="headerlink" title="1. display"></a>1. display</h3><p>取值：</p>
+<ul>
+<li>flex          将对象作为弹性容器显示</li>
+<li>inline-flex      将对象作为内联块级弹性容器显示。</li>
+</ul>
+<p><span style="color:red">注：</span>以下是旧版本的属性值：<br>box：将对象作为弹性容器显示。（最老版本）<br>inline-box：将对象作为内联块级弹性容器显示。（最老版本）<br>flexbox：将对象作为弹性容器显示。（过渡版本）<br>inline-flexbox：将对象作为内联块级弹性容器显示。（过渡版本）</p>
+<h3 id="2-flex-direction-决定主轴的方向（即项目的排列方向）。"><a href="#2-flex-direction-决定主轴的方向（即项目的排列方向）。" class="headerlink" title="2. flex-direction  决定主轴的方向（即项目的排列方向）。"></a>2. flex-direction  决定主轴的方向（即项目的排列方向）。</h3><p>取值：</p>
+<ul>
+<li>row  主轴为水平方向，起点在左端。</li>
+<li>row-reverse  主轴为水平方向，起点在右端。</li>
+<li>column  主轴为垂直方向，起点在上沿。</li>
+<li>column-reverse  主轴为垂直方向，起点在下沿。</li>
+</ul>
+<h3 id="3-flex-wrap-设置容器内的项目排列不下时是否换行"><a href="#3-flex-wrap-设置容器内的项目排列不下时是否换行" class="headerlink" title="3. flex-wrap  设置容器内的项目排列不下时是否换行"></a>3. flex-wrap  设置容器内的项目排列不下时是否换行</h3><p>取值：</p>
+<ul>
+<li>wrap  换行</li>
+<li>no-wrap  一行显示，不换行</li>
+<li>wrap-reverse  倒序换行，将各行的顺序倒序排列</li>
+</ul>
+<h3 id="4-justify-content-定义了项目在主轴上（依据设置的主轴方向而定）的对齐方式。"><a href="#4-justify-content-定义了项目在主轴上（依据设置的主轴方向而定）的对齐方式。" class="headerlink" title="4. justify-content   定义了项目在主轴上（依据设置的主轴方向而定）的对齐方式。"></a>4. justify-content   定义了项目在主轴上（依据设置的主轴方向而定）的对齐方式。</h3><p>取值：</p>
+<ul>
+<li>flex-start  左对齐</li>
+<li>flex-end   右对齐</li>
+<li>center   居中对齐</li>
+<li>space-between   俩端对齐</li>
+<li>space-around  项目间隔相同对齐</li>
+</ul>
+<h3 id="5-align-items-定义项目在交叉轴上的对齐方式。"><a href="#5-align-items-定义项目在交叉轴上的对齐方式。" class="headerlink" title="5.align-items  定义项目在交叉轴上的对齐方式。"></a>5.align-items  定义项目在交叉轴上的对齐方式。</h3><ul>
+<li>flex-start 起点对齐</li>
+<li>flex-end 终点对齐</li>
+<li>center 居中对齐</li>
+<li>baseline 项目的第一行文字的基线对齐。</li>
+<li>stretch 如果项目未设置高度或设为auto，将占满整个容器的高度。</li>
+</ul>
+<h3 id="6-align-content-当项目有多列（行）时，该属性定义各轴的对齐方式"><a href="#6-align-content-当项目有多列（行）时，该属性定义各轴的对齐方式" class="headerlink" title="6. align-content  当项目有多列（行）时，该属性定义各轴的对齐方式"></a>6. align-content  当项目有多列（行）时，该属性定义各轴的对齐方式</h3><p>取值：</p>
+<ul>
+<li>flex-start  起点对齐</li>
+<li>flex-end  终点对齐</li>
+<li>center  居中对齐</li>
+<li>space-between  项目间隔相同对齐</li>
+<li>space-around 每行（列）的间隔俩侧相等对齐</li>
+<li>stretch 项目布满容器对齐</li>
+</ul>
+<h2 id="项目属性（子元素属性）"><a href="#项目属性（子元素属性）" class="headerlink" title="项目属性（子元素属性）"></a>项目属性（子元素属性）</h2><h3 id="1-order-定义项目的排列顺序。数值越小，排列越靠前，默认为0。"><a href="#1-order-定义项目的排列顺序。数值越小，排列越靠前，默认为0。" class="headerlink" title="1. order  定义项目的排列顺序。数值越小，排列越靠前，默认为0。"></a>1. order  定义项目的排列顺序。数值越小，排列越靠前，默认为0。</h3><h3 id="2-flex-定义了项目的大小，是flex-grow-flex-shrink-和-flex-basis的简写，默认值为0-1-auto"><a href="#2-flex-定义了项目的大小，是flex-grow-flex-shrink-和-flex-basis的简写，默认值为0-1-auto" class="headerlink" title="2. flex 定义了项目的大小，是flex-grow, flex-shrink 和 flex-basis的简写，默认值为0 1 auto"></a>2. flex 定义了项目的大小，是flex-grow, flex-shrink 和 flex-basis的简写，默认值为0 1 auto</h3><p>(1) flex-grow  定义项目的放大比例，默认为0，即如果存在剩余空间，也不放大<br>(2) flex-shrink  定义了项目的缩小比例，默认为1，即如果空间不足，该项目将缩小<br>(3) flex-basis 定义项目占据的空间,然后再分配多余空间。</p>
+<h3 id="3-align-self-属性允许单个项目有与其他项目不一样的对齐方式，可覆盖align-items属性。默认值为auto，表示继承父元素的"><a href="#3-align-self-属性允许单个项目有与其他项目不一样的对齐方式，可覆盖align-items属性。默认值为auto，表示继承父元素的" class="headerlink" title="3. align-self  属性允许单个项目有与其他项目不一样的对齐方式，可覆盖align-items属性。默认值为auto，表示继承父元素的"></a>3. align-self  属性允许单个项目有与其他项目不一样的对齐方式，可覆盖align-items属性。默认值为auto，表示继承父元素的</h3><h2 id="测试用例"><a href="#测试用例" class="headerlink" title="测试用例"></a>测试用例</h2><p>这几天在项目中小范围试用了下（移动端），结果UC和微信浏览器不支持，当时就蒙逼了好吗。后来查了下，发现加上老版本的写法和前缀即可。至少借的几个手机测试是通过了。</p>
+<div class="flexbox">
+    <div>1</div>
+    <div>2</div>
+    <div>3</div>
+    <div>4</div>
+    <div>5</div>
+</div>
+
+<style>
+    .flexbox{
+        display: -webkit-flex;
+        display: flex;
+        display: -webkit-box;
+        -webkit-align-items: center;
+        align-items: center;
+        -webkit-box-align: center;
+        border:1px solid #000;
+        min-height:200px;
+    }
+    .flexbox>div{
+        flex: 1;
+        -webkit-flex: 1;
+        -webkit-box-flex: 1;
+        -moz-box-flex: 1;
+        -ms-flex: 1;
+        background-color: #258fb8;
+        border:1px solid blue;
+    }
+</style>
+
+<p>代码：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;flexbox&quot;</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">div</span>&gt;</span>1<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">div</span>&gt;</span>2<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">div</span>&gt;</span>3<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">div</span>&gt;</span>4<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">div</span>&gt;</span>5<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="css"></span></span><br><span class="line"><span class="css">	 <span class="selector-class">.flexbox</span>&#123;</span></span><br><span class="line"><span class="css">		<span class="attribute">display</span>: -webkit-flex;</span></span><br><span class="line"><span class="css">		<span class="attribute">display</span>: flex;</span></span><br><span class="line"><span class="css">		<span class="comment">/*兼容老版本*/</span></span></span><br><span class="line"><span class="css">		<span class="attribute">display</span>: -webkit-box;</span></span><br><span class="line"><span class="css">		-webkit-<span class="attribute">align-items</span>: center;</span></span><br><span class="line"><span class="css">		<span class="attribute">align-items</span>: center;</span></span><br><span class="line"><span class="css">		<span class="comment">/*兼容老版本*/</span></span></span><br><span class="line"><span class="css">		-webkit-box-align: center;</span></span><br><span class="line"><span class="css">		<span class="attribute">border</span>:<span class="number">1px</span> solid <span class="number">#000</span>;</span></span><br><span class="line"><span class="css">		<span class="attribute">min-height</span>:<span class="number">200px</span>;</span></span><br><span class="line"><span class="css">	&#125;</span></span><br><span class="line"><span class="css">	<span class="selector-class">.flexbox</span>&gt;<span class="selector-tag">div</span>&#123;</span></span><br><span class="line"><span class="css">		<span class="attribute">flex</span>: <span class="number">1</span>;</span></span><br><span class="line"><span class="css">		-webkit-<span class="attribute">flex</span>: <span class="number">1</span>;</span></span><br><span class="line"><span class="css">		-webkit-box-<span class="attribute">flex</span>: <span class="number">1</span>;</span></span><br><span class="line"><span class="css">		-moz-box-<span class="attribute">flex</span>: <span class="number">1</span>;</span></span><br><span class="line"><span class="css">		-ms-<span class="attribute">flex</span>: <span class="number">1</span>;</span></span><br><span class="line"><span class="css">		<span class="attribute">background-color</span>: green;</span></span><br><span class="line"><span class="css">		<span class="attribute">border</span>:<span class="number">1px</span> solid blue;</span></span><br><span class="line"><span class="css">	&#125;</span></span><br><span class="line"><span class="css"></span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+        <hr class="fhr">
+        <div id="vcomments"></div>
+    
+</div>
+    <div class="footer" id="footer">
+    <p>Copyright © 2020 <a class="flink" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>-<a class="flink" target="_blank" rel="noopener" href="https://github.com/sanjinhub/hexo-theme-geek">Geek</a>.
+        <label class="el-switch el-switch-green el-switch-sm" style="vertical-align: sub;">
+            <input type="checkbox" name="switch" id="update_style">
+            <span class="el-switch-style"></span>
+        </label>
+<!--         <script type="text/javascript">
+        var cnzz_protocol = (("https:" == document.location.protocol) ? "https://" : "http://");
+        document.write(unescape("%3Cspan id='cnzz_stat_icon_1278548644'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "v1.cnzz.com/stat.php%3Fid%3D1278548644%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+        </script> -->
+    </p>
+</div>
+<input type="hidden" id="web_style" value="black">
+<input type="hidden" id="valine_appid" value="cbTPc8u7ho07U6TmlFC0RjK7">
+<input type="hidden" id="valine_appKey" value="4hH8asmBIHG3iSVSUt8Hu5OP">
+
+<script src="/libs/jquery.min.js"></script>
+
+
+<script src="/libs/highlight/highlight.pack.js"></script>
+
+<script src='//cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+
+<script src="/js/js.js"></script>
+
+<style type="text/css">
+.v * {
+    color: #698fca;
+}
+
+.v .vlist .vcard .vhead .vsys {
+    color: #3a3e4a;
+}
+
+.v .vlist .vcard .vh .vmeta .vat {
+    color: #638fd5;
+}
+
+.v .vlist .vcard .vhead .vnick {
+    color: #6ba1ff;
+}
+
+.v a {
+    color: #8696b1;
+}
+
+.v .vlist .vcard .vhead .vnick:hover {
+    color: #669bfc;
+}
+</style>
+</body>
+
+</html>

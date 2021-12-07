@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>
+        yzg的个人站
+    </title>
+    
+<link rel="stylesheet" href="/libs/highlight/styles/monokai-sublime.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body id="bodyx">
+    <div class="hd posts">
+    <a href="/index.html"><i class="fa fa-reply replay-btn" aria-hidden="true"></i></a>
+    <div class="post-title">
+        <p>
+            搜索算法
+        </p>
+        <hr>
+    </div>
+    <div class="post-content">
+        <p>这篇文章主要介绍广度优先搜索（BFS）和 深度优先搜索（DFS）算法，它们是图／树常见的俩种遍历算法。</p>
+<h2 id="广度优先搜索（BFS）"><a href="#广度优先搜索（BFS）" class="headerlink" title="广度优先搜索（BFS）"></a>广度优先搜索（BFS）</h2><p>广度优先搜索算法（英语：Breadth-First-Search，缩写为 BFS），又译作宽度优先搜索，或横向优先搜索，是一种图形搜索算法。简单的说，BFS 是从根节点开始，沿着树的宽度遍历树的节点。如果所有节点均被访问，则算法中止。</p>
+<p><img src="https://raw.githubusercontent.com/bigdots/blog/master/images/201801/bfs.png" alt="image"></p>
+<ol>
+<li>首先将根节点放入队列中。</li>
+<li>从队列中取出第一个节点，并检验它是否为目标。</li>
+<li>如果找到目标，则结束搜寻并回传结果。</li>
+<li>否则将它所有尚未检验过的直接子节点加入队列中。</li>
+<li>若队列为空，表示整张图都检查过了——亦即图中没有欲搜寻的目标。结束搜寻并回传“找不到目标”。</li>
+<li>重复步骤2。</li>
+</ol>
+<p>bfs ＝队列，入队列，出队列</p>
+<p>利用队列。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//  伪代码</span></span><br><span class="line"></span><br><span class="line">funtion <span class="function"><span class="title">BFS</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    将根节点V加入队列S</span><br><span class="line">    <span class="keyword">while</span>(队列S不为空)&#123;</span><br><span class="line">        从队列中取出第一个节点W，并检验它是否满足搜索条件。</span><br><span class="line">        <span class="keyword">if</span>(当前节点W满足搜索条件)&#123;</span><br><span class="line">            <span class="keyword">return</span> W</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="function"><span class="title">For</span>(<span class="params">遍历W的相邻的未访问过的节点</span>)</span>&#123;</span><br><span class="line">                将其加入队列</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;未搜索到结果&#x27;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="深度优先搜索（DFS）"><a href="#深度优先搜索（DFS）" class="headerlink" title="深度优先搜索（DFS）"></a>深度优先搜索（DFS）</h2><p>深度优先搜索算法（Depth-First-Search，简称 DFS）是一种用于遍历或搜索树或图的算法。沿着树的深度遍历树的节点，尽可能深的搜索树的分支。当节点 v 的所在边都己被探寻过，搜索将回溯到发现节点 v 的那条边的起始节点。这一过程一直进行到已发现从源节点可达的所有节点为止。如果还存在未被发现的节点，则选择其中一个作为源节点并重复以上过程，整个进程反复进行直到所有节点都被访问为止。属于盲目搜索。</p>
+<p><img src="https://raw.githubusercontent.com/bigdots/blog/master/images/201801/dfs.png" alt="image"></p>
+<blockquote>
+<p>主要思想：不撞南墙不回头。</p>
+</blockquote>
+<p>实现步骤：</p>
+<ol>
+<li><p>首先将根节点放入队列中。</p>
+</li>
+<li><p>从队列中取出第一个节点，并检验它是否为目标。</p>
+<p> 如果找到目标，则结束搜寻并回传结果。</p>
+<p> 否则将它某一个尚未检验过的直接子节点加入队列中。</p>
+</li>
+<li><p>重复步骤 2。</p>
+</li>
+<li><p>如果不存在未检测过的直接子节点。</p>
+<p> 将上一级节点加入队列中。</p>
+<p> 重复步骤 2。</p>
+</li>
+<li><p>重复步骤 4。</p>
+</li>
+<li><p>若队列为空，表示整张图都检查过了——亦即图中没有欲搜寻的目标。结束搜寻并回传“找不到目标”。</p>
+</li>
+</ol>
+<p>利用栈。dfs=栈，压栈，出栈。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 伪代码</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 栈实现</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">DFS</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    将初始节点压栈。</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="title">While</span>(<span class="params">栈非空</span>)</span> &#123;</span><br><span class="line"></span><br><span class="line">        取出栈顶节点W,并暂存。</span><br><span class="line">        将栈顶元素出站。</span><br><span class="line">        <span class="keyword">if</span>(节点W满足搜索条件)&#123;</span><br><span class="line">            <span class="keyword">return</span> W</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="function"><span class="title">For</span>(<span class="params">遍历W的相邻的未访问过的节点</span>)</span>&#123;</span><br><span class="line">                将其入栈。</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;未搜索到结果&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 递归实现</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">DFS</span>(<span class="params">节点，搜索条件</span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(节点是否满足条件)&#123;</span><br><span class="line">        <span class="keyword">return</span> 节点</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="comment">// 判断是否到达终点，即是否还存在未遍历的相邻节点</span></span><br><span class="line">        <span class="keyword">if</span>() &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 尝试每一个可走方向（右下左上）</span></span><br><span class="line">        <span class="keyword">for</span>(遍历节点的所有相邻节点)&#123;</span><br><span class="line">            <span class="comment">// 判断是否可走,可走调用递归尝试下一步，不可走则尝试该点的其他方向</span></span><br><span class="line">            <span class="keyword">if</span> (可走) &#123;</span><br><span class="line">                <span class="comment">// 继续下一步</span></span><br><span class="line">                DFS();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Js-实现"><a href="#Js-实现" class="headerlink" title="Js 实现"></a>Js 实现</h2><h3 id="树结构数据"><a href="#树结构数据" class="headerlink" title="树结构数据"></a>树结构数据</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> tree = &#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&quot;中国&quot;</span>,</span><br><span class="line">    <span class="attr">children</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">name</span>: <span class="string">&quot;北京&quot;</span>,</span><br><span class="line">            <span class="attr">children</span>: [</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="attr">name</span>: <span class="string">&quot;朝阳群众&quot;</span></span><br><span class="line">                &#125;,</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="attr">name</span>: <span class="string">&quot;海淀区&quot;</span></span><br><span class="line">                &#125;,</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="attr">name</span>: <span class="string">&quot;昌平区&quot;</span></span><br><span class="line">                &#125;</span><br><span class="line">            ]</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">name</span>: <span class="string">&quot;浙江省&quot;</span>,</span><br><span class="line">            <span class="attr">children</span>: [</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="attr">name</span>: <span class="string">&quot;杭州市&quot;</span>,</span><br><span class="line">                    <span class="attr">code</span>: <span class="number">0571</span></span><br><span class="line">                &#125;,</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="attr">name</span>: <span class="string">&quot;嘉兴市&quot;</span></span><br><span class="line">                &#125;,</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="attr">name</span>: <span class="string">&quot;绍兴市&quot;</span></span><br><span class="line">                &#125;,</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="attr">name</span>: <span class="string">&quot;宁波市&quot;</span></span><br><span class="line">                &#125;</span><br><span class="line">            ]</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="DFS-实现"><a href="#DFS-实现" class="headerlink" title="DFS 实现"></a>DFS 实现</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 算法实现</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">dfs</span>(<span class="params">tree, name</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> stack = [];</span><br><span class="line">    stack.push(tree);</span><br><span class="line">    <span class="keyword">while</span> (stack.length !== <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">var</span> current = stack[stack.length - <span class="number">1</span>];</span><br><span class="line">        stack.pop();</span><br><span class="line">        <span class="keyword">if</span> (current.name === name) &#123;</span><br><span class="line">            <span class="keyword">return</span> current;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            current.children &amp;&amp;</span><br><span class="line">                current.children.forEach(<span class="function"><span class="params">node</span> =&gt;</span> &#123;</span><br><span class="line">                    stack.push(node);</span><br><span class="line">                &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用递归</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">dfs</span>(<span class="params">tree, name</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> result;</span><br><span class="line">    <span class="keyword">if</span> (tree.name === name) &#123;</span><br><span class="line">        result = tree;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">var</span> children = tree.children;</span><br><span class="line">        <span class="keyword">if</span> (children &amp;&amp; children.length) &#123;</span><br><span class="line">            children.forEach(<span class="function"><span class="params">node</span> =&gt;</span> &#123;</span><br><span class="line">                result = dfs(node, name);</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            result = <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="BFS-实现"><a href="#BFS-实现" class="headerlink" title="BFS 实现"></a>BFS 实现</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 算法实现</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">bfs</span>(<span class="params">tree, name</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> queue = [];</span><br><span class="line">    queue.push(tree);</span><br><span class="line">    <span class="keyword">while</span> (queue.length !== <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">var</span> current = queue[<span class="number">0</span>];</span><br><span class="line">        queue.shift();</span><br><span class="line">        <span class="keyword">if</span> (current.name === name) &#123;</span><br><span class="line">            <span class="keyword">return</span> current;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            current.children &amp;&amp;</span><br><span class="line">                current.children.forEach(<span class="function">(<span class="params">node, index</span>) =&gt;</span> &#123;</span><br><span class="line">                    queue.push(node);</span><br><span class="line">                &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+        <hr class="fhr">
+        <div id="vcomments"></div>
+    
+</div>
+    <div class="footer" id="footer">
+    <p>Copyright © 2020 <a class="flink" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>-<a class="flink" target="_blank" rel="noopener" href="https://github.com/sanjinhub/hexo-theme-geek">Geek</a>.
+        <label class="el-switch el-switch-green el-switch-sm" style="vertical-align: sub;">
+            <input type="checkbox" name="switch" id="update_style">
+            <span class="el-switch-style"></span>
+        </label>
+<!--         <script type="text/javascript">
+        var cnzz_protocol = (("https:" == document.location.protocol) ? "https://" : "http://");
+        document.write(unescape("%3Cspan id='cnzz_stat_icon_1278548644'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "v1.cnzz.com/stat.php%3Fid%3D1278548644%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+        </script> -->
+    </p>
+</div>
+<input type="hidden" id="web_style" value="black">
+<input type="hidden" id="valine_appid" value="cbTPc8u7ho07U6TmlFC0RjK7">
+<input type="hidden" id="valine_appKey" value="4hH8asmBIHG3iSVSUt8Hu5OP">
+
+<script src="/libs/jquery.min.js"></script>
+
+
+<script src="/libs/highlight/highlight.pack.js"></script>
+
+<script src='//cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+
+<script src="/js/js.js"></script>
+
+<style type="text/css">
+.v * {
+    color: #698fca;
+}
+
+.v .vlist .vcard .vhead .vsys {
+    color: #3a3e4a;
+}
+
+.v .vlist .vcard .vh .vmeta .vat {
+    color: #638fd5;
+}
+
+.v .vlist .vcard .vhead .vnick {
+    color: #6ba1ff;
+}
+
+.v a {
+    color: #8696b1;
+}
+
+.v .vlist .vcard .vhead .vnick:hover {
+    color: #669bfc;
+}
+</style>
+</body>
+
+</html>

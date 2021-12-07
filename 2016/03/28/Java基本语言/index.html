@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>
+        yzg的个人站
+    </title>
+    
+<link rel="stylesheet" href="/libs/highlight/styles/monokai-sublime.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body id="bodyx">
+    <div class="hd posts">
+    <a href="/index.html"><i class="fa fa-reply replay-btn" aria-hidden="true"></i></a>
+    <div class="post-title">
+        <p>
+            Java基本语言
+        </p>
+        <hr>
+    </div>
+    <div class="post-content">
+        <p>本章主要包括java的基本语言要素、基本数据类型、变量和常量、数据类型转换以及运算符和表达式。</p>
+<span id="more"></span>
+<h2 id="基本语言要素"><a href="#基本语言要素" class="headerlink" title="基本语言要素"></a>基本语言要素</h2><p>1.标示符<br>  标识符给定义的类、方法或者变量等起的名称。</p>
+<ul>
+<li>标识符由大小写字母、数字、下划线（_）和美元符号（$）组成，但<br>是不能以数字开头。</li>
+<li>标识符是严格区分大小写的，Hello 和HELLO 是完全不同的标识符</li>
+<li>其他约定俗成：</li>
+<li>包名：使用小写字母</li>
+<li>类名和接口名：通常定义为由具有含义的单词组成，所有单词的首字母大写。</li>
+<li>方法名：通常也是由具有含义的单词组成，第一个单词首字母小写，其他单词的首</li>
+<li>字母都大写。</li>
+<li>变量名：成员变量和方法相同，局部变量全部使用小写。</li>
+<li>常量名：全部使用大写，最好使用下划线分隔单词。</li>
+</ul>
+<p>2.关键字</p>
+<ul>
+<li>访问修饰符关键字</li>
+<li>public：所修饰的类、方法和变量是公共的，其他类可以访问该关键字修饰的类、方法或者变量。</li>
+<li>protected：用于修饰方法和变量。这些方法和变量可以被同一个包中的类或者子类进行访问。</li>
+<li>private：同样修饰方法和变量。方法和变量只能由所在类进行访问。</li>
+<li>类、方法和变量修饰符关键字</li>
+<li>class：告诉系统后面的单词是一个类名，从而定义一个类。</li>
+<li>interface：告诉系统后面的单词是一个接口名，从而定义一个接口。</li>
+<li>implements：让类实现接口。</li>
+<li>extends：用于继承。</li>
+<li>abstract：抽象修饰符。</li>
+<li>static：静态修饰符。</li>
+<li>new：实例化对象。</li>
+<li>流程控制关键字</li>
+<li>if-else</li>
+<li>switch-case-default</li>
+<li>for</li>
+<li>do-while</li>
+<li>break</li>
+<li>continue</li>
+<li>ruturn</li>
+<li>instanceof 用于判断对象是否是类或者接口的实例。</li>
+<li>异常处理关键字</li>
+<li>try-catch-finally</li>
+<li>throw</li>
+<li>throws</li>
+<li>assert</li>
+<li>包控制关键字</li>
+<li>importinport 用于将包或者类导入到</li>
+<li>pachage 用于定义包，并将类定义到这个包中。</li>
+<li>数据类型关键字<br>boolean、char、byte和数值型（short、int、long、float 和double）。</li>
+<li>特殊类型和方法关键字</li>
+<li>super 关键字用于引用父类，</li>
+<li>this 关键字用于应用当前类对象。</li>
+<li>void 关键字用于定义一般方法，该方法没有任何返回值。</li>
+<li>没有使用的关键字<br>const和goto</li>
+</ul>
+<p>3.注释</p>
+<ul>
+<li>单行注释 <code>//</code></li>
+<li>多行注释 <code>/* */</code></li>
+<li>文档注释 <code>/** */</code></li>
+</ul>
+<h2 id="基本数据类型"><a href="#基本数据类型" class="headerlink" title="基本数据类型"></a>基本数据类型</h2><p>Java 是一门强数据类型语言，Java 程序中定义的所有数据都有一个固定的数据类型。</p>
+<p>1.整数类型<br>整数类型标示的是整数</p>
+<table>
+<thead>
+<tr>
+<th align="center">整数类型</th>
+<th align="center">位数</th>
+<th align="center">取值范围</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">byte（字节型）</td>
+<td align="center">8</td>
+<td align="center">-2^7~2^7-1</td>
+</tr>
+<tr>
+<td align="center">short（短整型）</td>
+<td align="center">16</td>
+<td align="center">-2^15~2^15-1</td>
+</tr>
+<tr>
+<td align="center">int（整型）</td>
+<td align="center">32</td>
+<td align="center">-2^31~2^31-1</td>
+</tr>
+<tr>
+<td align="center">long（长整型）</td>
+<td align="center">64</td>
+<td align="center">-2^63~2^63-1</td>
+</tr>
+</tbody></table>
+<p>2.浮点类型<br>浮点类型表示的是浮点数（小数）。</p>
+<table>
+<thead>
+<tr>
+<th align="center">浮点类型</th>
+<th align="center">位数</th>
+<th align="center">取值范围</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">float（单精度浮点类型）</td>
+<td align="center">32</td>
+<td align="center">1.4e-45~3.4e+38</td>
+</tr>
+<tr>
+<td align="center">double（双精度浮点类型）</td>
+<td align="center">64</td>
+<td align="center">4.9e-324~1.7e+308</td>
+</tr>
+</tbody></table>
+<p>3.字符类型（char）<br>4.布尔类型（boolean）</p>
+<h2 id="变量和常量"><a href="#变量和常量" class="headerlink" title="变量和常量"></a>变量和常量</h2><p>常量表示不能改变的数值，而变量表示能够改变的数值。</p>
+<ul>
+<li>声明变量：变量类型、变量名以及变量值。</li>
+<li>声明常量：final、常量类型、常量名以及常量值。<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public static void main(String[ ] args) &#123;</span><br><span class="line">    final double PI=3.14; //定义一个表示PI 的常量</span><br><span class="line">    int R=5; //定义一个表示半径的变量</span><br><span class="line">    double ymj=PI*R*R; //计算圆的面积</span><br><span class="line">    System.out.println(&quot;圆的面积等于&quot;+ymj);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="数据类型转换"><a href="#数据类型转换" class="headerlink" title="数据类型转换"></a>数据类型转换</h2><p>1.自动类型转换</p>
+<ul>
+<li>的数据类型要兼容</li>
+<li>转换前的数据类型的位数要低于转换后的数据类型的位数<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public static void main(String[ ] args) &#123;</span><br><span class="line">    char c1=&#x27;a&#x27;; //定义一个char 类型</span><br><span class="line">    int i1=c1; //char自动类型转换为int</span><br><span class="line">    System.out.println(&quot;char 自动类型转换为int 后的值等于&quot;+i1);</span><br><span class="line">    char c2=&#x27;A&#x27;; //定义一个char 类型</span><br><span class="line">    int i2=c2+1; //char 类型和int 类型计算</span><br><span class="line">    System.out.println(&quot;char 类型和int 类型计算后的值等于&quot;+i2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>2.强制类型转换</p>
+<ul>
+<li>转换的数据类型必须兼容<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public static void main(String[] args)&#123;</span><br><span class="line">    int i = 3;</span><br><span class="line">    byte j = (byte)i;</span><br><span class="line">    System.out.println(&quot;int强制类型转换byte 后值等于&quot;+j);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>3.隐含强制类型转换</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">byte b=123;</span><br></pre></td></tr></table></figure>
+<p>123 这个数据的类型是int 类型，而定义的b 这个变量是byte 类型。按照前面的理论，这种是需要进行强制类型转换的。这样Java 就提供这种隐含强制类型转换机制，这个工作不再由程序来完成，而是Java 系统自动完成。</p>
+<h2 id="运算符和表达式"><a href="#运算符和表达式" class="headerlink" title="运算符和表达式"></a>运算符和表达式</h2><p>1.算数运算符<br>算术运算符就是用于计算的运算符，包括加（+）、减（-）、乘（*）、除（/）等数学中最基本的运算，还包括数学中没有的求余运算（%）。</p>
+<p>2.自增自减运算符</p>
+<p>自增自减运算符可以算是一种特殊的算术运算符。在算术运算符中需要两个操作数来进行运算，而自增自减运算符是一个操作数，自增运算符<code>++</code>表示该操作数递增加1，自减<code>--</code>运算符表示该操作数递增减1</p>
+<ul>
+<li>前缀方式：先进行自增或者自减运算，再进行表达式运算。</li>
+<li>后缀方式：先进行表达式运算，后进行自增或者自减运算。</li>
+</ul>
+<p>3.比较运算符<br>关系运算符用于计算两个操作数之间的关系，其结果是布尔类型。关系运算符包括等于（==）、不等于（!=）、大于（&gt;）、大于等于（&gt;=）、小于（&lt;）和小于等于（&lt;=）</p>
+<p>4.赋值运算符</p>
+<ul>
+<li><code>=</code></li>
+<li><code>+=</code></li>
+<li><code>-=</code></li>
+<li><code>*=</code></li>
+<li><code>/=</code></li>
+<li><code>%=</code></li>
+</ul>
+<p>5.逻辑运算符</p>
+<ul>
+<li>与（&amp;&amp;）</li>
+<li>或（||）</li>
+<li>异或（^）</li>
+<li>非（!）</li>
+</ul>
+<p>6.移位运算符</p>
+<ul>
+<li><code>&lt;&lt;</code> 左移运算符 用于将第一个操作数的比特位向左移动第二个操作数指定的位数。</li>
+<li><code>&gt;&gt;</code> 右移运算符 用于将第一个操作数的比特位向右移动第二个操作数指定的位数。</li>
+<li><code>&gt;&gt;&gt;</code> 无符号右移 和右移运算符的规则是一样的，只是填充时，不管原数是正或是负，都使用0 来填充。</li>
+</ul>
+<p>7.条件运算符（三元运算符）<br>expression? statement : statement2</p>
+<p>8.运算符优先级</p>
+<table>
+<thead>
+<tr>
+<th align="center">运算符</th>
+<th align="center">优先级</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">1</td>
+<td align="center">()</td>
+</tr>
+<tr>
+<td align="center">2</td>
+<td align="center">!、+(正)、-(负)、++、–</td>
+</tr>
+<tr>
+<td align="center">3</td>
+<td align="center">*、/、%</td>
+</tr>
+<tr>
+<td align="center">4</td>
+<td align="center">+(加)、-（减）</td>
+</tr>
+<tr>
+<td align="center">5</td>
+<td align="center">&lt;、&lt;=、&gt;、=&gt;</td>
+</tr>
+<tr>
+<td align="center">6</td>
+<td align="center">==、!=</td>
+</tr>
+<tr>
+<td align="center">7</td>
+<td align="center">^</td>
+</tr>
+<tr>
+<td align="center">8</td>
+<td align="center">&amp;&amp;</td>
+</tr>
+<tr>
+<td align="center">9</td>
+<td align="center">或</td>
+</tr>
+<tr>
+<td align="center">10</td>
+<td align="center">?:</td>
+</tr>
+<tr>
+<td align="center">11</td>
+<td align="center">=、+=、-=、*=、/=、%=</td>
+</tr>
+</tbody></table>
+<p>我的博客:<a target="_blank" rel="noopener" href="http://bigdots.github.io/">http://bigdots.github.io</a>、<a target="_blank" rel="noopener" href="http://www.cnblogs.com/yzg1/">http://www.cnblogs.com/yzg1/</a></p>
+<p>如果觉得本文不错的话，帮忙点击下面的推荐哦,谢谢！</p>
+
+    </div>
+
+    
+        <hr class="fhr">
+        <div id="vcomments"></div>
+    
+</div>
+    <div class="footer" id="footer">
+    <p>Copyright © 2020 <a class="flink" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>-<a class="flink" target="_blank" rel="noopener" href="https://github.com/sanjinhub/hexo-theme-geek">Geek</a>.
+        <label class="el-switch el-switch-green el-switch-sm" style="vertical-align: sub;">
+            <input type="checkbox" name="switch" id="update_style">
+            <span class="el-switch-style"></span>
+        </label>
+<!--         <script type="text/javascript">
+        var cnzz_protocol = (("https:" == document.location.protocol) ? "https://" : "http://");
+        document.write(unescape("%3Cspan id='cnzz_stat_icon_1278548644'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "v1.cnzz.com/stat.php%3Fid%3D1278548644%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+        </script> -->
+    </p>
+</div>
+<input type="hidden" id="web_style" value="black">
+<input type="hidden" id="valine_appid" value="cbTPc8u7ho07U6TmlFC0RjK7">
+<input type="hidden" id="valine_appKey" value="4hH8asmBIHG3iSVSUt8Hu5OP">
+
+<script src="/libs/jquery.min.js"></script>
+
+
+<script src="/libs/highlight/highlight.pack.js"></script>
+
+<script src='//cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+
+<script src="/js/js.js"></script>
+
+<style type="text/css">
+.v * {
+    color: #698fca;
+}
+
+.v .vlist .vcard .vhead .vsys {
+    color: #3a3e4a;
+}
+
+.v .vlist .vcard .vh .vmeta .vat {
+    color: #638fd5;
+}
+
+.v .vlist .vcard .vhead .vnick {
+    color: #6ba1ff;
+}
+
+.v a {
+    color: #8696b1;
+}
+
+.v .vlist .vcard .vhead .vnick:hover {
+    color: #669bfc;
+}
+</style>
+</body>
+
+</html>

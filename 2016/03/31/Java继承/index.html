@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>
+        yzg的个人站
+    </title>
+    
+<link rel="stylesheet" href="/libs/highlight/styles/monokai-sublime.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body id="bodyx">
+    <div class="hd posts">
+    <a href="/index.html"><i class="fa fa-reply replay-btn" aria-hidden="true"></i></a>
+    <div class="post-title">
+        <p>
+            Java继承
+        </p>
+        <hr>
+    </div>
+    <div class="post-content">
+        <h2 id="万物皆对象"><a href="#万物皆对象" class="headerlink" title="万物皆对象"></a>万物皆对象</h2><p>Java 是一门面向对象的语言，其重要的一个思想就是“万物皆对象”。而类是Java 的核心内容，它是一种逻辑结构，定义了对象的结构，可以由一个类得到众多相似的对象。从某种意义上说，类是Java 面向对象性的基础。</p>
+<span id="more"></span>
+
+<p>Java作为一种面向对象语言。支持以下基本概念：</p>
+<ul>
+<li>继承</li>
+<li>多态</li>
+<li>封装</li>
+<li>抽象</li>
+<li>类</li>
+<li>对象</li>
+<li>实例</li>
+<li>方法</li>
+<li>重载</li>
+</ul>
+<h2 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h2><blockquote>
+<p>继承是java面向对象编程技术的一块基石，因为它允许创建分等级层次的类。继承可以理解为一个对象从另一个对象获取属性的过程。在Java中，类的继承是单一继承，也就是说，一个子类(派生类)只能拥有一个父类</p>
+</blockquote>
+<h3 id="继承的实现"><a href="#继承的实现" class="headerlink" title="继承的实现"></a>继承的实现</h3><p>继承的实现主要通过<code>extends</code>和<code>implements</code>来实现</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">class Animal&#123;</span><br><span class="line">&#125;</span><br><span class="line">//tiger子类继承animal父类</span><br><span class="line">class tiger extends Animal&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="子类对象的构建"><a href="#子类对象的构建" class="headerlink" title="子类对象的构建"></a>子类对象的构建</h3><p>从最顶层的基类开始往下一层层的调用默认构造函数</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Animals</span></span>&#123;</span><br><span class="line">    Animals()&#123;  <span class="comment">//无参构造器</span></span><br><span class="line">        System.out.println(<span class="string">&quot;animal&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Mammal</span> <span class="keyword">extends</span> <span class="title">Animals</span></span>&#123;</span><br><span class="line">    Mammal()&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Mammal&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dog</span> <span class="keyword">extends</span> <span class="title">Mammal</span></span>&#123;</span><br><span class="line">    Dog()&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Dog&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ClassTransmit</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span></span>&#123;</span><br><span class="line">        Dog alone = <span class="keyword">new</span> Dog();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//animal</span></span><br><span class="line"><span class="comment">//Mammal</span></span><br><span class="line"><span class="comment">//Dog</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>在上面的程序中定义了3 个类Animals、Mammal、Dog，其中Mammal继承自Animals，Dog 继承自Mammal，当创建一个Dog 类的对象时候，会自动调用父类的无参构造函数，从上面的函数运行结果可以看出，构造函数的调用顺序为animal、Mammal、Dog。是自顶向下的。</p>
+<p><strong>instanceof 关键字</strong><br>可以使用 instanceof 运算符来检验一个对象是否是一个类的一个实例。</p>
+<h3 id="方法的覆写"><a href="#方法的覆写" class="headerlink" title="方法的覆写"></a>方法的覆写</h3><p>通过在子类中重写父类的方法，从而达到适应子类的特殊情况的效果。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">class Tiger extends Animal &#123;</span><br><span class="line">    void breath()&#123; //呼吸方法</span><br><span class="line">        System.out.println(&quot;tiger breath&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public class OverLoad &#123;</span><br><span class="line">    public static void main(String args[])&#123;</span><br><span class="line">        Tiger woods = new Tiger();</span><br><span class="line">        woods.breath(); //tiger breath</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面程序中，animal父类有一个breath方法，输出的是“animal breath”；这里在子类中改写了它的方法，使它输出“tiger breath”</p>
+<h2 id="final"><a href="#final" class="headerlink" title="final"></a>final</h2><p>编写程序时可能需要把类定义为不能继承的，即最终类，或者是有的方法不希望被子类继承，这时候就需要使用final 关键字来声明:</p>
+<blockquote>
+<p>final class 类名 extends 父类{<br>//类体<br>}</p>
+</blockquote>
+<p>方法也可以被声明为final:</p>
+<blockquote>
+<p>修饰符 final 返回值类型方法名(){<br>//方法体<br>}</p>
+</blockquote>
+<p><strong>实例变量也可以被定义为final，被定义为final 的变量不能被修改。被声明为final 的类的方法自动地被声明为final，但是它的实例变量并不是final。</strong></p>
+<p>我的博客:<a target="_blank" rel="noopener" href="http://bigdots.github.io/">http://bigdots.github.io</a>、<a target="_blank" rel="noopener" href="http://www.cnblogs.com/yzg1/">http://www.cnblogs.com/yzg1/</a></p>
+<p>如果觉得本文不错的话，帮忙点击下面的推荐哦,谢谢！</p>
+
+    </div>
+
+    
+        <hr class="fhr">
+        <div id="vcomments"></div>
+    
+</div>
+    <div class="footer" id="footer">
+    <p>Copyright © 2020 <a class="flink" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>-<a class="flink" target="_blank" rel="noopener" href="https://github.com/sanjinhub/hexo-theme-geek">Geek</a>.
+        <label class="el-switch el-switch-green el-switch-sm" style="vertical-align: sub;">
+            <input type="checkbox" name="switch" id="update_style">
+            <span class="el-switch-style"></span>
+        </label>
+<!--         <script type="text/javascript">
+        var cnzz_protocol = (("https:" == document.location.protocol) ? "https://" : "http://");
+        document.write(unescape("%3Cspan id='cnzz_stat_icon_1278548644'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "v1.cnzz.com/stat.php%3Fid%3D1278548644%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+        </script> -->
+    </p>
+</div>
+<input type="hidden" id="web_style" value="black">
+<input type="hidden" id="valine_appid" value="cbTPc8u7ho07U6TmlFC0RjK7">
+<input type="hidden" id="valine_appKey" value="4hH8asmBIHG3iSVSUt8Hu5OP">
+
+<script src="/libs/jquery.min.js"></script>
+
+
+<script src="/libs/highlight/highlight.pack.js"></script>
+
+<script src='//cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+
+<script src="/js/js.js"></script>
+
+<style type="text/css">
+.v * {
+    color: #698fca;
+}
+
+.v .vlist .vcard .vhead .vsys {
+    color: #3a3e4a;
+}
+
+.v .vlist .vcard .vh .vmeta .vat {
+    color: #638fd5;
+}
+
+.v .vlist .vcard .vhead .vnick {
+    color: #6ba1ff;
+}
+
+.v a {
+    color: #8696b1;
+}
+
+.v .vlist .vcard .vhead .vnick:hover {
+    color: #669bfc;
+}
+</style>
+</body>
+
+</html>

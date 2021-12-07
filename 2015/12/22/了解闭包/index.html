@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>
+        yzg的个人站
+    </title>
+    
+<link rel="stylesheet" href="/libs/highlight/styles/monokai-sublime.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body id="bodyx">
+    <div class="hd posts">
+    <a href="/index.html"><i class="fa fa-reply replay-btn" aria-hidden="true"></i></a>
+    <div class="post-title">
+        <p>
+            了解闭包
+        </p>
+        <hr>
+    </div>
+    <div class="post-content">
+        <p>江湖上都说要了解闭包，得先了解作用域链，所以，先从作用域链开始吧。</p>
+<h2 id="作用域链"><a href="#作用域链" class="headerlink" title="作用域链"></a>作用域链</h2><ol>
+<li>作用域链是一个对象列表或链表，这组对象定义了这段代码“作用域”中的变量；</li>
+<li>每当调用一个函数，这个函数会创建一个新的对象来储存它的变量（变量绑定对象），并且将这个对象添加到作用域链上；当函数返回时，就从作用域链中将这个对象删除；</li>
+<li>当javascript需要查找一个变量时，它会沿着作用域链一级一级地搜索变量。搜索过程始终从作用域链的前端开始，然后逐级地向后回溯，直至作用域链的最顶层（全局对象）为止。</li>
+<li>对于嵌套函数，每个嵌套的函数都各自对应一个作用域链，并且这个作用域链都指向一个变量绑定对象</li>
+</ol>
+<span id="more"></span>
+
+<p><strong>我们来看一个栗子</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">var word = &quot; the window&quot;</span><br><span class="line">function sayWord()&#123;</span><br><span class="line">	var word = &quot;sayWord&quot;</span><br><span class="line">	 function sayHello()&#123;</span><br><span class="line">		var word = &quot;sayHello&quot;</span><br><span class="line">		alert(word)</span><br><span class="line">	&#125;</span><br><span class="line">	return sayHello</span><br><span class="line">&#125;</span><br><span class="line">sayWord()();</span><br></pre></td></tr></table></figure>
+
+<p>上例的作用域链就是：<br><code>sayHello[word=&quot;sayHello&quot;]</code>——<code>sayWord[word=&quot;sayWord&quot;]</code>——<code>window[word=&quot;the window&quot;];</code><br>当执行sayHello函数时，会沿着这个作用域链一级一级往上找word这个变量，直到找到为止。</p>
+<h2 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h2><p>javacript高级程序设计上说“有不少开发人员总是搞不清匿名函数和闭包这两个概念”。很遗憾，本人就是。</p>
+<p><a href="javascript:void(0">@javacript高级程序设计</a></p>
+<blockquote>
+<p>闭包是指有权访问另一个函数作用域中的变量的函数。</p>
+</blockquote>
+<p><a target="_blank" rel="noopener" href="http://www.cnblogs.com/xiaotie/archive/2011/08/03/2126145.html">@xiaotie</a></p>
+<blockquote>
+<p>闭包是从用户角度考虑的一种设计概念，它基于对上下文的分析，把龌龊的事情、复杂的事情和外部环境交互的事情都自己做了，留给用户一个很自然的接口。</p>
+</blockquote>
+<p><a href="javascript:void(0">@javacript权威指南</a></p>
+<blockquote>
+<p>函数对象通过作用域链相互关联起来，函数体内部的变量都可以保存在函数作用域内</p>
+</blockquote>
+<hr>
+<p>上栗子</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">var word = &quot; the window&quot;</span><br><span class="line">function sayWord()&#123;</span><br><span class="line">	var word = &quot;sayWord&quot;</span><br><span class="line">	 function sayHello()&#123;</span><br><span class="line">		alert(word)</span><br><span class="line">	&#125;</span><br><span class="line">	return sayHello</span><br><span class="line">&#125;</span><br><span class="line">sayWord()();</span><br></pre></td></tr></table></figure>
+<p>sayHello函数在sayWord函数内部，它能访问sayWord函数内部的变量。sayHello函数就是闭包，</p>
+<h2 id="利用闭包实现私有属性"><a href="#利用闭包实现私有属性" class="headerlink" title="利用闭包实现私有属性"></a>利用闭包实现私有属性</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">function createCounter() &#123;</span><br><span class="line">  var counter = 0;</span><br><span class="line">  function increment() &#123;</span><br><span class="line">    counter = counter + 1;</span><br><span class="line">    console.log(&quot;Number of events: &quot; + counter);</span><br><span class="line">  &#125;</span><br><span class="line">  return increment;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var counter1 = createCounter();</span><br><span class="line">var counter2 = createCounter();</span><br><span class="line"></span><br><span class="line">counter1(); // Number of events: 1</span><br><span class="line">counter1(); // Number of events: 2</span><br><span class="line"></span><br><span class="line">counter2(); // Number of events: 1</span><br><span class="line"> </span><br><span class="line">counter1(); // Number of events: 3</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<p>每次调用函数都会创建变量绑定对象添加到作用域链中，所以每次调用外部函数的时候，作用域链都是不同的。而对于嵌套函数，每次调用外部函数时，内部函数又会重新定义一遍。</p>
+<h2 id="闭包存在的问题"><a href="#闭包存在的问题" class="headerlink" title="闭包存在的问题"></a>闭包存在的问题</h2><p><strong>this对象的指向问题</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">var name = &quot;The Window&quot;;</span><br><span class="line">var object = &#123;</span><br><span class="line">	name : &quot;My Object&quot;,</span><br><span class="line">	getNameFunc : function()&#123;</span><br><span class="line">		var name = &quot;The v&quot;;</span><br><span class="line">		return function()&#123;</span><br><span class="line">			return this.name;</span><br><span class="line">		&#125;;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line">alert(object.getNameFunc()()); //&quot;The Window&quot;（在非严格模式下）</span><br></pre></td></tr></table></figure>
+
+<p>每个函数在被调用时都会自动取得两个特殊变量：<code>this</code> 和<code>arguments</code>。内部函数在搜索这两个变量时，只会搜索到其活动对象为止，因此永远不可能直接访问外部函数中的这两个变量。</p>
+<p>这里</p>
+<blockquote>
+<p>object.getNameFunc()()==(function(){return this.name;})()</p>
+</blockquote>
+<p>所以其活动对象为window;</p>
+<p>解决办法</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">var name = &quot;The Window&quot;;</span><br><span class="line">var object = &#123;</span><br><span class="line">	name : &quot;My Object&quot;,</span><br><span class="line">	getNameFunc : function()&#123;</span><br><span class="line">		var that = this;</span><br><span class="line">		return function()&#123;</span><br><span class="line">			return that.name;</span><br><span class="line">		&#125;;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line">alert(object.getNameFunc()()); //&quot;My Object&quot;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p><strong>内存泄露问题</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">function sayWord()&#123;</span><br><span class="line">	var word = &quot;hello&quot;</span><br><span class="line">	add = function()&#123;</span><br><span class="line">		word = word + &quot; world&quot;</span><br><span class="line">	&#125;</span><br><span class="line">	function sayHello()&#123;</span><br><span class="line">		alert(word)</span><br><span class="line">	&#125;</span><br><span class="line">	return sayHello;</span><br><span class="line">	word = null;</span><br><span class="line">&#125;</span><br><span class="line">var say = sayWord();</span><br><span class="line">say();  //hello</span><br><span class="line">add();</span><br><span class="line">say();	//hello world</span><br></pre></td></tr></table></figure>
+
+
+<ul>
+<li>首先调用say();结果输出hello</li>
+<li>然后调用add，add是个全局变量，所以可以在外部调用，因为它又是闭包，所以可以访问到变量word，所以world=“hello world”;</li>
+<li>最后再调用say()；发现结果输出hello world；<br>这说明函数sayWord中的局部变量word一直保存在内存中，并没有在sayWord调用后被自动清除。产生这个问题主要是由于匿名函数保存了一个对word的引用，所以它所占用的内存就永远不会被回收。</li>
+</ul>
+<p style="color:red">注意：因为闭包的这个特性，所以外部函数的变量是其内部所有闭包的共享值，因此，不能在闭包中随意的改变外部函数的变量值，牵一发而动全身。</p>
+    </div>
+
+    
+        <hr class="fhr">
+        <div id="vcomments"></div>
+    
+</div>
+    <div class="footer" id="footer">
+    <p>Copyright © 2020 <a class="flink" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>-<a class="flink" target="_blank" rel="noopener" href="https://github.com/sanjinhub/hexo-theme-geek">Geek</a>.
+        <label class="el-switch el-switch-green el-switch-sm" style="vertical-align: sub;">
+            <input type="checkbox" name="switch" id="update_style">
+            <span class="el-switch-style"></span>
+        </label>
+<!--         <script type="text/javascript">
+        var cnzz_protocol = (("https:" == document.location.protocol) ? "https://" : "http://");
+        document.write(unescape("%3Cspan id='cnzz_stat_icon_1278548644'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "v1.cnzz.com/stat.php%3Fid%3D1278548644%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+        </script> -->
+    </p>
+</div>
+<input type="hidden" id="web_style" value="black">
+<input type="hidden" id="valine_appid" value="cbTPc8u7ho07U6TmlFC0RjK7">
+<input type="hidden" id="valine_appKey" value="4hH8asmBIHG3iSVSUt8Hu5OP">
+
+<script src="/libs/jquery.min.js"></script>
+
+
+<script src="/libs/highlight/highlight.pack.js"></script>
+
+<script src='//cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+
+<script src="/js/js.js"></script>
+
+<style type="text/css">
+.v * {
+    color: #698fca;
+}
+
+.v .vlist .vcard .vhead .vsys {
+    color: #3a3e4a;
+}
+
+.v .vlist .vcard .vh .vmeta .vat {
+    color: #638fd5;
+}
+
+.v .vlist .vcard .vhead .vnick {
+    color: #6ba1ff;
+}
+
+.v a {
+    color: #8696b1;
+}
+
+.v .vlist .vcard .vhead .vnick:hover {
+    color: #669bfc;
+}
+</style>
+</body>
+
+</html>

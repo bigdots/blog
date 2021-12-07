@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>
+        yzg的个人站
+    </title>
+    
+<link rel="stylesheet" href="/libs/highlight/styles/monokai-sublime.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body id="bodyx">
+    <div class="hd posts">
+    <a href="/index.html"><i class="fa fa-reply replay-btn" aria-hidden="true"></i></a>
+    <div class="post-title">
+        <p>
+            rem在响应式布局中的应用
+        </p>
+        <hr>
+    </div>
+    <div class="post-content">
+        <h2 id="rem-em-px-pt的基友关系"><a href="#rem-em-px-pt的基友关系" class="headerlink" title="rem/em/px/pt的基友关系"></a>rem/em/px/pt的基友关系</h2><p><strong>px</strong><br>像素相对长度单位,相对于显示器屏幕分辨率而言</p>
+<span id="more"></span>
+
+<p><strong>em</strong><br>相对长度单位,根据其父元素来设置字体大小</p>
+<p><strong>pt</strong><br>point，是印刷行业常用单位，等于1/72英寸</p>
+<p><strong>rem</strong><br>CSS3新增的一个相对单位,是根据网页的跟元素（html）来设置字体大小</p>
+<h2 id="rem应用于适配"><a href="#rem应用于适配" class="headerlink" title="rem应用于适配"></a>rem应用于适配</h2><p>rem的特性同样适用于width和height，我们可以根据根元素的font-size值来改变元素的宽高值，由此我们应该可以联想到我们可以根据屏幕大小动态地给html设定不同的值，从而达到我们css样式中的适配效果。</p>
+<h2 id="rem的适配规则"><a href="#rem的适配规则" class="headerlink" title="rem的适配规则"></a>rem的适配规则</h2><p><strong>1.选择基准</strong><br>虽然我们所写出的页面要在不同的屏幕大小设备上运行，但是我们写页面的时候，必须要选择其中一种屏幕大小作为初始的基准，而这个基准的选择应该根据我们所拿到的视觉稿来决定，</p>
+<p><strong>2.rem数值计算</strong><br>正常情况下rem的值默认为16px，这样在整个页面的css计算过程中太过繁琐。比如，现在有个30px宽度的元素，就得写成30/16rem。对于整个页面来说工作量还是挺大的。所以这里提供了俩种方法</p>
+<ul>
+<li><p>可以将html的font-size设置成100px<br>这样设置，在写单位时直接将数值除以100在加上rem的单位就可以了。如果设计稿的字体是16px；我们就可以写成1.6rem。</p>
+<ul>
+<li><strong>这里为什么不用10？</strong><br>因为google等浏览器对最小字体有限制，即最小为12px，所以设置10px会有问题。</li>
+</ul>
+</li>
+<li><p>使用sass</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$rem : 16x;</span><br><span class="line">@function px_rem($px)&#123;</span><br><span class="line">    @return ($px/$rem) + rem;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p><strong>3.动态设置html的font-size</strong><br>随着屏幕大小的改变，html的font-size的值应该是<code>基准rem*改变后的屏幕宽度 / 基准屏幕宽度</code></p>
+<ul>
+<li>利用css的media query来设置（这种是一个宽度区间内是一个rem）<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">@media (min-device-width : 375px) and (max-device-width : 667px) and (-webkit-min-device-pixel-ratio : 2)&#123;</span><br><span class="line">      $rem : 16x;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>利用javascript来动态设置（这种方法每一个宽度点都会有一个新的rem）<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.getElementsByTagName(<span class="string">&#x27;html&#x27;</span>)[<span class="number">0</span>].style.fontSize = 基准rem*<span class="built_in">window</span>.innerWidth / 基准屏幕宽度 + <span class="string">&#x27;px&#x27;</span>;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="考虑dpr"><a href="#考虑dpr" class="headerlink" title="考虑dpr"></a>考虑dpr</h2><p>一般我们获取到的视觉稿大部分尺寸是双倍大小的，我们一般会自觉的将标注/2，但是当我们配合rem使用时，完全可以按照视觉稿上的尺寸来设置。</p>
+<ul>
+<li><p>设计给的稿子双倍的原因是iphone等高清屏手机的存在，高清屏的像素比(device pixel ratio)dpr比较大，所以显示的像素较为清晰。</p>
+</li>
+<li><p>一般手机的dpr是1，iphone4，iphone5这种高清屏是2，iphone6s plus这种高清屏是3，可以通过js的window.devicePixelRatio获取到当前设备的dpr，所以iphone6给的视觉稿大小是（*2）750×1334了。</p>
+</li>
+<li><p>拿到了dpr之后，我们就可以在viewport meta头里，取消让浏览器自动缩放页面，而自己去设置viewport的content</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">meta.setAttribute(<span class="string">&#x27;content&#x27;</span>, <span class="string">&#x27;initial-scale=&#x27;</span> + <span class="number">1</span>/dpr + <span class="string">&#x27;, maximum-scale=&#x27;</span> + <span class="number">1</span>/dpr + <span class="string">&#x27;, minimum-scale=&#x27;</span> + <span class="number">1</span>/dpr + <span class="string">&#x27;, user-scalable=no&#x27;</span>);</span><br></pre></td></tr></table></figure>
+<p>这样我们就直接可以使用视觉稿上的尺寸了。</p>
+</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="http://bigdots.github.io/blogSource/example/rem.html">点击查看示例&gt;&gt;</a></p>
+<p>我的博客:<a target="_blank" rel="noopener" href="http://bigdots.github.io/">http://bigdots.github.io</a>、<a target="_blank" rel="noopener" href="http://www.cnblogs.com/yzg1/">http://www.cnblogs.com/yzg1/</a></p>
+<p>如果觉得本文不错的话，帮忙点击下面的推荐哦,谢谢！</p>
+
+    </div>
+
+    
+        <hr class="fhr">
+        <div id="vcomments"></div>
+    
+</div>
+    <div class="footer" id="footer">
+    <p>Copyright © 2020 <a class="flink" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>-<a class="flink" target="_blank" rel="noopener" href="https://github.com/sanjinhub/hexo-theme-geek">Geek</a>.
+        <label class="el-switch el-switch-green el-switch-sm" style="vertical-align: sub;">
+            <input type="checkbox" name="switch" id="update_style">
+            <span class="el-switch-style"></span>
+        </label>
+<!--         <script type="text/javascript">
+        var cnzz_protocol = (("https:" == document.location.protocol) ? "https://" : "http://");
+        document.write(unescape("%3Cspan id='cnzz_stat_icon_1278548644'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "v1.cnzz.com/stat.php%3Fid%3D1278548644%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+        </script> -->
+    </p>
+</div>
+<input type="hidden" id="web_style" value="black">
+<input type="hidden" id="valine_appid" value="cbTPc8u7ho07U6TmlFC0RjK7">
+<input type="hidden" id="valine_appKey" value="4hH8asmBIHG3iSVSUt8Hu5OP">
+
+<script src="/libs/jquery.min.js"></script>
+
+
+<script src="/libs/highlight/highlight.pack.js"></script>
+
+<script src='//cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+
+<script src="/js/js.js"></script>
+
+<style type="text/css">
+.v * {
+    color: #698fca;
+}
+
+.v .vlist .vcard .vhead .vsys {
+    color: #3a3e4a;
+}
+
+.v .vlist .vcard .vh .vmeta .vat {
+    color: #638fd5;
+}
+
+.v .vlist .vcard .vhead .vnick {
+    color: #6ba1ff;
+}
+
+.v a {
+    color: #8696b1;
+}
+
+.v .vlist .vcard .vhead .vnick:hover {
+    color: #669bfc;
+}
+</style>
+</body>
+
+</html>

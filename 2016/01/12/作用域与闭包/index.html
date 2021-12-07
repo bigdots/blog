@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>
+        yzg的个人站
+    </title>
+    
+<link rel="stylesheet" href="/libs/highlight/styles/monokai-sublime.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body id="bodyx">
+    <div class="hd posts">
+    <a href="/index.html"><i class="fa fa-reply replay-btn" aria-hidden="true"></i></a>
+    <div class="post-title">
+        <p>
+            作用域与闭包
+        </p>
+        <hr>
+    </div>
+    <div class="post-content">
+        <!-- TOC -->
+
+<ul>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E4%BD%9C%E7%94%A8%E5%9F%9F">什么是作用域</a><ul>
+<li><a href="#%E7%BC%96%E8%AF%91%E5%99%A8">编译器</a></li>
+<li><a href="#%E7%90%86%E8%A7%A3%E4%BD%9C%E7%94%A8%E5%9F%9F">理解作用域</a></li>
+<li><a href="#%E5%B5%8C%E5%A5%97%E7%9A%84%E4%BD%9C%E7%94%A8%E5%9F%9F">嵌套的作用域</a></li>
+</ul>
+</li>
+<li><a href="#%E8%AF%8D%E6%B3%95%E4%BD%9C%E7%94%A8%E5%9F%9F">词法作用域</a><ul>
+<li><a href="#%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90%E6%97%B6">词法分析时</a></li>
+<li><a href="#%E6%AC%BA%E9%AA%97%E8%AF%8D%E6%B3%95%E4%BD%9C%E7%94%A8%E5%9F%9F">欺骗词法作用域</a></li>
+</ul>
+</li>
+<li><a href="#%E5%87%BD%E6%95%B0%E4%B8%8E%E5%9D%97%E4%BD%9C%E7%94%A8%E5%9F%9F">函数与块作用域</a><ul>
+<li><a href="#%E5%87%BD%E6%95%B0%E4%B8%AD%E7%9A%84%E4%BD%9C%E7%94%A8%E5%9F%9F">函数中的作用域</a></li>
+<li><a href="#%E9%9A%90%E8%97%8F%E6%A0%87%E8%AF%86%E7%AC%A6%E4%BA%8E%E6%99%AE%E9%80%9A%E4%BD%9C%E7%94%A8%E5%9F%9F">隐藏标识符于普通作用域</a></li>
+<li><a href="#%E5%87%BD%E6%95%B0%E4%BD%9C%E4%B8%BA%E4%BD%9C%E7%94%A8%E5%9F%9F">函数作为作用域</a></li>
+<li><a href="#%E5%9D%97%E4%BD%9C%E4%B8%BA%E4%BD%9C%E7%94%A8%E5%9F%9F">块作为作用域</a></li>
+</ul>
+</li>
+<li><a href="#%E6%8F%90%E5%8D%87">提升</a><ul>
+<li><a href="#%E5%85%88%E6%9C%89%E9%B8%A1%E8%BF%98%E6%98%AF%E5%85%88%E6%9C%89%E8%9B%8B">先有鸡还是先有蛋？</a></li>
+<li><a href="#%E7%BC%96%E8%AF%91%E5%99%A8%E5%86%8D%E6%AC%A1%E8%A2%AD%E6%9D%A5">编译器再次袭来</a></li>
+<li><a href="#%E5%87%BD%E6%95%B0%E4%BC%98%E5%85%88">函数优先</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BD%9C%E7%94%A8%E5%9F%9F%E9%97%AD%E5%8C%85">作用域闭包</a><ul>
+<li><a href="#%E5%90%AF%E8%92%99">启蒙</a></li>
+<li><a href="#%E4%BA%8B%E5%AE%9E%E7%9C%9F%E7%9B%B8">事实真相</a></li>
+<li><a href="#%E5%BE%AA%E7%8E%AF--%E9%97%AD%E5%8C%85">循环 + 闭包</a></li>
+<li><a href="#%E6%A8%A1%E5%9D%97">模块</a></li>
+</ul>
+</li>
+</ul>
+<!-- /TOC -->
+
+<h2 id="什么是作用域"><a href="#什么是作用域" class="headerlink" title="什么是作用域"></a>什么是作用域</h2><blockquote>
+<p>作用域是一组定义在何处储存变量以及如何访问变量的<strong>规则</strong>。</p>
+</blockquote>
+<h3 id="编译器"><a href="#编译器" class="headerlink" title="编译器"></a>编译器</h3><p>javascript 是编译型语言。但是与传统编译型语言不同，它是边编译边执行的。编译型语言一般从源码到执行会经历三个步骤：</p>
+<ul>
+<li><p>分词／词法分析</p>
+<p>将一连串字符串打断成有意义的片段，成为 token（记号）。</p>
+</li>
+<li><p>解析</p>
+<p>将一个 token 流（数组）转化为一个嵌套元素的树，即抽象语法树（AST）。</p>
+</li>
+<li><p>代码生成</p>
+<p>将抽象语法树转化为可执行的代码。其实是转化成机器指令。</p>
+</li>
+</ul>
+<p>比如<code>var a = 1</code>的编译过程：</p>
+<ol>
+<li>分词／词法分析： <code>var a = 1</code>这段程序可能会被打断成如下 token：<code>var</code>、<code>a</code>、<code>=</code>、<code>1</code>，空格保留与否得看其是否具有意义。</li>
+<li>解析：将第一步的 token 形成抽象树：大致如下：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">变量声明: &#123;</span><br><span class="line">    标识符: a</span><br><span class="line">    赋值表达式: &#123;</span><br><span class="line">        数字字面量: 1</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>代码生成： 转化成机器命令：创建一个称为 a 的变量，并分配内存，存入一个值为数字 1。</li>
+</ol>
+<h3 id="理解作用域"><a href="#理解作用域" class="headerlink" title="理解作用域"></a>理解作用域</h3><blockquote>
+<p>作用域就是通过标识符名称查询变量的一组规则。</p>
+</blockquote>
+<p>代码解析运行中的角色：</p>
+<ul>
+<li><p>引擎</p>
+<p>负责代码的编译和程序的执行。</p>
+</li>
+<li><p>编译器</p>
+<p>协助引擎，主要负责解析和代码生成。</p>
+</li>
+<li><p>作用域</p>
+<p>协助引擎，收集并维护一张所有被声明的标识符（变量）的列表，并对当前执行的代码如何访问这些变量强制实施一组严格的规则。</p>
+</li>
+</ul>
+<p>比如<code>var a = 1</code>的运行：</p>
+<ol>
+<li>编译器遇到<code>var a</code>，会首先让作用域去查询 a 是否已经存在，存在则忽略，不存在，则让作用域创建它；</li>
+<li>编译器遇到<code>a = 1</code>，会编译成引擎稍后需要运行的代码；</li>
+<li>引擎执行编译后的代码，会让当前查看是否存在变量<code>a</code>可以访问，存在则引用这个变量，不存在则查看其他其他。</li>
+</ol>
+<p>上面过程中，引擎会对变量进行查询，而查询分为 RHS（right-hand Side）查询 和 LHS（left-hand Side）查询，它们根据变量出现在赋值操作的左手边还是右手边来判断查询方式。</p>
+<ul>
+<li><p>RHS</p>
+<p>变量在赋值的右手边时采用这种方式查询，查不到会抛出错误 <code>referenceError</code></p>
+</li>
+<li><p>LHS</p>
+<p>变量在赋值的左手边时采用这种方式查询，在非严格模式下，查不到会再顶层作用域创建这个变量</p>
+</li>
+</ul>
+<h3 id="嵌套的作用域"><a href="#嵌套的作用域" class="headerlink" title="嵌套的作用域"></a>嵌套的作用域</h3><p>实际工作中，通常会有多于一个的作用域需要考虑，会存在作用域嵌套在其他作用域中的情况。</p>
+<p>嵌套作用域的规则：</p>
+<p><strong>从当前作用域开始查找，如果没有，则向上走一级继续查找，以此类推，直至到了最外层全局作用域，无论找到与否，都会停止。</strong></p>
+<h2 id="词法作用域"><a href="#词法作用域" class="headerlink" title="词法作用域"></a>词法作用域</h2><p>作用域的工作方式一般有俩种模型：词法作用域和动态作用域。javascript 所采用的是词法作用域。</p>
+<h3 id="词法分析时"><a href="#词法分析时" class="headerlink" title="词法分析时"></a>词法分析时</h3><blockquote>
+<p>词法作用域是在词法分析时被定义的作用域。</p>
+</blockquote>
+<p>上述定义的潜在含义即：词法作用域是基于写程序时变量和作用域的块儿在何处被编写所决定的。公认的最佳实践是将词法作用域看作是仅仅依靠词法的。</p>
+<p>查询变量：</p>
+<p><strong>引擎查找标识符时会在当前作用域开始一直向最外层作用域查找，一旦匹配到第一个，作用域查询便停止。</strong></p>
+<p>相同名称的标识符可以在嵌套作用域的多个层中被指定，这成为“遮蔽”。</p>
+<p>不管函数是从哪里被调用、如何调用，它的词法作用域是由这个函数被声明的位置<strong>唯一</strong>定义的。</p>
+<h3 id="欺骗词法作用域"><a href="#欺骗词法作用域" class="headerlink" title="欺骗词法作用域"></a>欺骗词法作用域</h3><p>javascript 提供了在运行时修改词法作用域的机制——with 和 eval，它们会欺骗词法作用域。实际工作中，这种做法并不被推荐，应当尽量避免使用。</p>
+<p><strong>欺骗词法作用域会导致更低下的性能。</strong></p>
+<p>引擎在编译阶段会对代码做许多优化工作，比如静态地分析代码。但如果代码存在 eval 和 with，导致词法作用域的不固定行为，这一切的优化都有可能毫无意义，所以引擎就会简单地不做任何优化。</p>
+<ol>
+<li>eval</li>
+</ol>
+<p><code>eval函数</code>接收一个字符串作为参数，并在运行时将该字符串的内容在当前位置运行。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params">str, a</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">eval</span>(str); <span class="comment">// 作弊！</span></span><br><span class="line">    <span class="built_in">console</span>.log(a, b);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> b = <span class="number">2</span>;</span><br><span class="line">foo(<span class="string">&quot;var b = 3&quot;</span>, <span class="number">1</span>); <span class="comment">//1,3</span></span><br></pre></td></tr></table></figure>
+
+<p>上面的代码，<code>var b = 3</code>会再 eval 位置运行，从而在 foo 作用域内创建了变量<code>b</code>。当<code>console.log(a,b)</code>调用发生时，引擎会直接访问 foo 作用域内的<code>b</code>，而不会再访问外部的<code>b</code>变量。</p>
+<p><strong>注意：使用严格模式，在 eval 中作出的声明不会实际上修改包围他的作用域</strong></p>
+<ol start="2">
+<li>with</li>
+</ol>
+<p>我们通常使用 with 来引用一个对象的多个属性。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">    <span class="attr">a</span>: <span class="number">1</span>,</span><br><span class="line">    <span class="attr">b</span>: <span class="number">2</span>,</span><br><span class="line">    <span class="attr">c</span>: <span class="number">3</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> (obj) &#123;</span><br><span class="line">    a = <span class="number">3</span>;</span><br><span class="line">    b = <span class="number">4</span>;</span><br><span class="line">    c = <span class="number">5</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(obj); <span class="comment">//&#123;a: 3, b: 4, c: 5&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>但是，with 会做的事，比这要多得多。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> o1 = &#123; <span class="attr">a</span>: <span class="number">3</span> &#125;;</span><br><span class="line"><span class="keyword">var</span> o2 = &#123; <span class="attr">b</span>: <span class="number">3</span> &#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params">obj</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">with</span> (obj) &#123;</span><br><span class="line">        a = <span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo(o1);</span><br><span class="line"><span class="built_in">console</span>.log(o1.a); <span class="comment">//2</span></span><br><span class="line"></span><br><span class="line">foo(o2);</span><br><span class="line"><span class="built_in">console</span>.log(o2.a); <span class="comment">// undefined</span></span><br><span class="line"><span class="built_in">console</span>.log(a); <span class="comment">// 2  全局作用域泄漏</span></span><br></pre></td></tr></table></figure>
+
+<p>with 语句接受一个对象，并将这个对象视为一个<strong>完全隔离的词法作用域</strong>。</p>
+<p><strong>但是</strong> with 块内部的一个普通的<code>var</code>声明并不会归于这个<code>with</code>块儿的作用域，而是归于包含它的函数作用域。</p>
+<p>所以，上面代码执行<code>foo(o2)</code>时，在执行到 <code>a = 2</code> 时，引擎会进行 <code>LHS查找</code>，但是一直到最外层都没有找到 a 变量，所以会在最外层创建这个变量，这里就造成了作用域泄漏。</p>
+<h2 id="函数与块作用域"><a href="#函数与块作用域" class="headerlink" title="函数与块作用域"></a>函数与块作用域</h2><p>javascript 中是不是只能通过函数创建新的作用域，有没有其他方式／结构创建作用域？</p>
+<h3 id="函数中的作用域"><a href="#函数中的作用域" class="headerlink" title="函数中的作用域"></a>函数中的作用域</h3><blockquote>
+<p>javascript 拥有基于函数的作用域</p>
+</blockquote>
+<p>函数作用域支持着这样的想法：所有变量都属于函数，而去贯穿整个函数都可以使用或重用（包括嵌套的作用域中）。</p>
+<p>这样以来，一个声明出现在作用域何处是<strong>无关紧要</strong>的。</p>
+<h3 id="隐藏标识符于普通作用域"><a href="#隐藏标识符于普通作用域" class="headerlink" title="隐藏标识符于普通作用域"></a>隐藏标识符于普通作用域</h3><p>我们可以通过将变量和函数围在一个函数的作用域中来“隐藏”它们。</p>
+<p>为什么需要“隐藏”变量和函数？</p>
+<p>如果允许外围的作用域访问一个工作的私有细节，不仅没必要，而且可能是危险的。所以软件设计中有一个<strong>最低权限原则</strong>原则：</p>
+<p><strong>最低权限原则</strong>：也称“最低授权”／“最少曝光”，在软件设计中，比如一个模块／对象的 API，你应当只暴露所需要的最低限度的东西，而隐藏其他一切。</p>
+<p>将变量和函数隐藏可以避免多个同名但用处不同的标识符之间发生无意的冲突，从而导致值被意外的覆盖。</p>
+<p>实际可操作的方式：</p>
+<ol>
+<li><p>全局命名空间</p>
+<p>在引用多个库时，如果他们没有隐藏内部／私有函数和变量，那么它们十分容易出现相互冲突。所以，这些库通常会在全局作用域中使用一个特殊的名称来创建一个单读的变量声明。它经常是一个对象，然后这个对象被用作这个库一个<code>命名空间</code>，所有要暴露出来的功能都会作为属性挂载在这个对象上。</p>
+<p>比如，Jquery 的对象就是 jquery/$;</p>
+</li>
+<li><p>模块管理</p>
+<p>实现命名冲突的另一种方式是模块管理。</p>
+</li>
+</ol>
+<h3 id="函数作为作用域"><a href="#函数作为作用域" class="headerlink" title="函数作为作用域"></a>函数作为作用域</h3><p>声明一个函数，可以拿来隐藏函数和变量，但这种方式同时也存在着问题：</p>
+<ul>
+<li>不得不声明一个命名函数，这个函数的标识符名称本身就污染了外围作用域</li>
+<li>不得不通过名称明确地调用这个函数</li>
+</ul>
+<p>不需要名称，又能自动执行的，js 恰好提供了这样一种方式。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure>
+
+<p>上面的代码使用了匿名函数和立即调用函数表达式：</p>
+<ol>
+<li>匿名函数</li>
+</ol>
+<p>函数表达式可以匿名，函数声明不能匿名。</p>
+<p>匿名函数的缺点：</p>
+<ul>
+<li>在栈中没有有用的名称可以表示，调试困难；</li>
+<li>想要递归自己（arguments.callee）或者解绑事件处理器变得麻烦</li>
+<li>更不易代码阅读</li>
+</ul>
+<p>最佳的方式总是命名你的函数表达式。</p>
+<ol start="2">
+<li>立即调用函数表达式</li>
+</ol>
+<p>通过一个<code>()</code>，我们可以将函数作为表达式。末尾再加一个括号可以执行这个函数表达式。这种模式被成为 IIFE（立即调用函数表达式；Immediately Invoked Function Expression）</p>
+<h3 id="块作为作用域"><a href="#块作为作用域" class="headerlink" title="块作为作用域"></a>块作为作用域</h3><p>大部门语言都支持块级作用域，从而将信息隐藏到我们的代码块中，块级作用域是一种扩展了<code>最低权限原则</code>的工具。</p>
+<p>但是，表面上看来 javascript 没有块级作用域。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(i);</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(i); <span class="comment">// 10 变量i被划入了外围作用域中</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> bar = <span class="number">9</span>;</span><br><span class="line">    <span class="built_in">console</span>.log(bar); <span class="comment">//9</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(bar); <span class="comment">//9 // 变量bar被划入了外围作用域中</span></span><br></pre></td></tr></table></figure>
+
+<p>但也有特殊情况：</p>
+<ul>
+<li><p>with</p>
+<p>它从对象中创建的作用域仅存在于这个 with 语句的生命周期中。</p>
+</li>
+<li><p>try/catch</p>
+<p>ES3 明确指出 try/catch 中的 cathc 子语句中声明的变量，是属于 catch 块的块级作用域。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> a = <span class="number">1</span>;</span><br><span class="line">&#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">    <span class="keyword">var</span> c = <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(a); <span class="comment">//1</span></span><br><span class="line"><span class="built_in">console</span>.log(c); <span class="comment">//undefined</span></span><br></pre></td></tr></table></figure></li>
+<li><p>let/const</p>
+<p>let 将变量声明依附在它所在的块儿（通常是{…}）作用域中。</p>
+<ul>
+<li>隐含使用现存得块儿</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">    <span class="keyword">let</span> bar = <span class="number">1</span>;</span><br><span class="line">    <span class="built_in">console</span>.log(bar); <span class="comment">//1</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(bar); <span class="comment">// ReferenceError</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>创建明确块儿</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 明确的块儿</span></span><br><span class="line">        <span class="keyword">let</span> bar = <span class="number">1</span>;</span><br><span class="line">        <span class="built_in">console</span>.log(bar); <span class="comment">//1</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(bar); <span class="comment">// ReferenceError</span></span><br></pre></td></tr></table></figure>
+
+<p>const 也创建一个块级作用域，但是它的值是固定的（常量）。</p>
+<p><strong>注意：</strong> let/const 声明不进行变量提升。</p>
+</li>
+</ul>
+<p>块级作用域的用处：</p>
+<ol>
+<li><p>垃圾回收</p>
+<p>可以处理闭包和释放内存的垃圾回收。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">process</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// do something</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> bigData = &#123;...&#125;; <span class="comment">// 大体量数据</span></span><br><span class="line">process(bigData);</span><br><span class="line"><span class="keyword">var</span> btn = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;btn&#x27;</span>);</span><br><span class="line">btn.addEventListener(<span class="string">&quot;click&quot;</span>,<span class="function"><span class="keyword">function</span>(<span class="params">e</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;btn click&#x27;</span>);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>点击事件的回调函数根本不需要 bigData 这个大体量数据。理论上讲，在执行完 process 函数后，这个消耗巨大内存的数据结构应该被作为垃圾而回收。然而因为 click 函数在整个函数作用域上拥有一个闭包，bigData 将会仍然保持一段事件。</p>
+<p>块级作用域可以解决这个问题：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">process</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">   <span class="comment">// do something</span></span><br><span class="line">&#125;</span><br><span class="line">&#123;</span><br><span class="line">   <span class="keyword">let</span> bigData = &#123;...&#125;; <span class="comment">// 大体量数据</span></span><br><span class="line">   process(bigData);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> btn = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;btn&#x27;</span>);</span><br><span class="line">btn.addEventListener(<span class="string">&quot;click&quot;</span>,<span class="function"><span class="keyword">function</span>(<span class="params">e</span>)</span>&#123;</span><br><span class="line">   <span class="built_in">console</span>.log(<span class="string">&#x27;btn click&#x27;</span>);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></li>
+<li><p>循环</p>
+<p>对每一次循环的迭代重新绑定。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(i);</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(i); <span class="comment">// ReferenceError</span></span><br></pre></td></tr></table></figure>
+
+<p>也可以这样：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="keyword">let</span> j;</span><br><span class="line">    <span class="keyword">for</span> (j = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">        <span class="keyword">let</span> i = j; <span class="comment">// 每次迭代重新绑定</span></span><br><span class="line">        <span class="built_in">console</span>.log(i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="提升"><a href="#提升" class="headerlink" title="提升"></a>提升</h2><p>函数作用域还是块级作用域的行为都依赖于一个相同的规则： 在一个作用域中声明的任何变量都附着在这个作用域上。</p>
+<p>但是出现一个作用域内各种位置的声明如何依附作用域？</p>
+<h3 id="先有鸡还是先有蛋？"><a href="#先有鸡还是先有蛋？" class="headerlink" title="先有鸡还是先有蛋？"></a>先有鸡还是先有蛋？</h3><p>我们倾向于认为代码是自上而下地被解释执行的。这大致上是对的，但也有一部分并非如此。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">var</span> a;</span><br><span class="line"><span class="built_in">console</span>.log(a); <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+
+<p>如果代码自上而下的解释运行，预期应该输出 <code>undefined</code> ，因为 <code>var a</code> 在 <code>a = 2</code> 之后，应该重新定义了变量 a。显然，结果并不是如此。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(a); <span class="comment">// undefined</span></span><br><span class="line"><span class="keyword">var</span> a = <span class="number">2</span>;</span><br></pre></td></tr></table></figure>
+
+<p>从上面的例子上，你也许会猜测这里会输出 2，或者认为这里会导致一个 ReferenceError 被抛出。不幸的是，结果却是 undefined。</p>
+<p>代码究竟如何执行，是先有声明还是赋值？</p>
+<h3 id="编译器再次袭来"><a href="#编译器再次袭来" class="headerlink" title="编译器再次袭来"></a>编译器再次袭来</h3><p>我们知道，引擎在 javascript 执行代码之前会先对代码进行编译，编译的其中一个工作就是找到所有的声明，并将它关联在合适的作用域上。</p>
+<p>所以，在我们的代码被执行前，所有的声明，包括变量和函数，都会被首先处理。</p>
+<p>对于<code>var a = 2</code>，我们认为是一个语句，但 javascript 实际上认为这是俩个语句：<code>var a</code> 和 <code>a = 2</code>。第一句（声明）会在编译阶段处理，第二句（赋值）会在执行阶段处理。</p>
+<p>知道了这些，我想对于上一节的疑惑也就迎刃而解了：<strong>先有声明，后有赋值</strong>。</p>
+<p><strong>注意：提升是以作用域为单位的</strong></p>
+<p>函数声明会被提升，但是表达式不会。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">foo(); <span class="comment">// 1</span></span><br><span class="line">goo(); <span class="comment">// TypeError</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> goo = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">2</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>变量 goo 被提升了，但表达式没有，所以调用 goo 时，goo 的值为 undefined。所以会报 TypeError。</p>
+<h3 id="函数优先"><a href="#函数优先" class="headerlink" title="函数优先"></a>函数优先</h3><p>函数声明和变量都会提升。但是函数享有更高的优先级。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span> foo); <span class="comment">// function</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> foo = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从上面代码可以看出，结果输出 function 而不是 undefined 。说明函数声明优先于变量。</p>
+<p><strong>重复声明，后面的会覆盖前面的。</strong></p>
+<h2 id="作用域闭包"><a href="#作用域闭包" class="headerlink" title="作用域闭包"></a>作用域闭包</h2><p>必须要对作用域有健全和坚实的理解才能理解闭包。</p>
+<h3 id="启蒙"><a href="#启蒙" class="headerlink" title="启蒙"></a>启蒙</h3><p>在 javascript 中闭包无处不在，你只是必须认出它并接纳它。它是依赖于词法作用域编写代码而产生的结果。</p>
+<h3 id="事实真相"><a href="#事实真相" class="headerlink" title="事实真相"></a>事实真相</h3><blockquote>
+<p>闭包就是函数能够记住并访问它的词法作用域，即使当这个函数在他的词法作用域之外执行时</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> a = <span class="number">2</span>;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">bar</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="number">2</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    bar();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这种形式算闭包吗？技术上算，它实现了闭包，函数 bar 在函数 foo 的作用域上有一个闭包，即 bar 闭住了 foo 的作用域。但是在上面代码中并不是可以严格地观察到。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> a = <span class="number">2</span>;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">bar</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="number">2</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> bar;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> baz = foo();</span><br><span class="line">baz(); <span class="comment">//2  这样使用才算真正意义上的闭包</span></span><br></pre></td></tr></table></figure>
+
+<p>bar 对于 foo 内的作用域拥有此法作用域访问权，当我们调用 foo 之后返回 bar 的引用。按理来说，foo 执行过后，我们一般会期望 foo 的整个内部作用域消失，因为垃圾回收机制会自动回收不再使用的内存。但 bar 拥有一个词法作用域的闭包，覆盖着 foo 的内部作用域，闭包为了能使 bar 在以后的任意时刻可以引用这个作用域而保持的它的存在。</p>
+<p>所以，bar <strong>在词法作用域之外依然拥有对那个作用域的引用，这个引用称为闭包。</strong></p>
+<p><strong>闭包使一个函数可以继续访问它在编写时被定义的词法作用域。</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">bar</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(a);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params">fn</span>) </span>&#123;</span><br><span class="line">    fn(); <span class="comment">// 发现闭包！</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo(bar);</span><br></pre></td></tr></table></figure>
+
+<p>上面的代码，函数作为参数被传递，实际上这也是一种观察／使用闭包的例子。</p>
+<p><strong>无论我们使用什么方法将一个函数传送到它的词法作用域之外，它都将维护一个指向它被声明时的作用域的引用。</strong></p>
+<h3 id="循环-闭包"><a href="#循环-闭包" class="headerlink" title="循环 + 闭包"></a>循环 + 闭包</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">1</span>; i &lt;= <span class="number">5</span>; i++) &#123;</span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="function"><span class="keyword">function</span> <span class="title">timer</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(i); <span class="comment">// 5</span></span><br><span class="line">    &#125;, i * <span class="number">1000</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这段代码的预期是每隔一秒分别打印数字：1，2，3，4，5。但是我们执行后发现结果一共输出了 5 次 6。</p>
+<p><strong>为什么达不到预期的效果？</strong></p>
+<p>定时器的回调函数会在循环完成之后执行（详见<a href="'./%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6'">事件循环机制</a>）。而 for 不是块级作用域，所以每次执行 timer 函数的时候，它们的闭包都在全局作用域上。而此时全局作用域环境中的变量 i 的值为 6。</p>
+<p><strong>我们的代码缺少了什么？</strong></p>
+<p>因为每一个 timer 函数执行的时候都是使用全局作用域，所以访问的变量必然是一致的，所以想要达到预期的结果，我们必须为每一个 timer 函数创建一个私有作用域，并在这个私有作用域内存在一个可供回调函数访问的变量。现在我们来改写一下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">1</span>; i &lt;= <span class="number">5</span>; i++) &#123;</span><br><span class="line">    (<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">let</span> j = i;</span><br><span class="line">        <span class="built_in">setTimeout</span>(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(j); <span class="comment">// 1,2,3,4,5</span></span><br><span class="line">        &#125;, i * <span class="number">1000</span>);</span><br><span class="line">    &#125;)();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们使用 IIFE 为每次迭代创建新的作用域，并且保存每次迭代需要的值。</p>
+<p>其实这里主要用到的原理是使用块级作用域，所以，理论上还有其他方式可以实现，比如：with，try/catch,let/const，大家都可以尝试下哦。</p>
+<h3 id="模块"><a href="#模块" class="headerlink" title="模块"></a>模块</h3><p>模块也利用了闭包的力量。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">coolModule</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> something = <span class="string">&quot;cool&quot;</span>;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">doSomething</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(something);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="attr">doSomething</span>: doSomething</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> foo = coolModule()</span><br><span class="line">foo.doSomething() <span class="comment">// cool</span></span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+        <hr class="fhr">
+        <div id="vcomments"></div>
+    
+</div>
+    <div class="footer" id="footer">
+    <p>Copyright © 2020 <a class="flink" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>-<a class="flink" target="_blank" rel="noopener" href="https://github.com/sanjinhub/hexo-theme-geek">Geek</a>.
+        <label class="el-switch el-switch-green el-switch-sm" style="vertical-align: sub;">
+            <input type="checkbox" name="switch" id="update_style">
+            <span class="el-switch-style"></span>
+        </label>
+<!--         <script type="text/javascript">
+        var cnzz_protocol = (("https:" == document.location.protocol) ? "https://" : "http://");
+        document.write(unescape("%3Cspan id='cnzz_stat_icon_1278548644'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "v1.cnzz.com/stat.php%3Fid%3D1278548644%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+        </script> -->
+    </p>
+</div>
+<input type="hidden" id="web_style" value="black">
+<input type="hidden" id="valine_appid" value="cbTPc8u7ho07U6TmlFC0RjK7">
+<input type="hidden" id="valine_appKey" value="4hH8asmBIHG3iSVSUt8Hu5OP">
+
+<script src="/libs/jquery.min.js"></script>
+
+
+<script src="/libs/highlight/highlight.pack.js"></script>
+
+<script src='//cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+
+<script src="/js/js.js"></script>
+
+<style type="text/css">
+.v * {
+    color: #698fca;
+}
+
+.v .vlist .vcard .vhead .vsys {
+    color: #3a3e4a;
+}
+
+.v .vlist .vcard .vh .vmeta .vat {
+    color: #638fd5;
+}
+
+.v .vlist .vcard .vhead .vnick {
+    color: #6ba1ff;
+}
+
+.v a {
+    color: #8696b1;
+}
+
+.v .vlist .vcard .vhead .vnick:hover {
+    color: #669bfc;
+}
+</style>
+</body>
+
+</html>

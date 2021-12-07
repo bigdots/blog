@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>
+        yzg的个人站
+    </title>
+    
+<link rel="stylesheet" href="/libs/highlight/styles/monokai-sublime.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body id="bodyx">
+    <div class="hd posts">
+    <a href="/index.html"><i class="fa fa-reply replay-btn" aria-hidden="true"></i></a>
+    <div class="post-title">
+        <p>
+            Java抽象类
+        </p>
+        <hr>
+    </div>
+    <div class="post-content">
+        <p>在面向对象的概念中，所有的对象都是通过类来描绘的，但并不是所有的类都是用来描绘对象的，如果一个类中没有包含足够的信息来描绘一个具体的对象，这样的类就是抽象类。<br>抽象类是指在类中定义方法，但是并不去实现它，而在它的子类中去具体的实现。定义的抽象方法不过是一个方法占位符。继承抽象类的子类必须实现父类的抽象方法，除非子类也被定义成一个抽象类。</p>
+<span id="more"></span>
+
+<p><strong>关键词：</strong></p>
+<ul>
+<li>不能实例化对象，但其它功能和普通类一样</li>
+<li>在类中定义方法，但是并不去实现它</li>
+<li>子类必须实现父类的抽象方法</li>
+</ul>
+<h3 id="声明"><a href="#声明" class="headerlink" title="声明"></a>声明</h3><ol>
+<li><p>抽象类声明</p>
+<blockquote>
+<p>修饰符 abstract 类名{<br>//类体<br>}</p>
+</blockquote>
+</li>
+<li><p>抽象方法声明</p>
+<blockquote>
+<p>修饰符 abstract 返回值类型方法名();</p>
+</blockquote>
+</li>
+</ol>
+<p>抽象方法没有定义，方法名后面直接跟一个分号，而不是花括号。</p>
+<p>声明抽象方法会造成以下两个结果：</p>
+<ul>
+<li>如果一个类包含抽象方法，那么该类必须是抽象类。</li>
+<li>任何子类必须重写父类的抽象方法，或者声明自身为抽象类。</li>
+</ul>
+<p><strong>在抽象类中的方法不一定是抽象方法，但是含有抽象方法的类必须被定义成抽象类</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">//抽象类声明</span><br><span class="line">abstract class Animal &#123;</span><br><span class="line">    String type;</span><br><span class="line">    String name;</span><br><span class="line">    int age;</span><br><span class="line">    int weight;</span><br><span class="line">    void eat() &#123;</span><br><span class="line">        System.out.println(&quot;动物爱吃饭&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    //抽象方法声明</span><br><span class="line">    abstract void breath();</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"> public static void  main(String args[])&#123;</span><br><span class="line">    //error</span><br><span class="line">    //Animal animal1 = new Animal();</span><br><span class="line">    //抽象类可以创建类对象变量，只是这个变量只能用来指向它的非抽象子类对象</span><br><span class="line">    Animal animal1 = new Tiger();</span><br><span class="line">    animal1.breath();</span><br><span class="line">    //不能直接调用tiger子类的方法</span><br><span class="line">    //animal1.run();</span><br><span class="line">    //正确的调用方法</span><br><span class="line">    ((Tiger)animal1).run();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>由于根本不可能构建出Animal 对象，所以animal1存放的对象是Tiger对象，它会动态绑定正确的方法进行调用。</li>
+<li>尽管animal1存放的是Tiger 对象，但是不能直接调用tiger子类的方法，</li>
+</ul>
+<p>我的博客:<a target="_blank" rel="noopener" href="http://bigdots.github.io/">http://bigdots.github.io</a>、<a target="_blank" rel="noopener" href="http://www.cnblogs.com/yzg1/">http://www.cnblogs.com/yzg1/</a></p>
+<p>如果觉得本文不错的话，帮忙点击下面的推荐哦,谢谢！</p>
+
+    </div>
+
+    
+        <hr class="fhr">
+        <div id="vcomments"></div>
+    
+</div>
+    <div class="footer" id="footer">
+    <p>Copyright © 2020 <a class="flink" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>-<a class="flink" target="_blank" rel="noopener" href="https://github.com/sanjinhub/hexo-theme-geek">Geek</a>.
+        <label class="el-switch el-switch-green el-switch-sm" style="vertical-align: sub;">
+            <input type="checkbox" name="switch" id="update_style">
+            <span class="el-switch-style"></span>
+        </label>
+<!--         <script type="text/javascript">
+        var cnzz_protocol = (("https:" == document.location.protocol) ? "https://" : "http://");
+        document.write(unescape("%3Cspan id='cnzz_stat_icon_1278548644'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "v1.cnzz.com/stat.php%3Fid%3D1278548644%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+        </script> -->
+    </p>
+</div>
+<input type="hidden" id="web_style" value="black">
+<input type="hidden" id="valine_appid" value="cbTPc8u7ho07U6TmlFC0RjK7">
+<input type="hidden" id="valine_appKey" value="4hH8asmBIHG3iSVSUt8Hu5OP">
+
+<script src="/libs/jquery.min.js"></script>
+
+
+<script src="/libs/highlight/highlight.pack.js"></script>
+
+<script src='//cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+
+<script src="/js/js.js"></script>
+
+<style type="text/css">
+.v * {
+    color: #698fca;
+}
+
+.v .vlist .vcard .vhead .vsys {
+    color: #3a3e4a;
+}
+
+.v .vlist .vcard .vh .vmeta .vat {
+    color: #638fd5;
+}
+
+.v .vlist .vcard .vhead .vnick {
+    color: #6ba1ff;
+}
+
+.v a {
+    color: #8696b1;
+}
+
+.v .vlist .vcard .vhead .vnick:hover {
+    color: #669bfc;
+}
+</style>
+</body>
+
+</html>

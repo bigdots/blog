@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>
+        yzg的个人站
+    </title>
+    
+<link rel="stylesheet" href="/libs/highlight/styles/monokai-sublime.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body id="bodyx">
+    <div class="hd posts">
+    <a href="/index.html"><i class="fa fa-reply replay-btn" aria-hidden="true"></i></a>
+    <div class="post-title">
+        <p>
+            运行机制：事件队列与调用栈
+        </p>
+        <hr>
+    </div>
+    <div class="post-content">
+        <h2 id="JavaScript-是单线程单并发语言"><a href="#JavaScript-是单线程单并发语言" class="headerlink" title="JavaScript 是单线程单并发语言"></a>JavaScript 是单线程单并发语言</h2><ol>
+<li><p>什么是单线程</p>
+<p> 主程序只有一个线程，即同一时间片断内其只能执行单个任务。</p>
+</li>
+<li><p>为什么选择单线程？</p>
+<p> JavaScript的主要用途是与用户互动，以及操作DOM。这决定了它只能是单线程，否则会带来很复杂的同步问题。</p>
+</li>
+<li><p>单线程意味着什么？</p>
+<p> 单线程就意味着，所有任务都需要排队，前一个任务结束，才会执行后一个任务。如果前一个任务耗时很长，后一个任务就需要一直等着。这就会导致<code>IO操作（耗时但cpu闲置）</code>时造成性能浪费的问题。</p>
+</li>
+<li><p>如何解决单线程带来的性能问题？</p>
+<p> 答案是<strong>异步</strong>！主线程完全可以不管IO操作，暂时挂起处于等待中的任务，先运行排在后面的任务。等到IO操作返回了结果，再回过头，把挂起的任务继续执行下去。于是，所有任务可以分成两种，一种是同步任务（synchronous），另一种是异步任务（asynchronous）。</p>
+<p> <strong>注：</strong>  当主线程阻塞时，任务队列仍然是能够被推入任务的</p>
+</li>
+</ol>
+<h2 id="事件循环（Event-Loop）"><a href="#事件循环（Event-Loop）" class="headerlink" title="事件循环（Event Loop）"></a>事件循环（Event Loop）</h2><ol>
+<li><p>JavaScript 内存模型</p>
+<p> 讲事件循环之前，先看一张下网上看到的 JavaScript 内存模型，相信看完这个会对事件循环机制有一种豁然开朗的感觉。</p>
+<p> <img src="https://raw.githubusercontent.com/bigdots/blog/master/images/201709/h-s-q.png"></p>
+<ul>
+<li>调用栈（Call Stack）：用于主线程任务的执行</li>
+<li>堆（Heap）： 用于存放非结构化数据，譬如程序分配的变量与对象</li>
+<li>任务队列（Queue）： 用于存放异步任务与定时任务。</li>
+</ul>
+</li>
+<li><p>JavaScript 代码执行机制：</p>
+<ul>
+<li>所有同步任务都在主线程上的栈中执行。</li>
+<li>主线程之外，还存在一个”任务队列”（task queue）。<strong>只要异步任务有了运行结果</strong>，就在”任务队列”之中放置一个事件。</li>
+<li>一旦”栈”中的所有同步任务执行完毕，系统就会读取”任务队列”，选择出需要首先执行的任务（由浏览器决定，并不按序）。</li>
+</ul>
+</li>
+<li><p>Event Loop</p>
+<p> 现在我们来聊事件循环。事件循环顾名思义它就是一个循环，主线程会不断循环执行上面的第三步,其基本的代码逻辑如下所示：</p>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> (queue.waitForMessage()) &#123;</span><br><span class="line">queue.processNextMessage();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>常见异步任务进入任务队列时机</p>
+<table>
+<thead>
+<tr>
+<th align="left">行为</th>
+<th align="left">时机</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">DOM操作</td>
+<td align="left">在用户点击等操作事件完成后</td>
+</tr>
+<tr>
+<td align="left">网络操作（Ajax等）</td>
+<td align="left">在网络操作响应后</td>
+</tr>
+<tr>
+<td align="left">定时器</td>
+<td align="left">在规定时间到达后</td>
+</tr>
+</tbody></table>
+</li>
+</ol>
+<pre><code>事件循环机制图解：
+
+![](https://raw.githubusercontent.com/bigdots/blog/master/images/201709/eventLoop.png)
+</code></pre>
+<h2 id="任务"><a href="#任务" class="headerlink" title="任务"></a>任务</h2><ol>
+<li><p>MacroTask（Task）<br> setTimeout, setInterval, setImmediate, requestAnimationFrame, I/O, UI rendering</p>
+</li>
+<li><p>MicroTask（在ES2015规范中称为Job）<br>  process.nextTick, Promise, Object.observe, MutationObserver</p>
+</li>
+</ol>
+<p>规范：</p>
+<ul>
+<li>每个浏览器环境，至多有一个event loop。</li>
+<li>一个event loop可以有1个或多个task queue，而仅有一个 MicroTask Queue。</li>
+<li>一个task queue是一列有序的task, 每个task定义时都有一个task source，从同一个task source来的task必须放到同一个task queue，从不同源来的则被添加到不同队列。</li>
+<li>tasks are scheduled，所以浏览器可以从内部到JS/DOM，保证动作按序发生。</li>
+<li>Microtasks are scheduled，Microtask queue 在当前 task queue 的结尾执行。microtask中添加的microtask也被添加到Microtask queue的末尾并处理。</li>
+</ul>
+<p> <strong>注：</strong> event loop的每个turn，是由浏览器决定先执行哪个task queue。这允许浏览器为不同的task source设置不同的优先级，比如为用户交互设置更高优先级来使用户感觉流畅。</p>
+<h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">ELoop</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 当前任务</span></span><br><span class="line">    <span class="keyword">let</span> p = <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>)=&gt;</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&quot;current Task&quot;</span>)</span><br><span class="line">        resolve();</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">let</span> nextP; </span><br><span class="line"></span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&quot;MacroTask_1&quot;</span>);</span><br><span class="line">        nextP.then(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">            <span class="comment">// 第一次执行时，这段代码并没有执行到。</span></span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">&quot;MicroTask_promise_1&quot;</span>); <span class="comment">//第一个MicroTask</span></span><br><span class="line">        &#125;)</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&quot;MacroTask_1 end&quot;</span>)</span><br><span class="line">    &#125;, <span class="number">0</span>) <span class="comment">// 第一个 MacroTask</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&quot;MacroTask_2&quot;</span>);</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&quot;MacroTask_2 end&quot;</span>)</span><br><span class="line">    &#125;, <span class="number">0</span>)<span class="comment">// 第二个MacroTask</span></span><br><span class="line"></span><br><span class="line">    nextP = p.then(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&quot;MicroTask_promise_2&quot;</span>); <span class="comment">//第一个MicroTask</span></span><br><span class="line">        <span class="built_in">console</span>.log(<span class="number">1</span>)</span><br><span class="line">    &#125;).then(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&quot;MicroTask_promise_3&quot;</span>); <span class="comment">// 第二个MicroTask</span></span><br><span class="line">        <span class="built_in">console</span>.log(<span class="number">1</span>)</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;current Task end&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ELoop();</span><br><span class="line"></span><br><span class="line"><span class="comment">/**输出结果：</span></span><br><span class="line"><span class="comment">current Task</span></span><br><span class="line"><span class="comment">MicroTask_promise_2</span></span><br><span class="line"><span class="comment">MicroTask_promise_3</span></span><br><span class="line"><span class="comment">MacroTask_1</span></span><br><span class="line"><span class="comment">MicroTask_promise_1</span></span><br><span class="line"><span class="comment">MacroTask_2</span></span><br><span class="line"><span class="comment">**/</span></span><br></pre></td></tr></table></figure>
+
+<p>参考文献:</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/creeperyang/blog/issues/21">从Promise来看JavaScript中的Event Loop、Tasks和Microtasks</a></p>
+<p><a target="_blank" rel="noopener" href="http://mp.weixin.qq.com/s/qJSmotjzeu02EeK51NgFUQ">JavaScript Event Loop 机制详解与 Vue.js 中实践应用</a></p>
+<p><a target="_blank" rel="noopener" href="http://www.ruanyifeng.com/blog/2014/10/event-loop.html">JavaScript 运行机制详解：再谈Event Loop</a></p>
+
+    </div>
+
+    
+        <hr class="fhr">
+        <div id="vcomments"></div>
+    
+</div>
+    <div class="footer" id="footer">
+    <p>Copyright © 2020 <a class="flink" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>-<a class="flink" target="_blank" rel="noopener" href="https://github.com/sanjinhub/hexo-theme-geek">Geek</a>.
+        <label class="el-switch el-switch-green el-switch-sm" style="vertical-align: sub;">
+            <input type="checkbox" name="switch" id="update_style">
+            <span class="el-switch-style"></span>
+        </label>
+<!--         <script type="text/javascript">
+        var cnzz_protocol = (("https:" == document.location.protocol) ? "https://" : "http://");
+        document.write(unescape("%3Cspan id='cnzz_stat_icon_1278548644'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "v1.cnzz.com/stat.php%3Fid%3D1278548644%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+        </script> -->
+    </p>
+</div>
+<input type="hidden" id="web_style" value="black">
+<input type="hidden" id="valine_appid" value="cbTPc8u7ho07U6TmlFC0RjK7">
+<input type="hidden" id="valine_appKey" value="4hH8asmBIHG3iSVSUt8Hu5OP">
+
+<script src="/libs/jquery.min.js"></script>
+
+
+<script src="/libs/highlight/highlight.pack.js"></script>
+
+<script src='//cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+
+<script src="/js/js.js"></script>
+
+<style type="text/css">
+.v * {
+    color: #698fca;
+}
+
+.v .vlist .vcard .vhead .vsys {
+    color: #3a3e4a;
+}
+
+.v .vlist .vcard .vh .vmeta .vat {
+    color: #638fd5;
+}
+
+.v .vlist .vcard .vhead .vnick {
+    color: #6ba1ff;
+}
+
+.v a {
+    color: #8696b1;
+}
+
+.v .vlist .vcard .vhead .vnick:hover {
+    color: #669bfc;
+}
+</style>
+</body>
+
+</html>

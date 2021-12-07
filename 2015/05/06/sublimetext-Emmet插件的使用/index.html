@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>
+        yzg的个人站
+    </title>
+    
+<link rel="stylesheet" href="/libs/highlight/styles/monokai-sublime.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body id="bodyx">
+    <div class="hd posts">
+    <a href="/index.html"><i class="fa fa-reply replay-btn" aria-hidden="true"></i></a>
+    <div class="post-title">
+        <p>
+            sublimetext Emmet插件的使用
+        </p>
+        <hr>
+    </div>
+    <div class="post-content">
+        <p>categories: [js]</p>
+<h3 id="1-省略div，插件会默认元素为div"><a href="#1-省略div，插件会默认元素为div" class="headerlink" title="1. 省略div，插件会默认元素为div"></a>1. 省略div，插件会默认元素为div</h3><p>.container</p>
+<pre><code>&lt;div class=&quot;container&quot;&gt;&lt;/div&gt;
+</code></pre>
+<h3 id="2-含糊标签名称-不需要指定。比如li，Emmet会自动帮助你生成"><a href="#2-含糊标签名称-不需要指定。比如li，Emmet会自动帮助你生成" class="headerlink" title="2. 含糊标签名称,不需要指定。比如li，Emmet会自动帮助你生成"></a>2. 含糊标签名称,不需要指定。比如li，Emmet会自动帮助你生成</h3><p> ul&gt;.lis</p>
+<pre><code>&lt;ul&gt;
+&lt;li class=&quot;lis&quot;&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+<span id="more"></span>
+
+<h3 id="3-链式缩写"><a href="#3-链式缩写" class="headerlink" title="3.链式缩写"></a>3.链式缩写</h3><p>① &gt; :添加创建子元素<br>div&gt;span </p>
+<pre><code>&lt;div&gt;&lt;span&gt;&lt;/span&gt;&lt;/div&gt;
+</code></pre>
+<p>② + :添加创建同层级元素</p>
+<p>div+span</p>
+<pre><code>&lt;div&gt;&lt;/div&gt;
+&lt;span&gt;&lt;/span&gt;
+</code></pre>
+<p>③ ^ :添加一个父层级元素（需要的话你可以向上多层）</p>
+<p> p&gt;a^p </p>
+<pre><code>&lt;p&gt;&lt;a href=&quot;&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;/p&gt;
+</code></pre>
+<h3 id="4-分组功能；"><a href="#4-分组功能；" class="headerlink" title="4.分组功能；"></a>4.分组功能；</h3><p> (.one&gt;h1)+(.two&gt;h1) </p>
+<pre><code>&lt;div class=&quot;one&quot;&gt;
+&lt;h1&gt;&lt;/h1&gt;
+&lt;/div&gt;
+&lt;div class=&quot;two&quot;&gt;
+&lt;h1&gt;&lt;/h1&gt;
+&lt;/div&gt;
+</code></pre>
+<h3 id="5-插入文本-和属性-；"><a href="#5-插入文本-和属性-；" class="headerlink" title="5.插入文本{}和属性[]；"></a>5.插入文本{}和属性[]；</h3><p>h1{heading}</p>
+<pre><code>&lt;h1&gt;heading&lt;/h1&gt;
+ a[href=&#39;#&#39;] 
+
+&lt;a href=&quot;#&quot;&gt;&lt;/a&gt;
+</code></pre>
+<h3 id="6-添加多个class；"><a href="#6-添加多个class；" class="headerlink" title="6.添加多个class；"></a>6.添加多个class；</h3><p> .one.two.three</p>
+<pre><code>&lt;div class=&quot;one two three&quot;&gt;&lt;/div&gt;
+</code></pre>
+<h3 id="7-添加多个元素"><a href="#7-添加多个元素" class="headerlink" title="7.添加多个元素"></a>7.添加多个元素</h3><p> ul&gt;li*5 </p>
+<pre><code>&lt;ul&gt;
+&lt;li&gt;&lt;/li&gt;
+&lt;li&gt;&lt;/li&gt;
+&lt;li&gt;&lt;/li&gt;
+&lt;li&gt;&lt;/li&gt;
+&lt;li&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+<h3 id="8-自动列表计数"><a href="#8-自动列表计数" class="headerlink" title="8.自动列表计数"></a>8.自动列表计数</h3><p> 按顺序生成HTML元素，使用 <code>$</code>符号可以帮助生成一系列数字，支持class，id，属性，内容等等。<br>(生成n位的数字，使用n个<code>$</code>符号)<br>ul&gt;li.list<code>$</code>{number<code>$</code>}*5</p>
+<pre><code>&lt;ul&gt;
+&lt;li class=&quot;list1&quot;&gt;number 1&lt;/li&gt;
+&lt;li class=&quot;list2&quot;&gt;number 2&lt;/li&gt;
+&lt;li class=&quot;list3&quot;&gt;number 3&lt;/li&gt;
+&lt;li class=&quot;list4&quot;&gt;number 4&lt;/li&gt;
+&lt;li class=&quot;list5&quot;&gt;number 5&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+<p>ul&gt;li$.number<code>$$</code>*5 </p>
+<pre><code>&lt;ul&gt;
+&lt;li1 class=&quot;number01&quot;&gt;&lt;/li1&gt;
+&lt;li2 class=&quot;number02&quot;&gt;&lt;/li2&gt;
+&lt;li3 class=&quot;number03&quot;&gt;&lt;/li3&gt;
+&lt;li4 class=&quot;number04&quot;&gt;&lt;/li4&gt;
+&lt;li5 class=&quot;number05&quot;&gt;&lt;/li5&gt;
+&lt;/ul&gt;
+</code></pre>
+<hr>
+<p style="text-align:right">整理于2015-11-30 16:31:18</p>
+    </div>
+
+    
+        <hr class="fhr">
+        <div id="vcomments"></div>
+    
+</div>
+    <div class="footer" id="footer">
+    <p>Copyright © 2020 <a class="flink" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>-<a class="flink" target="_blank" rel="noopener" href="https://github.com/sanjinhub/hexo-theme-geek">Geek</a>.
+        <label class="el-switch el-switch-green el-switch-sm" style="vertical-align: sub;">
+            <input type="checkbox" name="switch" id="update_style">
+            <span class="el-switch-style"></span>
+        </label>
+<!--         <script type="text/javascript">
+        var cnzz_protocol = (("https:" == document.location.protocol) ? "https://" : "http://");
+        document.write(unescape("%3Cspan id='cnzz_stat_icon_1278548644'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "v1.cnzz.com/stat.php%3Fid%3D1278548644%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+        </script> -->
+    </p>
+</div>
+<input type="hidden" id="web_style" value="black">
+<input type="hidden" id="valine_appid" value="cbTPc8u7ho07U6TmlFC0RjK7">
+<input type="hidden" id="valine_appKey" value="4hH8asmBIHG3iSVSUt8Hu5OP">
+
+<script src="/libs/jquery.min.js"></script>
+
+
+<script src="/libs/highlight/highlight.pack.js"></script>
+
+<script src='//cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+
+<script src="/js/js.js"></script>
+
+<style type="text/css">
+.v * {
+    color: #698fca;
+}
+
+.v .vlist .vcard .vhead .vsys {
+    color: #3a3e4a;
+}
+
+.v .vlist .vcard .vh .vmeta .vat {
+    color: #638fd5;
+}
+
+.v .vlist .vcard .vhead .vnick {
+    color: #6ba1ff;
+}
+
+.v a {
+    color: #8696b1;
+}
+
+.v .vlist .vcard .vhead .vnick:hover {
+    color: #669bfc;
+}
+</style>
+</body>
+
+</html>

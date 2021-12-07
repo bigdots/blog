@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>
+        yzg的个人站
+    </title>
+    
+<link rel="stylesheet" href="/libs/highlight/styles/monokai-sublime.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body id="bodyx">
+    <div class="hd posts">
+    <a href="/index.html"><i class="fa fa-reply replay-btn" aria-hidden="true"></i></a>
+    <div class="post-title">
+        <p>
+            ES6笔记（一）：ES6所改良的javascript“缺陷”
+        </p>
+        <hr>
+    </div>
+    <div class="post-content">
+        <h2 id="块级作用域"><a href="#块级作用域" class="headerlink" title="块级作用域"></a>块级作用域</h2><p>ES5没有块级作用域，只有全局作用域和函数作用域，由于这一点，变量的作用域甚广，所以一进入函数就要马上将它创建出来。这就造成了所谓的变量提升。</p>
+<p>ES5的“变量提升”这一特性往往一不小心就会造成一下错误：</p>
+<ol>
+<li><p>内层变量覆盖外层变量</p>
+<pre><code> var tmp = new Date();
+ function f() &#123;
+   console.log(tmp);
+   if (false) &#123;    //执行则undefined
+     var tmp = &quot;hello world&quot;;
+   &#125;
+ &#125;
+</code></pre>
+</li>
+<li><p>变量泄露，成为全局变量</p>
+<pre><code> var s = &#39;hello&#39;;
+ for (var i = 0; i &lt; s.length; i++) &#123;
+   console.log(s[i]);
+ &#125;
+ console.log(i); // 5
+</code></pre>
+</li>
+</ol>
+<p>往常我们往往是使用<code>闭包</code>来解决这一问题的（比如自执行函数）。现在，基于这一问题，ES6增加了<code>块级作用域</code>,所以不再需要自执行函数了。</p>
+<h3 id="let-和-const"><a href="#let-和-const" class="headerlink" title="let 和 const"></a>let 和 const</h3><p>ES6是是向后兼容的，而保持向后兼容性意味着永不改变JS代码在Web平台上的行为，所以<code>var</code>创建的变量其作用域依旧将会是全局作用域和函数作用域。这样以来，即使拥有了块级作用域，也无法解决ES5的“变量提升”问题。所以，这里ES6新增了俩个新关键词：<code>let</code>和<code>const</code>。</p>
+<ol>
+<li><p>let</p>
+<p> “let是更完美的var”，它有着更好的作用域规则。</p>
+</li>
+<li><p>const<br> const声明一个只读的常量。一旦声明，常量的值就不能改变，但const声明的对象可以有属性变化（对象冻结Object.freeze）</p>
+<pre><code> const a = [];
+ a.push(&#39;Hello&#39;); // 可执行
+ a = [&#39;Dave&#39;];    // 报错
+</code></pre>
+<p> 也可以使用Object.freeze将对象冻结</p>
+<pre><code> const foo = Object.freeze(&#123;&#125;);
+ // 常规模式时，下面一行不起作用；
+ // 严格模式时，该行会报错
+ foo.prop = 123;//
+</code></pre>
+</li>
+</ol>
+<p>使用let和const：</p>
+<ul>
+<li><p>变量只在声明所在的块级作用域内有效</p>
+</li>
+<li><p>变量声明后方可使用（暂时性死区）</p>
+</li>
+<li><p>不能重复定义变量</p>
+</li>
+<li><p>声明的全局变量，不属于全局对象的属性</p>
+<pre><code>  var a = 1;
+  window.a // 1
+  let b = 1;
+  window.b // undefined
+</code></pre>
+</li>
+</ul>
+<h2 id="this关键字"><a href="#this关键字" class="headerlink" title="this关键字"></a>this关键字</h2><p>我们知道，ES5函数中的this指向的是运行时所在的作用域。比如</p>
+<pre><code>function foo() &#123;
+  setTimeout(function()&#123;
+    console.log(&#39;id:&#39;, this.id);
+  &#125;, 100);
+&#125;
+
+var id = 21;
+
+foo.call(&#123;id:42&#125;);//id: 21
+</code></pre>
+<p>在这里，我声明了一个函数foo,其内部为一个延迟函数setTimeout，每隔100ms打印一个this.id。我们通过<code>foo.call(&#123;id:42&#125;)</code>来调用它，并且为这个函数设定作用域。它真正执行要等到100毫秒后，由于this指向的是运行时所在的作用域，所以这里的this就指向了全局对象window，而不是函数foo。这里：</p>
+<ul>
+<li><p>使用call来改变foo的执行上下文，使函数的执行上下文不再是window，从而来辨别setTimeout中的this指向</p>
+</li>
+<li><p>setTimeout方法挂在window对象下，所以其this指向执行时所在的作用域——window对象。</p>
+<blockquote>
+<p>超时调用的代码都是在全局作用域中执行的，因此函数中this 的值在非严格模式下指向window 对象，在严格模式下是undefined   –《javascript高级程序设计》</p>
+</blockquote>
+</li>
+</ul>
+<p>为了解决这一问题，我们往常的做法往往是将this赋值给其他变量：</p>
+<pre><code>function foo() &#123;var that = this;
+  setTimeout(function()&#123;
+    console.log(&#39;id:&#39;, that.id);
+  &#125;, 100);
+&#125;
+    
+var id = 21;
+foo.call(&#123;id:42&#125;);//id: 42
+</code></pre>
+<p>而现在ES6推出了箭头函数解决了这一问题。</p>
+<h3 id="箭头函数"><a href="#箭头函数" class="headerlink" title="箭头函数"></a>箭头函数</h3><p>标识符=&gt; 表达式</p>
+<pre><code>var sum = (num1, num2) =&gt; &#123; return num1 + num2; &#125;
+// 等同于
+var sum = function(num1, num2) &#123;
+  return num1 + num2;
+&#125;;
+</code></pre>
+<ul>
+<li><p>如果函数只有一个参数，则可以省略<code>圆括号</code></p>
+</li>
+<li><p>如果函数只有一条返回语句，则可以省略<code>大括号</code>和<code>return</code></p>
+</li>
+<li><p>如果函数直接返回一个对象，必须在对象外面加上括号。(因为一个空对象{}和一个空的块 {} 看起来完全一样。所以需要用小括号包裹对象字面量。)</p>
+</li>
+</ul>
+<p>针对this关键字的问题，ES6规定箭头函数中的this绑定定义时所在的作用域，而不是指向运行时所在的作用域。这一以来，this指向固定化了，从而有利于封装回调函数。</p>
+<pre><code>function foo() &#123;var that = this;
+  setTimeout(()=&gt;&#123;
+    console.log(&#39;id:&#39;, that.id);
+  &#125;, 100);
+&#125;
+    
+var id = 21;
+foo.call(&#123;id:42&#125;);//id: 42
+</code></pre>
+<p><strong>注意：</strong>箭头函数this指向的固定化，并不是因为箭头函数内部有绑定this的机制，实际原因是箭头函数根本没有自己的this。而箭头函数根本没有自己的this，其内部的this也就是外层代码块的this。这就导致了其：</p>
+<ul>
+<li><p>不能用作构造函数</p>
+</li>
+<li><p>不能用call()、apply()、bind()这些方法去改变this的指向</p>
+</li>
+</ul>
+<h2 id="类与继承"><a href="#类与继承" class="headerlink" title="类与继承"></a>类与继承</h2><p>传统ECMAScript没类的概念，它描述了原型链的概念，并将原型链作为实现继承的主要方法。其基本思想是利用原型让一个引用类型继承另一个引用类型的属性和方法。而实现这一行为的传统方法便是通过构造函数：<br>    function Point(x, y) {<br>      this.x = x;<br>      this.y = y;<br>    }</p>
+<pre><code>Point.prototype.toString = function () &#123;
+  return &#39;(&#39; + this.x + &#39;, &#39; + this.y + &#39;)&#39;;
+&#125;;
+
+var p = new Point(1, 2);
+</code></pre>
+<p>在这里，构造函数Point会有一个原型对象（prototype），这个原型对象包含一个指向Point的指针(constructor)，而实例p包含一个指向原型对象的内部指针(<em>prop</em>)。所以整个的继承是通过原型链来实现的。详情可见我的这篇文章：<a target="_blank" rel="noopener" href="http://www.cnblogs.com/yzg1/p/5688722.html">javascript中的prototype和constructor</a></p>
+<h3 id="class"><a href="#class" class="headerlink" title="class"></a>class</h3><p>ES6提供了更接近传统语言的写法，引入了Class（类）这个概念，作为对象的模板。通过class关键字，可以定义类。但是类只是基于原型的面向对象模式的语法糖。对于<code>class</code>的引入，褒贬不一，很多人认为它反而是一大缺陷，但对我来说，这是一个好的语法糖，因为往常的原型链继承的方式往往能把我绕那么一会儿。</p>
+<pre><code>//定义类
+class Point &#123;
+  constructor(x, y) &#123;
+    this.x = x;
+    this.y = y;
+  &#125;
+
+  toString() &#123;
+    return &#39;(&#39; + this.x + &#39;, &#39; + this.y + &#39;)&#39;;
+  &#125;
+&#125;
+var p = new Point(1, 2);
+</code></pre>
+<ul>
+<li><p>类里面有一个constructor方法，它是类的默认方法，通过new命令生成对象实例时，自动调用该方法。一个类必须有constructor方法，如果没有显式定义，一个空的constructor方法会被默认添加。</p>
+</li>
+<li><p>constructor方法中的this关键字代表实例对象，</p>
+</li>
+<li><p>定义“类”的方法(如上例的toString)的时候，前面不需要加上function这个关键字，直接把函数定义放进去了就可以了。另外，方法之间不需要逗号分隔，加了会报错。</p>
+</li>
+<li><p>使用的时候，也是直接对类使用new命令，跟构造函数的用法完全一致</p>
+</li>
+<li><p>类的所有方法都定义在类的prototype属性上面</p>
+</li>
+</ul>
+<h3 id="class的继承——extend"><a href="#class的继承——extend" class="headerlink" title="class的继承——extend"></a>class的继承——extend</h3><p>Class之间可以通过extends关键字实现继承，这比ES5的通过修改原型链实现继承，要清晰和方便很多。</p>
+<pre><code>class ColorPoint extends Point &#123;
+  constructor(x, y, color) &#123;
+    super(x, y); // 调用父类的constructor(x, y)
+    this.color = color;
+  &#125;
+
+  toString() &#123;
+    return this.color + &#39; &#39; + super.toString(); // 调用父类的toString()
+  &#125;
+&#125;
+</code></pre>
+<ul>
+<li>super关键字，作为函数调用时（即super(…args)），它代表父类的构造函数；作为对象调用时（即super.prop或super.method()），它代表父类。在这里，它表示父类的构造函数，用来新建父类的this对象。</li>
+<li>子类必须在constructor方法中调用super方法，否则新建实例时会报错。这是因为子类没有自己的this对象，而是继承父类的this对象，然后对其进行加工。如果不调用super方法，子类就得不到this对象。</li>
+</ul>
+<h2 id="模块化"><a href="#模块化" class="headerlink" title="模块化"></a>模块化</h2><p>历史上，JavaScript一直没有模块（module）体系，无法将一个大程序拆分成互相依赖的小文件，再用简单的方法拼装起来，这对开发大型的、复杂的项目形成了巨大障碍。为了适应大型模块的开发，社区制定了一些模块加载方案，比如CMD和AMD。</p>
+<p>ES6的模块化写法：</p>
+<pre><code>import &#123; stat, exists, readFile &#125; from &#39;fs&#39;;
+</code></pre>
+<p>上面代码的实质是从fs模块加载3个方法，其他方法不加载。这种加载称为“编译时加载”，即ES6可以在编译时就完成模块加载，效率要比CommonJS模块的加载方式高。当然，这也导致了没法引用ES6模块本身，因为它不是对象。</p>
+<p>模块功能主要由两个命令构成：</p>
+<ul>
+<li><p>export</p>
+<p>  用于规定模块的对外接口，对外的接口，必须与模块内部的变量建立一一对应关系。</p>
+<pre><code>  // 写法一
+  export var m = 1;
+  //错误
+  export 1;
+  
+  // 写法二
+  var m = 1;
+  export &#123;m&#125;;
+  //错误
+  export m;
+  
+  // 写法三  重命名
+  var n = 1;
+  export &#123;n as m&#125;; 
+</code></pre>
+</li>
+<li><p>import</p>
+<p>  用于输入其他模块提供的功能，它接受一个对象（用大括号表示），里面指定要从其他模块导入的变量名（也可以使用*号整体加载）</p>
+</li>
+</ul>
+<h2 id="字符串插值"><a href="#字符串插值" class="headerlink" title="字符串插值"></a>字符串插值</h2><p>在javascript的开发中，我们常常需要这样来输出模板：</p>
+<pre><code>function sayHello(name)&#123;
+    return &quot;hello,my name is &quot;+name+&quot; I am &quot;+getAge(18);
+&#125;
+function getAge(age)&#123;
+    return age;
+&#125;
+sayHello(&quot;brand&quot;) //&quot;hello,my name is brand I am 18&quot;
+</code></pre>
+<p>我们需要使用+来连接字符串和变量（或者表达式）。例子比较简单，所以看上去无伤大雅，但是一旦在比较复杂的情况下，就会显得相当繁琐不方便，这一用法也让我们不厌其烦。对此，ES6引入了<code>模板字符串</code>,可以方便优雅地将 JS 的值插入到字符串中。</p>
+<h3 id="模板字符串"><a href="#模板字符串" class="headerlink" title="模板字符串"></a>模板字符串</h3><p>对于模板字符串，它：</p>
+<ul>
+<li>使用反引号``包裹；</li>
+<li>使用${}来输出值；</li>
+<li>${}里的内容可以是任何 JavaScript 表达式，所以函数调用和算数运算等都是合法的；</li>
+<li>如果一个值不是字符串，它将被转换为字符串；</li>
+<li>保留所有的空格、换行和缩进，并输出到结果字符串中（可以书写多行字符串）</li>
+<li>内部使用反引号和大括号需要转义，转义使用反斜杠<code>\</code></li>
+</ul>
+<p>对于上面的例子，模板字符串的写法是：</p>
+<pre><code>function sayHello(name)&#123;
+    return `hello,my name is $&#123;name&#125; I am $&#123;getAge(18)&#125;`;
+&#125;
+function getAge(age)&#123;
+    return age;
+&#125;
+sayHello(&quot;brand&quot;) //&quot;hello,my name is brandI am 18&quot;
+</code></pre>
+<h2 id="严格模式"><a href="#严格模式" class="headerlink" title="严格模式"></a>严格模式</h2><p>严格模式的目标之一是允许更快地调试错误。帮助开发者调试的最佳途径是当确定的问题发生时抛出相应的错误(throw errors when certain patterns occur)，而不是悄无声息地失败或者表现出奇怪的行为(非严格模式下经常发生)。严格模式下的代码会抛出更多的错误信息，能帮助开发者很快注意到一些必须立即解决的问题。在 ES5 中, 严格模式是可选项，但是在 ES6 中，许多特性要求必须使用严格模式，这个习惯有助于我们书写更好的 JavaScript。</p>
+
+    </div>
+
+    
+        <hr class="fhr">
+        <div id="vcomments"></div>
+    
+</div>
+    <div class="footer" id="footer">
+    <p>Copyright © 2020 <a class="flink" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>-<a class="flink" target="_blank" rel="noopener" href="https://github.com/sanjinhub/hexo-theme-geek">Geek</a>.
+        <label class="el-switch el-switch-green el-switch-sm" style="vertical-align: sub;">
+            <input type="checkbox" name="switch" id="update_style">
+            <span class="el-switch-style"></span>
+        </label>
+<!--         <script type="text/javascript">
+        var cnzz_protocol = (("https:" == document.location.protocol) ? "https://" : "http://");
+        document.write(unescape("%3Cspan id='cnzz_stat_icon_1278548644'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "v1.cnzz.com/stat.php%3Fid%3D1278548644%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+        </script> -->
+    </p>
+</div>
+<input type="hidden" id="web_style" value="black">
+<input type="hidden" id="valine_appid" value="cbTPc8u7ho07U6TmlFC0RjK7">
+<input type="hidden" id="valine_appKey" value="4hH8asmBIHG3iSVSUt8Hu5OP">
+
+<script src="/libs/jquery.min.js"></script>
+
+
+<script src="/libs/highlight/highlight.pack.js"></script>
+
+<script src='//cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+
+<script src="/js/js.js"></script>
+
+<style type="text/css">
+.v * {
+    color: #698fca;
+}
+
+.v .vlist .vcard .vhead .vsys {
+    color: #3a3e4a;
+}
+
+.v .vlist .vcard .vh .vmeta .vat {
+    color: #638fd5;
+}
+
+.v .vlist .vcard .vhead .vnick {
+    color: #6ba1ff;
+}
+
+.v a {
+    color: #8696b1;
+}
+
+.v .vlist .vcard .vhead .vnick:hover {
+    color: #669bfc;
+}
+</style>
+</body>
+
+</html>

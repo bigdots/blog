@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>
+        yzg的个人站
+    </title>
+    
+<link rel="stylesheet" href="/libs/highlight/styles/monokai-sublime.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body id="bodyx">
+    <div class="hd posts">
+    <a href="/index.html"><i class="fa fa-reply replay-btn" aria-hidden="true"></i></a>
+    <div class="post-title">
+        <p>
+            lazyload.js详解
+        </p>
+        <hr>
+    </div>
+    <div class="post-content">
+        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>lazyload.js用于长页面图片的延迟加载，视口外的图片会在窗口滚动到它的位置时再进行加载，这是与预加载相反的。</p>
+<h2 id="优点："><a href="#优点：" class="headerlink" title="优点："></a>优点：</h2><ul>
+<li>它可以提高页面加载速度；</li>
+<li>在某些情况清晰它也可以帮助减少服务器负载。</li>
+</ul>
+<span id="more"></span>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>bower安装：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ bower install jquery.lazyload</span><br></pre></td></tr></table></figure>
+
+<p>npm安装:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install jquery-lazyload  </span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>lazyload依赖与jquery。所以先引入jquery和lazyload</p>
+<pre><code>&lt;script src=&quot;jquery.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;jquery.lazyload.js&quot;&gt;&lt;/script&gt;
+</code></pre>
+<p>1.将图片路径写入data-original属性<br>2.给lazyload的图片增加一个名为lazy的class<br>3.选择所有要lazyload的图片（img.lazy），执行lazyload();</p>
+<pre><code>&lt;img class=&quot;lazy&quot; data-original=&quot;img/example.jpg&quot; style=&quot;margin-top:1000px&quot; height=&quot;200&quot;&gt;
+&lt;script&gt;
+    $(function()&#123;
+        $(&quot;img.lazy&quot;).lazyload();
+    &#125;)
+&lt;/script&gt;
+</code></pre>
+<p style="color:red">注意：必须设置图片的高度或者宽度，否则插件可能无法正常工作</p>
+
+<h2 id="提前加载——Threshold"><a href="#提前加载——Threshold" class="headerlink" title="提前加载——Threshold"></a>提前加载——Threshold</h2><p>lazyload默认是当滚动到该图片位置时，加载该图片。但是可以通过设置Threshold参数来实现滚到距离其xx px时就加载。</p>
+<pre><code>    $(function()&#123;
+        $(&quot;img.lazy&quot;).lazyload(&#123;
+            threshold :20
+        &#125;);
+    &#125;)
+</code></pre>
+<p>上面的例子设置了滚动到距离图片20px时，图片就开始再开始加载</p>
+<h2 id="事件触发-可以是jquery事件，也可以是自定义事件-——Event"><a href="#事件触发-可以是jquery事件，也可以是自定义事件-——Event" class="headerlink" title="事件触发(可以是jquery事件，也可以是自定义事件)——Event"></a>事件触发(可以是jquery事件，也可以是自定义事件)——Event</h2><p>当触发定义的事件时，图片才开始加载</p>
+<pre><code>    $(function()&#123;
+        $(&quot;img.lazy&quot;).lazyload(&#123;
+            event : &quot;click&quot;
+        &#125;);
+    &#125;)
+</code></pre>
+<p>上面的例子使图片点击后，才开始加载</p>
+<p style="color:rgb(27, 128, 158)">Tip:你可以使用这个来实现图片的延迟加载</p>
+
+<pre><code>$(function() &#123;
+    $(&quot;img.lazy&quot;).lazyload(&#123;
+        event : &quot;sporty&quot;
+    &#125;);
+&#125;);
+
+$(window).bind(&quot;load&quot;, function() &#123;
+    var timeout = setTimeout(function() &#123;
+        $(&quot;img.lazy&quot;).trigger(&quot;sporty&quot;)
+    &#125;, 5000);
+&#125;);
+</code></pre>
+<p>上面的代码在页面加载完毕后五秒才开始加载图片</p>
+<h2 id="设定效果——Effects"><a href="#设定效果——Effects" class="headerlink" title="设定效果——Effects"></a>设定效果——Effects</h2><p>插件默认的加载效果是 <code>show()</code> ,你可以使用任何你想要的效果。下面的代码使用了 <code>fadeIn()</code></p>
+<pre><code>$(&quot;img.lazy&quot;).lazyload(&#123;
+    effect : &quot;fadeIn&quot;
+&#125;);
+</code></pre>
+<h2 id="滚动容器内的图片——container"><a href="#滚动容器内的图片——container" class="headerlink" title="滚动容器内的图片——container"></a>滚动容器内的图片——container</h2><p>插件也可以使用在滚动容器内的图片上。下面的div拥有scrollerbar，内容的内容进行滚动，滚到图片位置时，图片开始加载</p>
+<pre><code>&lt;div style=&quot;height:600px;overflow:scroll&quot; id=&quot;container&quot;&gt;
+    &lt;img class=&quot;lazy&quot; data-original=&quot;img/example.jpg&quot;  alt=&quot;&quot; style=&quot;margin-top:1000px&quot; height=&quot;200&quot;&gt;
+&lt;/div&gt;
+&lt;script&gt;
+    $(function()&#123;
+        $(&quot;img.lazy&quot;).lazyload(&#123;
+            container: $(&quot;#container&quot;)
+        &#125;);
+    &#125;)
+&lt;/script&gt;
+</code></pre>
+<h2 id="不顺序排列的图片——failurelimit"><a href="#不顺序排列的图片——failurelimit" class="headerlink" title="不顺序排列的图片——failurelimit"></a>不顺序排列的图片——failurelimit</h2><ul>
+<li>插件会执行一个寻找未加载图片的循坏，该循环会检查图片是否可见，默认情况下，当第一个视图外的图片被找到，循环就会停止 。</li>
+<li>但是存在一种情况：页面布局图片的顺序和html图片代码的顺序不一致;它会导致本该加载的没有加载。这种情况下就可以将 failurelimit 设为 10 ，它令插件找到 10 个不在可见区域的图片是才停止搜索. 如果你有一个恶心的布局, 请把这个参数设高一点。</li>
+</ul>
+<p>代码：</p>
+<pre><code>$(&quot;img.lazy&quot;).lazyload(&#123;
+    failure_limit : 10
+&#125;);
+</code></pre>
+<h2 id="处理隐藏图片——skip-invisible"><a href="#处理隐藏图片——skip-invisible" class="headerlink" title="处理隐藏图片——skip_invisible"></a>处理隐藏图片——skip_invisible</h2><p>为了提升性能，插件默认忽略隐藏的图片；如果想要加载隐藏图片.设置skip_invisible为false;</p>
+<p style="color:red">注意：Webkit浏览器将自动把没有宽度和高度的图像视为不可见</p> 
+
+<pre><code>$(&quot;img.lazy&quot;).lazyload(&#123;
+    skip_invisible : true
+&#125;);
+</code></pre>
+<p>详情请查看<a target="_blank" rel="noopener" href="http://www.appelsiini.net/projects/lazyload/">文档</a></p>
+
+    </div>
+
+    
+        <hr class="fhr">
+        <div id="vcomments"></div>
+    
+</div>
+    <div class="footer" id="footer">
+    <p>Copyright © 2020 <a class="flink" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>-<a class="flink" target="_blank" rel="noopener" href="https://github.com/sanjinhub/hexo-theme-geek">Geek</a>.
+        <label class="el-switch el-switch-green el-switch-sm" style="vertical-align: sub;">
+            <input type="checkbox" name="switch" id="update_style">
+            <span class="el-switch-style"></span>
+        </label>
+<!--         <script type="text/javascript">
+        var cnzz_protocol = (("https:" == document.location.protocol) ? "https://" : "http://");
+        document.write(unescape("%3Cspan id='cnzz_stat_icon_1278548644'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "v1.cnzz.com/stat.php%3Fid%3D1278548644%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+        </script> -->
+    </p>
+</div>
+<input type="hidden" id="web_style" value="black">
+<input type="hidden" id="valine_appid" value="cbTPc8u7ho07U6TmlFC0RjK7">
+<input type="hidden" id="valine_appKey" value="4hH8asmBIHG3iSVSUt8Hu5OP">
+
+<script src="/libs/jquery.min.js"></script>
+
+
+<script src="/libs/highlight/highlight.pack.js"></script>
+
+<script src='//cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+
+<script src="/js/js.js"></script>
+
+<style type="text/css">
+.v * {
+    color: #698fca;
+}
+
+.v .vlist .vcard .vhead .vsys {
+    color: #3a3e4a;
+}
+
+.v .vlist .vcard .vh .vmeta .vat {
+    color: #638fd5;
+}
+
+.v .vlist .vcard .vhead .vnick {
+    color: #6ba1ff;
+}
+
+.v a {
+    color: #8696b1;
+}
+
+.v .vlist .vcard .vhead .vnick:hover {
+    color: #669bfc;
+}
+</style>
+</body>
+
+</html>

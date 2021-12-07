@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>
+        yzg的个人站
+    </title>
+    
+<link rel="stylesheet" href="/libs/highlight/styles/monokai-sublime.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body id="bodyx">
+    <div class="hd posts">
+    <a href="/index.html"><i class="fa fa-reply replay-btn" aria-hidden="true"></i></a>
+    <div class="post-title">
+        <p>
+            Node.js学习笔记（五）_文件系统（fs）
+        </p>
+        <hr>
+    </div>
+    <div class="post-content">
+        <p>Node.js 提供一组类似 UNIX（POSIX）标准的文件操作API。 要使用<br>这个模块需要require(“fs”)。fs 模块中所有的操作都提供了异步的和 同步的两个版本。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">&quot;fs&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>异步形式的API总是将回调函数作为它的最后一个参数，并且回调函数第一个参数总是为异常保留，如果没有发生错误，则第一个参数为<code>null</code>或<code>undefined</code>。</p>
+<p>使用同步形式的API时，任何异常都会立即抛出，您可以使用try/catch来处理异常或允许它们冒泡。</p>
+<p>强烈鼓励大家使用这些API的异步版本，同步版本会阻塞整个进程。</p>
+<p>异步删除文件：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">fs.unlink(<span class="string">&#x27;/tmp/hello&#x27;</span>, <span class="function">(<span class="params">err</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (err) <span class="keyword">throw</span> err;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;successfully deleted /tmp/hello&#x27;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>这里传入了一个回调函数，这个回调函数会在删除文件操作完成后执行。打印’successfully deleted /tmp/hello’；</p>
+<p>同步删除文件：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">fs.unlinkSync(<span class="string">&#x27;/tmp/hello&#x27;</span>);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">&#x27;successfully deleted /tmp/hello&#x27;</span>);</span><br></pre></td></tr></table></figure>
+<p>这里是同步函数，所以不需要传回调函数，打印字符串的操作会在删除文件操作开始的同时进行（不管文件删除操作是否已经完成）。</p>
+<p>fs 模块提供了文件信息获取，文件读写，关闭文件，截取文件，删除文件，创建目录，读取目录，删除目录等文件系统操作。</p>
+<h3 id="API一览："><a href="#API一览：" class="headerlink" title="API一览："></a>API一览：</h3><ul>
+<li><p>打开文件 </p>
+<ul>
+<li>fs.open(path,flags, [mode], [callback(err, fd)])</li>
+<li>fs.openSync(path, flags, [mode]) fd)])</li>
+</ul>
+</li>
+<li><p>关闭文件 </p>
+<ul>
+<li>fs.close(fd, [callback(err)]) </li>
+<li>fs.closeSync(fd)</li>
+</ul>
+</li>
+<li><p>读取文件(文件描述符） </p>
+<ul>
+<li>fs.read(fd,buffer,offset,length,position,[callback(err, bytesRead, buffer)])</li>
+<li>fs.readSync(fd, buffer, offset, length, position)</li>
+</ul>
+</li>
+<li><p>写入文件(文件描述符)</p>
+<ul>
+<li>fs.write(fd,buffer,offset,length,position,  [callback(err, bytesWritten, buffer)])</li>
+<li>fs.writeSync(fd, buffer, offset, length, position)</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p>读取文件内容 </p>
+<ul>
+<li>fs.readFile(filename,[encoding],[callba ck(err, data)])</li>
+<li>fs.readFileSync(filename,[encoding])</li>
+</ul>
+</li>
+<li><p>写入文件内容 </p>
+<ul>
+<li>fs.writeFile(filename, data,[encoding], [callback(err)])</li>
+<li>fs.writeFileSync(filename, data, [encoding])</li>
+</ul>
+</li>
+<li><p>删除文件 </p>
+<ul>
+<li>fs.unlink(path, [callback(err)])</li>
+<li>fs.unlinkSync(path)</li>
+</ul>
+</li>
+<li><p>创建目录 </p>
+<ul>
+<li>fs.mkdir(path, [mode], [callback(err)])</li>
+<li>fs.mkdirSync(path, [mode])</li>
+</ul>
+</li>
+<li><p>删除目录 </p>
+<ul>
+<li>fs.rmdir(path, [callback(err)])</li>
+<li>fs.rmdirSync(path)</li>
+</ul>
+</li>
+<li><p>读取目录 </p>
+<ul>
+<li>fs.readdir(path, [callback(err, files)])</li>
+<li>fs.readdirSync(path)</li>
+</ul>
+</li>
+<li><p>获取真实路  </p>
+<ul>
+<li>fs.realpath(path, [callback(err, resolvedPath)])</li>
+<li>fs.realpathSync(path)</li>
+</ul>
+</li>
+<li><p>更名</p>
+<ul>
+<li>fs.rename(path1, path2, [callback(err)])</li>
+<li>fs.renameSync(path1, path2)</li>
+</ul>
+</li>
+<li><p>截断</p>
+<ul>
+<li>fs.truncate(fd, len, [callback(err)])</li>
+<li>fs.truncateSync(fd, len)</li>
+</ul>
+</li>
+<li><p>更改所有权</p>
+<ul>
+<li>fs.chown(path, uid, gid, [callback(err)])</li>
+<li>fs.chownSync(path, uid, gid)</li>
+</ul>
+</li>
+<li><p>更改所有权(文件描述符）</p>
+<ul>
+<li>fs.fchown(fd, uid, gid, [callback(err)])</li>
+<li>fs.fchownSync(fd, uid, gid)</li>
+</ul>
+</li>
+<li><p>更改所有权(不解析符链接) </p>
+<ul>
+<li>fs.lchown(path, uid, gid, [callback(err)]) </li>
+<li>fs.lchownSync(path, uid, gid)</li>
+</ul>
+</li>
+<li><p>更改权限</p>
+<ul>
+<li>fs.chmod(path, mode, [callback(err)])</li>
+<li>fs.chmodSync(path, mode)</li>
+</ul>
+</li>
+<li><p>更改权限(文件描述符)  </p>
+<ul>
+<li>fs.fchmod(fd, mode, [callback(err)])</li>
+<li>fs.fchmodSync(fd, mode)</li>
+</ul>
+</li>
+<li><p>获取文件信息</p>
+<ul>
+<li>fs.stat(path, [callback(err, stats)]) </li>
+<li>fs.statSync(path)</li>
+</ul>
+</li>
+<li><p>获取文件信息(文件描述符） </p>
+<ul>
+<li>fs.fstat(fd, [callback(err, stats)])</li>
+<li>fs.fstatSync(fd)</li>
+</ul>
+</li>
+<li><p>创建硬链接 </p>
+<ul>
+<li>fs.link(srcpath, dstpath, [callback(err)]) </li>
+<li>fs.linkSync(srcpath, dstpath)</li>
+</ul>
+</li>
+<li><p>创建符号链接 </p>
+<ul>
+<li>fs.symlink(linkdata, path, [type],[callback(err)])</li>
+<li>fs.symlinkSync(linkdata, path,[type])</li>
+</ul>
+</li>
+<li><p>读取链接 </p>
+<ul>
+<li>fs.readlink(path, [callback(err, linkString)])</li>
+<li>fs.readlinkSync(path)</li>
+</ul>
+</li>
+<li><p>修改文件时间戳  </p>
+<ul>
+<li>fs.utimes(path, atime, mtime, [callback (err)])</li>
+<li>fs.utimesSync(path, atime, mtime)</li>
+</ul>
+</li>
+<li><p>修改文件时间戳（文件描述符）  </p>
+<ul>
+<li>fs.futimes(fd, atime, mtime, [callback(err)])</li>
+<li>fs.futimesSync(fd, atime, mtime)</li>
+</ul>
+</li>
+<li><p>同步磁盘缓存</p>
+<ul>
+<li>fs.fsync(fd, [callback(err)])</li>
+<li>fs.fsyncSync(fd)</li>
+</ul>
+</li>
+</ul>
+
+    </div>
+
+    
+        <hr class="fhr">
+        <div id="vcomments"></div>
+    
+</div>
+    <div class="footer" id="footer">
+    <p>Copyright © 2020 <a class="flink" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>-<a class="flink" target="_blank" rel="noopener" href="https://github.com/sanjinhub/hexo-theme-geek">Geek</a>.
+        <label class="el-switch el-switch-green el-switch-sm" style="vertical-align: sub;">
+            <input type="checkbox" name="switch" id="update_style">
+            <span class="el-switch-style"></span>
+        </label>
+<!--         <script type="text/javascript">
+        var cnzz_protocol = (("https:" == document.location.protocol) ? "https://" : "http://");
+        document.write(unescape("%3Cspan id='cnzz_stat_icon_1278548644'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "v1.cnzz.com/stat.php%3Fid%3D1278548644%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+        </script> -->
+    </p>
+</div>
+<input type="hidden" id="web_style" value="black">
+<input type="hidden" id="valine_appid" value="cbTPc8u7ho07U6TmlFC0RjK7">
+<input type="hidden" id="valine_appKey" value="4hH8asmBIHG3iSVSUt8Hu5OP">
+
+<script src="/libs/jquery.min.js"></script>
+
+
+<script src="/libs/highlight/highlight.pack.js"></script>
+
+<script src='//cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+
+<script src="/js/js.js"></script>
+
+<style type="text/css">
+.v * {
+    color: #698fca;
+}
+
+.v .vlist .vcard .vhead .vsys {
+    color: #3a3e4a;
+}
+
+.v .vlist .vcard .vh .vmeta .vat {
+    color: #638fd5;
+}
+
+.v .vlist .vcard .vhead .vnick {
+    color: #6ba1ff;
+}
+
+.v a {
+    color: #8696b1;
+}
+
+.v .vlist .vcard .vhead .vnick:hover {
+    color: #669bfc;
+}
+</style>
+</body>
+
+</html>

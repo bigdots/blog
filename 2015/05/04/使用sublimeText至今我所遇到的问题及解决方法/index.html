@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>
+        yzg的个人站
+    </title>
+    
+<link rel="stylesheet" href="/libs/highlight/styles/monokai-sublime.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body id="bodyx">
+    <div class="hd posts">
+    <a href="/index.html"><i class="fa fa-reply replay-btn" aria-hidden="true"></i></a>
+    <div class="post-title">
+        <p>
+            使用sublimeText至今我所遇到的问题及解决方法
+        </p>
+        <hr>
+    </div>
+    <div class="post-content">
+        <h3 id="1-汉化："><a href="#1-汉化：" class="headerlink" title="1.汉化："></a>1.汉化：</h3><p>下载汉化包 、打开程序Preference下的浏览包文件夹、将解压的程序包粘贴进包文件夹</p>
+<h3 id="2-破解：标题栏上面有带（unregistered）表示还没有注册；"><a href="#2-破解：标题栏上面有带（unregistered）表示还没有注册；" class="headerlink" title="2.破解：标题栏上面有带（unregistered）表示还没有注册；"></a>2.破解：标题栏上面有带（unregistered）表示还没有注册；</h3><p>打开HELP→Enter license粘贴如下代码:<br>版本2：</p>
+<span id="more"></span>
+
+<pre><code>----- BEGIN LICENSE ----- 
+Andrew Weber 
+Single User License 
+EA7E-855605 
+813A03DD 5E4AD9E6 6C0EEB94 BC99798F 
+942194A6 02396E98 E62C9979 4BB979FE 
+91424C9D A45400BF F6747D88 2FB88078 
+90F5CC94 1CDC92DC 8457107A F151657B 
+1D22E383 A997F016 42397640 33F41CFC 
+E1D0AE85 A0BBD039 0E9C8D55 E1B89D5D 
+5CDB7036 E56DE1C0 EFCC0840 650CD3A6 
+B98FC99C 8FAC73EE D2B95564 DF450523 
+------ END LICENSE ------
+</code></pre>
+<p>版本3：</p>
+<pre><code>—– BEGIN LICENSE —–
+Andrew Weber
+Single User License
+EA7E-855605
+813A03DD 5E4AD9E6 6C0EEB94 BC99798F
+942194A6 02396E98 E62C9979 4BB979FE
+91424C9D A45400BF F6747D88 2FB88078
+90F5CC94 1CDC92DC 8457107A F151657B
+1D22E383 A997F016 42397640 33F41CFC
+E1D0AE85 A0BBD039 0E9C8D55 E1B89D5D
+5CDB7036 E56DE1C0 EFCC0840 650CD3A6
+B98FC99C 8FAC73EE D2B95564 DF450523
+—— END LICENSE ——
+</code></pre>
+<h3 id="3-安装包控制器-这个安装成功后就可以通过Preference-package-control-Install-package安装插件了"><a href="#3-安装包控制器-这个安装成功后就可以通过Preference-package-control-Install-package安装插件了" class="headerlink" title="3.安装包控制器(这个安装成功后就可以通过Preference-package control-Install package安装插件了)"></a>3.安装包控制器(这个安装成功后就可以通过Preference-package control-Install package安装插件了)</h3><p>首先按Ctrl+~打开控制台，输入以下代码：<br>版本2：</p>
+<pre><code>import urllib2,os; pf=&#39;Package Control.sublime-package&#39;; ipp=sublime.installed_packages_path(); os.makedirs(ipp) if not os.path.exists(ipp) else None; urllib2.install_opener(urllib2.build_opener(urllib2.ProxyHandler())); open(os.path.join(ipp,pf),&#39;wb&#39;).write(urllib2.urlopen(&#39;http://sublime.wbond.net/&#39;+pf.replace(&#39; &#39;,&#39;%20&#39;)).read()); print(&#39;Please restart Sublime Text to finish installation&#39;)
+</code></pre>
+<p>版本3：</p>
+<pre><code>import urllib.request,os; pf = &#39;Package Control.sublime-package&#39;; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); open(os.path.join(ipp, pf), &#39;wb&#39;).write(urllib.request.urlopen( &#39;http://sublime.wbond.net/&#39; + pf.replace(&#39; &#39;,&#39;%20&#39;)).read())
+</code></pre>
+<h3 id="4-显示无法启动此程序，因为计算机丢失php-mbstring-dll："><a href="#4-显示无法启动此程序，因为计算机丢失php-mbstring-dll：" class="headerlink" title="4.显示无法启动此程序，因为计算机丢失php_mbstring.dll："></a>4.显示无法启动此程序，因为计算机丢失php_mbstring.dll：</h3><p>修改php.ini配置。去掉“;extension=php_mbstring.dll”和“;extension=php_exif.dll”前的分号，并保证php_mbstring.dll在php_exif.dll之前加载，因为加载php_exif.dll需要用到php_mbstring.dll。然后保存php.ini，并重启web服务器。</p>
+<h3 id="5-弹出错误信息："><a href="#5-弹出错误信息：" class="headerlink" title="5.弹出错误信息："></a>5.弹出错误信息：</h3><p>A plugin (SublimeCodeIntel) may be making Sublime Text unresponsive by taking too long (0.020000s) in its on_modified callback.</p>
+<p>This message can be disabled via the detect_slow_plugins setting</p>
+<p>解决方法：打开preference-&gt;setting_user<br>添加<br>“detect_slow_plugins”: false<br>这样以后就不会弹出类似提示了</p>
+<h3 id="6-弹出错误信息："><a href="#6-弹出错误信息：" class="headerlink" title="6.弹出错误信息："></a>6.弹出错误信息：</h3><p>Error trying to parse settings: No data in ~/Library/Application Support/Sublime Text 2/Packages/User/JavaScript.sublime-settings:1:1</p>
+<p>Stack Overflow的回答是：Most likely you or something has created an empty file in your User config directory.</p>
+<p>The config files must be valid JSON. The file in the question is empty and is not JSON.</p>
+<p>Try deleting the file or get a fixed version from somewhere (not sure for what the file is being used for)</p>
+<p>最有可能你或者在您的用户配置目录中创建一个空文件。</p>
+<p>配置文件必须是有效的JSON。 问题文件是空的,不是JSON。</p>
+<p>试着从某个地方删除文件或得到一个固定的版本</p>
+<hr>
+<p style="text-align:right">整理于2015-11-27 16:28:24</p>
+    </div>
+
+    
+        <hr class="fhr">
+        <div id="vcomments"></div>
+    
+</div>
+    <div class="footer" id="footer">
+    <p>Copyright © 2020 <a class="flink" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>-<a class="flink" target="_blank" rel="noopener" href="https://github.com/sanjinhub/hexo-theme-geek">Geek</a>.
+        <label class="el-switch el-switch-green el-switch-sm" style="vertical-align: sub;">
+            <input type="checkbox" name="switch" id="update_style">
+            <span class="el-switch-style"></span>
+        </label>
+<!--         <script type="text/javascript">
+        var cnzz_protocol = (("https:" == document.location.protocol) ? "https://" : "http://");
+        document.write(unescape("%3Cspan id='cnzz_stat_icon_1278548644'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "v1.cnzz.com/stat.php%3Fid%3D1278548644%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+        </script> -->
+    </p>
+</div>
+<input type="hidden" id="web_style" value="black">
+<input type="hidden" id="valine_appid" value="cbTPc8u7ho07U6TmlFC0RjK7">
+<input type="hidden" id="valine_appKey" value="4hH8asmBIHG3iSVSUt8Hu5OP">
+
+<script src="/libs/jquery.min.js"></script>
+
+
+<script src="/libs/highlight/highlight.pack.js"></script>
+
+<script src='//cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+
+<script src="/js/js.js"></script>
+
+<style type="text/css">
+.v * {
+    color: #698fca;
+}
+
+.v .vlist .vcard .vhead .vsys {
+    color: #3a3e4a;
+}
+
+.v .vlist .vcard .vh .vmeta .vat {
+    color: #638fd5;
+}
+
+.v .vlist .vcard .vhead .vnick {
+    color: #6ba1ff;
+}
+
+.v a {
+    color: #8696b1;
+}
+
+.v .vlist .vcard .vhead .vnick:hover {
+    color: #669bfc;
+}
+</style>
+</body>
+
+</html>

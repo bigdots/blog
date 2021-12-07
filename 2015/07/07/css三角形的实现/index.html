@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>
+        yzg的个人站
+    </title>
+    
+<link rel="stylesheet" href="/libs/highlight/styles/monokai-sublime.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body id="bodyx">
+    <div class="hd posts">
+    <a href="/index.html"><i class="fa fa-reply replay-btn" aria-hidden="true"></i></a>
+    <div class="post-title">
+        <p>
+            css三角形的实现
+        </p>
+        <hr>
+    </div>
+    <div class="post-content">
+        <h3 id="实心三角形"><a href="#实心三角形" class="headerlink" title="实心三角形"></a>实心三角形</h3><p>原理：</p>
+<p><img src="/images/201511/1.jpg"></p>
+<span id="more"></span>
+
+<p>上图为盒子的边框模型。当中间的conten部分的宽和高为0时，就变成了下图这样。</p>
+<p><img src="/images/201511/2.jpg"><br>接着，我们让左右边框为透明，上边框为0；即为如下三角形</p>
+<div style="width:0;height:0;border-left: 160px solid 
+            transparent;border-right: 160px solid transparent;
+            border-bottom: 130px solid #eeeeee;">
+            </div>
+
+<p><em>代码实现</em></p>
+<pre><code>    div&#123;
+        width:0;height:0;
+        border-left: 160px solid transparent;
+        border-right: 160px solid transparent;
+        border-bottom: 130px solid #eeeeee;
+    &#125;
+</code></pre>
+<p>网上有人做了个动图，解释了全过程<br><img src="/images/201511/2.gif"></p>
+<h3 id="空心三角形"><a href="#空心三角形" class="headerlink" title="空心三角形"></a>空心三角形</h3><p>原理：用俩个三角形进行叠加</p>
+<style>
+    .triangle:before{
+            top:0;
+            left:0;
+            content: '';
+            position: absolute;
+            display: block;
+            width: 0;
+            height: 0;
+            border-left: 50px solid transparent;
+            border-right: 50px solid transparent;
+            border-bottom: 50px solid red;
+        }
+        .triangle:after{
+            top:1px;
+            left:2px;
+            content: '';
+            position: absolute;
+            display: block;
+            width: 0;
+            height: 0;
+            border-left: 48px solid transparent;
+            border-right: 48px solid transparent;
+            border-bottom: 48px solid #fff;
+        }
+        .triangle{
+            position: relative;
+            height: 60px;
+        }
+</style>
+
+<div class="triangle"></div>
+
+    
+<p>代码实现</p>
+<pre><code>&lt;div class=&quot;triangle&quot;&gt;&lt;/div&gt;
+
+.triangle:before&#123;
+    top:0;
+    left:0;
+    content: &#39;&#39;;
+    position: absolute;
+    display: block;
+    width: 0;
+    height: 0;
+    border-left: 50px solid transparent;
+    border-right: 50px solid transparent;
+    border-bottom: 50px solid red;
+&#125;
+
+.triangle:after&#123;
+    top:1px;
+    left:2px;
+    content: &#39;&#39;;
+    position: absolute;
+    display: block;
+    width: 0;
+    height: 0;
+    border-left: 48px solid transparent;
+    border-right: 48px solid transparent;
+    border-bottom: 48px solid #fff;
+&#125;
+
+.triangle&#123;
+    position: relative;
+&#125;
+</code></pre>
+<hr>
+<p style="text-align:right">整理于2015-11-30 14:08:14</p>
+    </div>
+
+    
+        <hr class="fhr">
+        <div id="vcomments"></div>
+    
+</div>
+    <div class="footer" id="footer">
+    <p>Copyright © 2020 <a class="flink" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>-<a class="flink" target="_blank" rel="noopener" href="https://github.com/sanjinhub/hexo-theme-geek">Geek</a>.
+        <label class="el-switch el-switch-green el-switch-sm" style="vertical-align: sub;">
+            <input type="checkbox" name="switch" id="update_style">
+            <span class="el-switch-style"></span>
+        </label>
+<!--         <script type="text/javascript">
+        var cnzz_protocol = (("https:" == document.location.protocol) ? "https://" : "http://");
+        document.write(unescape("%3Cspan id='cnzz_stat_icon_1278548644'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "v1.cnzz.com/stat.php%3Fid%3D1278548644%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+        </script> -->
+    </p>
+</div>
+<input type="hidden" id="web_style" value="black">
+<input type="hidden" id="valine_appid" value="cbTPc8u7ho07U6TmlFC0RjK7">
+<input type="hidden" id="valine_appKey" value="4hH8asmBIHG3iSVSUt8Hu5OP">
+
+<script src="/libs/jquery.min.js"></script>
+
+
+<script src="/libs/highlight/highlight.pack.js"></script>
+
+<script src='//cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+
+<script src="/js/js.js"></script>
+
+<style type="text/css">
+.v * {
+    color: #698fca;
+}
+
+.v .vlist .vcard .vhead .vsys {
+    color: #3a3e4a;
+}
+
+.v .vlist .vcard .vh .vmeta .vat {
+    color: #638fd5;
+}
+
+.v .vlist .vcard .vhead .vnick {
+    color: #6ba1ff;
+}
+
+.v a {
+    color: #8696b1;
+}
+
+.v .vlist .vcard .vhead .vnick:hover {
+    color: #669bfc;
+}
+</style>
+</body>
+
+</html>

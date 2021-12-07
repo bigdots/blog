@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>
+        yzg的个人站
+    </title>
+    
+<link rel="stylesheet" href="/libs/highlight/styles/monokai-sublime.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body id="bodyx">
+    <div class="hd posts">
+    <a href="/index.html"><i class="fa fa-reply replay-btn" aria-hidden="true"></i></a>
+    <div class="post-title">
+        <p>
+            redux 初识
+        </p>
+        <hr>
+    </div>
+    <div class="post-content">
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><blockquote>
+<p>Redux 试图让 state 的变化变得可预测</p>
+</blockquote>
+<p>react／react-native 将组件的更新交给了状态机（state），想要更新页面活着页面的某个组件就必须得通过改变state的方式。页面越复杂，组件越多，所需要的state就越多，并且随着页面的交互，state也需要不断得变化，而管理这些不断变化的 state 就变的非常困难。终有一刻，不计其数的 state 会让你觉得 state 的变化已然不受控制。</p>
+<blockquote>
+<p>“如果你不知道是否需要 Redux，那就是不需要它。”</p>
+</blockquote>
+<p>Redux主要作用是让应用的 state 可以集中管理，从而达到清晰管理每个 state，所以当你的应用很简单时，完全不需要使用redux，它会增加你的工作量。</p>
+<h2 id="三大原则"><a href="#三大原则" class="headerlink" title="三大原则"></a>三大原则</h2><p>Redux 主要是通过限制 state 更新发生的时间和方式来实现 state 的管理。而这些限制条件则反应在三大原则中：</p>
+<h3 id="单一数据源"><a href="#单一数据源" class="headerlink" title="单一数据源"></a>单一数据源</h3><p>整个应用的 state 被储存在一棵 object tree 中，并且这个 object tree 只存在于唯一一个 store 中。</p>
+<h3 id="State-只读"><a href="#State-只读" class="headerlink" title="State 只读"></a>State 只读</h3><p><strong>惟一改变 state 的方法就是触发 action。</strong></p>
+<p>确保视图和网络请求都不能直接修改 state，它们可以表达想要修改的意图（actio），然后通过这个触发意图（action）来修改 state。</p>
+<h3 id="使用纯函数来执行修改"><a href="#使用纯函数来执行修改" class="headerlink" title="使用纯函数来执行修改"></a>使用纯函数来执行修改</h3><p><strong>为了描述 action 如何改变 state tree ，你需要编写 reducers。</strong></p>
+<p>Reducer 是纯函数，它接收先前的 state 和 action，并返回新的 state。</p>
+<h2 id="Action、Reducer-和-Store"><a href="#Action、Reducer-和-Store" class="headerlink" title="Action、Reducer 和 Store"></a>Action、Reducer 和 Store</h2><h3 id="Action"><a href="#Action" class="headerlink" title="Action"></a>Action</h3><p>action是一个普通对象，用于指明用户的操作行为，它是把数据从应用传到 store 的有效载荷，是 store 数据的唯一来源。通常将新数据（state）传入action发送给store。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">const EAT_APPLE = &#x27;EAT_APPLE&#x27;</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  type: EAT_APPLE,</span><br><span class="line">  text: &#x27;eat an apple&#x27;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里定义了一个action对象，它有<code>type</code>和<code>text</code>俩个键，其中<code>type</code>是必需的，用于描述当前action；<code>text</code>是自定义的，作为承载数据的载体。</p>
+<p> <strong>Action 创建函数</strong></p>
+<p> <code>Action创建函数</code>就是生成 action 的方法，，调用这个函数会创建action，通常只返回一个简单的action对象。它的作用主要是为了减少重复大量地创建action。</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">function eat(text) &#123;</span><br><span class="line"> return &#123;</span><br><span class="line">   type: EAT_APPLE,</span><br><span class="line">   text</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Reducer"><a href="#Reducer" class="headerlink" title="Reducer"></a>Reducer</h3><p>reducer根据action操作来做出不同的数据响应，指明应用如何更新 state。它是一个纯函数，只做数据处理。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(previousState, action) =&gt; newState</span><br></pre></td></tr></table></figure>
+
+<p>它接收俩个参数：action和state，并return一个新的state。</p>
+<p>纯函数(同样的输入，必定得到同样的输出)：</p>
+<ul>
+<li>修改传入参数；</li>
+<li>执行有副作用的操作，如 API 请求和路由跳转；</li>
+<li>调用非纯函数，如 Date.now() 或 Math.random()。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"> //使用ES6参数默认值语法初始化state</span><br><span class="line">function toEat(state = &#123;behavior: &quot;&quot;&#125;, action) &#123;</span><br><span class="line">  if (typeof state === &#x27;EAT_APPLE&#x27;) &#123;</span><br><span class="line">    return Object.assign(&#123;&#125;, state,&#123;</span><br><span class="line">    	behavior: action.text</span><br><span class="line">    &#125;&#125;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  return state；</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong></p>
+<ul>
+<li>不要修改 state，Object.assign() 新建了一个副本</li>
+<li>在无匹配action的情况下返回旧的 state</li>
+</ul>
+<p>由于redux单一数据源，所以整个应用只有一个单一的 store，所以当需要拆分数据处理逻辑时，你应该使用 reducer 组合 而不是创建多个 store。</p>
+<p>Redux 提供了一个combineReducers方法，用于 Reducer 的合并：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">combineReducers(&#123;reducer,...&#125;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="Store"><a href="#Store" class="headerlink" title="Store"></a>Store</h3><p> Redux 应用只有一个单一的 store。</p>
+<p> store有以下方法：</p>
+<ul>
+<li><p>createStore(reducer,[preloadedState])  </p>
+<p>  根据传入的reducer创建一个store。这个函数的第二个参数是可选的，用于设置 state 初始状态。</p>
+</li>
+<li><p>store.getState()</p>
+<p>  获取当前state的值。</p>
+</li>
+<li><p>store.dispatch(action)</p>
+<p> 向store派遣一个action。即向store传值。</p>
+</li>
+<li><p>store.subscribe(listener)</p>
+<p> 注册监听器，监听store，一旦store变化，会触发listener。该函数会返回一个函数用于注销该监听器。</p>
+</li>
+</ul>
+<h3 id="工作流程"><a href="#工作流程" class="headerlink" title="工作流程"></a>工作流程</h3><p> 一个清晰明了的流程图能帮我们更好的理解：<br> <img src="https://raw.githubusercontent.com/bigdots/blog/master/images/201601/redux.png"></p>
+<p>从上图可以看出redux处理的是一个单向数据流：</p>
+<ul>
+<li><p>用户行为或者程序调用 store.dispatch(action)，向store派遣action；</p>
+</li>
+<li><p>store在接收到action后，会自动呼起reducer来处理action，并且会传入俩个参数（当前 State 和收到的 Action），这里reducer可以依据数据处理逻辑拆分成多个,但是数据源store只能是一个；</p>
+</li>
+<li><p>combineReducers函数会将多个多个子 reducer 输出合并成一个单一的 state 树</p>
+</li>
+<li><p>生成新的UI</p>
+</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
+<li>并不总是需要redux，如果你的应用没那么复杂，就没必要用它；</li>
+<li>redux通过限制数据更新发生的时间和方式来达到管理state的目的；</li>
+<li>redux三大原则：单一store、reducer纯函数、state只读</li>
+<li>在 createStore 和 reducer 函数中都可以初始化state。</li>
+<li>redux通过dispatch、subscribe、getState实现数据的发送、监听、获取，从而实现单向数据流的流动</li>
+</ol>
+
+    </div>
+
+    
+        <hr class="fhr">
+        <div id="vcomments"></div>
+    
+</div>
+    <div class="footer" id="footer">
+    <p>Copyright © 2020 <a class="flink" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>-<a class="flink" target="_blank" rel="noopener" href="https://github.com/sanjinhub/hexo-theme-geek">Geek</a>.
+        <label class="el-switch el-switch-green el-switch-sm" style="vertical-align: sub;">
+            <input type="checkbox" name="switch" id="update_style">
+            <span class="el-switch-style"></span>
+        </label>
+<!--         <script type="text/javascript">
+        var cnzz_protocol = (("https:" == document.location.protocol) ? "https://" : "http://");
+        document.write(unescape("%3Cspan id='cnzz_stat_icon_1278548644'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "v1.cnzz.com/stat.php%3Fid%3D1278548644%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+        </script> -->
+    </p>
+</div>
+<input type="hidden" id="web_style" value="black">
+<input type="hidden" id="valine_appid" value="cbTPc8u7ho07U6TmlFC0RjK7">
+<input type="hidden" id="valine_appKey" value="4hH8asmBIHG3iSVSUt8Hu5OP">
+
+<script src="/libs/jquery.min.js"></script>
+
+
+<script src="/libs/highlight/highlight.pack.js"></script>
+
+<script src='//cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+
+<script src="/js/js.js"></script>
+
+<style type="text/css">
+.v * {
+    color: #698fca;
+}
+
+.v .vlist .vcard .vhead .vsys {
+    color: #3a3e4a;
+}
+
+.v .vlist .vcard .vh .vmeta .vat {
+    color: #638fd5;
+}
+
+.v .vlist .vcard .vhead .vnick {
+    color: #6ba1ff;
+}
+
+.v a {
+    color: #8696b1;
+}
+
+.v .vlist .vcard .vhead .vnick:hover {
+    color: #669bfc;
+}
+</style>
+</body>
+
+</html>

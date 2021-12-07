@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>
+        yzg的个人站
+    </title>
+    
+<link rel="stylesheet" href="/libs/highlight/styles/monokai-sublime.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body id="bodyx">
+    <div class="hd posts">
+    <a href="/index.html"><i class="fa fa-reply replay-btn" aria-hidden="true"></i></a>
+    <div class="post-title">
+        <p>
+            构造函数、原型与原型链
+        </p>
+        <hr>
+    </div>
+    <div class="post-content">
+        <!-- TOC -->
+
+<ul>
+<li><a href="#%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0">构造函数</a></li>
+<li><a href="#prototype">prototype</a></li>
+<li><a href="#constructor-%E5%B1%9E%E6%80%A7">constructor 属性</a></li>
+<li><a href="#__proto__">__proto__</a></li>
+<li><a href="#%E5%8E%9F%E5%9E%8B%E9%93%BE">原型链</a></li>
+</ul>
+<!-- /TOC -->
+
+<p><img src="https://raw.githubusercontent.com/bigdots/blog/master/images/201801/%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E3%80%81%E5%8E%9F%E5%9E%8B%E3%80%81%E5%AE%9E%E4%BE%8B.png" alt="image"></p>
+<h2 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h2><p>ECMAScript 中提供了构造函数来创建新对象。但构造函数本身就是一个函数，与普通函数没有任何区别，只不过为了区分，一般将其首字母大写，但这并不是必须的。</p>
+<p><strong>函数被 new 关键字调用时就是构造函数。</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params">name</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;execute&quot;</span>);</span><br><span class="line">    <span class="built_in">this</span>.name = name;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> k = <span class="keyword">new</span> f(<span class="string">&quot;k&quot;</span>); <span class="comment">// execute</span></span><br><span class="line"><span class="built_in">console</span>.log(k); <span class="comment">// &#123;name: &quot;k&quot;&#125;</span></span><br><span class="line"><span class="keyword">var</span> h = f(<span class="string">&quot;h&quot;</span>); <span class="comment">// execute</span></span><br><span class="line"><span class="built_in">console</span>.log(h); <span class="comment">// undefined</span></span><br></pre></td></tr></table></figure>
+
+<p>从上面代码可以看出：</p>
+<ul>
+<li>首字母是否大写并不影响函数 f 作为构造函数使用，</li>
+<li>不使用 new 调用函数就是普通函数，直接执行内部代码，使用 new，函数的角色就成为了构造函数，创建一个对象并返回。</li>
+</ul>
+<p>对象由构造函数通过 new 关键字创造，那么是如何创造的呢？</p>
+<p>new 关键字的内部实现机制：</p>
+<ul>
+<li>创建一个新对象；</li>
+<li>将构造函数的作用域赋值给新对象；</li>
+<li>执行构造函数中的代码；</li>
+<li>返回新对象</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;&#125;; <span class="comment">// 创建一个空对象</span></span><br><span class="line">obj.__proto__ = <span class="title">constructor</span>.<span class="title">prototype</span>; <span class="comment">// 添加__proto__属性，并指向构造函数的 prototype 属性。</span></span><br><span class="line"><span class="title">constructor</span>.<span class="title">call</span>(<span class="params"><span class="built_in">this</span></span>); <span class="comment">// 绑定this</span></span><br><span class="line"><span class="keyword">return</span> obj;</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="prototype"><a href="#prototype" class="headerlink" title="prototype"></a>prototype</h2><blockquote>
+<p>每一个函数都有一个 <code>prototype</code> 属性。</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Foo</span>(<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">Foo.prototype; <span class="comment">// &#123;constructor,__proto__&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>无论什么时候，只要创建了一个新函数，根据一组特定的规则为该函数创建一个 prototype 属性，这个属性指向函数的原型对象。</strong></p>
+<p>那么这个创建的原型对象是什么呢？</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">constructor</span>: ƒ Foo(),</span><br><span class="line">    <span class="attr">__proto__</span>: <span class="built_in">Object</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="constructor-属性"><a href="#constructor-属性" class="headerlink" title="constructor 属性"></a>constructor 属性</h2><blockquote>
+<p>每一个原型对象都有一个 <code>constructor</code> 属性</p>
+</blockquote>
+<p>创建了自定义的构造函数后，其原型对象只会默认取得 <code>constructor</code> 属性。这个属性解决了对象识别问题，即可以通过该属性判断出实例是由哪个构造函数创建的。</p>
+<!-- 其中 constructor 指向当前构造函数；`__proto__` 指向 Object.prototype。 -->
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Foo.prototype.constructor === Foo; <span class="comment">//  true</span></span><br></pre></td></tr></table></figure>
+
+<p>前面说了，原型对象只会默认取得 <code>constructor</code> 属性，那么原型对象的其他属性（比如：<code>__proto__</code> ）是这么来的呢，这就要说到 <code>__proto__</code> 指针了。</p>
+<!-- **原来函数的原型的原型竟然是 Object 的原型！！！！** -->
+
+<h2 id="proto"><a href="#proto" class="headerlink" title="__proto__"></a>__proto__</h2><blockquote>
+<p>每一个实例都有一个 <code>__proto__</code> 指针，指向构造函数的原型对象。</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> foo = <span class="keyword">new</span> Foo();</span><br><span class="line">foo.__proto__ === Foo.prototype; <span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+
+<p>上面提到的构造函数的原型对象它本身也是一个实例，所以在它内部会有一个 <code>__proto__</code> 指针。</p>
+<p>想要知道构造函数的原型对象是由什么创建的吗？</p>
+<p>活学活用，这里我们可以使用刚刚学到对象指向问题判断的知识。我们想要知道 constructor，那么可以通过实例的原型对象（因为每一个原型对象都有一个 <code>constructor</code> 属性），所以我们可以这样操作：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Foo.prototype.__proto__.constructor <span class="comment">// ƒ Object() &#123; [native code] &#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>这说明，构造函数的原型的原型是由 Object 生成的！！所以，构造函数原型对象的其他方法，则是从 Object 上继承来的。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Foo.prototype.__proto__ === <span class="built_in">Object</span>.prototype; <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="原型链"><a href="#原型链" class="headerlink" title="原型链"></a>原型链</h2><p>原型链的理论主要基于上述提到的构造函数、实例和原型的关系：</p>
+<ul>
+<li>每一个构造函数都有一个原型对象</li>
+<li>原型对象都包含一个指向构造函数的 constructor 属性</li>
+<li>每一个实例都包含一个指向原型对象的 <code>__proto__</code> 指针</li>
+</ul>
+<p>其中最最重要的是第三条，依赖这条关系，层层递进，就形成了<strong>实例与原型</strong>的链条。</p>
+<p>我接着上面的探索，构造函数的原型的原型是由 Object 生成的，那么 Object 的原型是由什么生成？而原型链的终点又是在哪？</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Object</span>.prototype.__proto__ <span class="comment">// null</span></span><br><span class="line"><span class="literal">null</span>.__proto__; <span class="comment">// Uncaught TypeError: Cannot read property &#x27;__proto__&#x27; of null</span></span><br><span class="line"><span class="comment">// game over</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>原型的终点是 null</strong>，因为 null 没有 <strong><strong>proto</strong></strong> 属性。</p>
+<p>哇，感觉这很符合创世纪的故事啊—— “初始，一切且不存在（null）”。</p>
+<p><em>tips： 其实 null 是基本数据类型，typeof null 返回 object 是 ECMAScript 设计上的一个错误</em></p>
+<p>最后，一图胜千言：<br><img src="https://raw.githubusercontent.com/bigdots/blog/master/images/201801/%E5%8E%9F%E5%9E%8B%E9%93%BE.png" alt="image"></p>
+<!-- 关于 Function.**proto**===Function.prototype 的问题,
+是不是可以说 Function 也是 Function 本身的一个实例呢？这个具体该怎么理解 js 这种设计理念呢，Function 是不是既充当鸡又充当蛋呢。。。 -->
+    </div>
+
+    
+        <hr class="fhr">
+        <div id="vcomments"></div>
+    
+</div>
+    <div class="footer" id="footer">
+    <p>Copyright © 2020 <a class="flink" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>-<a class="flink" target="_blank" rel="noopener" href="https://github.com/sanjinhub/hexo-theme-geek">Geek</a>.
+        <label class="el-switch el-switch-green el-switch-sm" style="vertical-align: sub;">
+            <input type="checkbox" name="switch" id="update_style">
+            <span class="el-switch-style"></span>
+        </label>
+<!--         <script type="text/javascript">
+        var cnzz_protocol = (("https:" == document.location.protocol) ? "https://" : "http://");
+        document.write(unescape("%3Cspan id='cnzz_stat_icon_1278548644'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "v1.cnzz.com/stat.php%3Fid%3D1278548644%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+        </script> -->
+    </p>
+</div>
+<input type="hidden" id="web_style" value="black">
+<input type="hidden" id="valine_appid" value="cbTPc8u7ho07U6TmlFC0RjK7">
+<input type="hidden" id="valine_appKey" value="4hH8asmBIHG3iSVSUt8Hu5OP">
+
+<script src="/libs/jquery.min.js"></script>
+
+
+<script src="/libs/highlight/highlight.pack.js"></script>
+
+<script src='//cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+
+<script src="/js/js.js"></script>
+
+<style type="text/css">
+.v * {
+    color: #698fca;
+}
+
+.v .vlist .vcard .vhead .vsys {
+    color: #3a3e4a;
+}
+
+.v .vlist .vcard .vh .vmeta .vat {
+    color: #638fd5;
+}
+
+.v .vlist .vcard .vhead .vnick {
+    color: #6ba1ff;
+}
+
+.v a {
+    color: #8696b1;
+}
+
+.v .vlist .vcard .vhead .vnick:hover {
+    color: #669bfc;
+}
+</style>
+</body>
+
+</html>

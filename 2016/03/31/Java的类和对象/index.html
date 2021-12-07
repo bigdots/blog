@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>
+        yzg的个人站
+    </title>
+    
+<link rel="stylesheet" href="/libs/highlight/styles/monokai-sublime.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body id="bodyx">
+    <div class="hd posts">
+    <a href="/index.html"><i class="fa fa-reply replay-btn" aria-hidden="true"></i></a>
+    <div class="post-title">
+        <p>
+            Java的类和对象
+        </p>
+        <hr>
+    </div>
+    <div class="post-content">
+        <h2 id="类"><a href="#类" class="headerlink" title="类"></a>类</h2><p>类实际上是定义一个模板，而对象是由这个模板产生的一个实例。</p>
+<span id="more"></span>
+
+<p><strong>类的一般形式</strong></p>
+<blockquote>
+<p>class 类名{<br> 类型实例变量名;<br> 类型实例变量名;<br> ……<br> 类型 方法名(参数){<br> //方法内容<br> }<br> ……<br>}</p>
+</blockquote>
+<p>这里，在类名面前并没有向以前那样加上修饰符public，在Java 中是允许把许多类的声明放在一个Java 文件中的，但是这些类<strong>只能有一个类被声明为public</strong>，而且这个<strong>类名必须和Java 文件名相同</strong>。<br>类修饰符：</p>
+<ul>
+<li>private：只有本类可见。</li>
+<li>protected：本类、子类、同一包的类可见。</li>
+<li>默认（无修饰符）：本类、同一包的类可见。</li>
+<li>public：对任何类可见。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Humans</span> </span>&#123;</span><br><span class="line">    String name;</span><br><span class="line">    String sex;</span><br><span class="line">    <span class="keyword">int</span> age;</span><br><span class="line">    String address;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">work</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;I am working&quot;</span>);</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">eat</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;I am eating&quot;</span>);</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="function">String <span class="title">getState</span><span class="params">(<span class="keyword">int</span> time)</span></span>&#123;</span><br><span class="line">        String state = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">if</span>(time&gt;=<span class="number">0</span>&amp;&amp; time&lt;=<span class="number">24</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(time&gt;<span class="number">8</span>&amp;&amp;time&lt;<span class="number">17</span>)&#123;</span><br><span class="line">                state=<span class="string">&quot;I am working&quot;</span>;</span><br><span class="line">            &#125;<span class="keyword">else</span> <span class="keyword">if</span>(time&gt;=<span class="number">17</span>&amp;&amp;time&lt;<span class="number">22</span>)&#123;</span><br><span class="line">                state=<span class="string">&quot;I am studying&quot;</span>;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                state=<span class="string">&quot;I am sleeping&quot;</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            state = <span class="string">&quot;it&#x27;s not correct time&quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> state;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//测试类</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Human</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[ ])</span> </span>&#123;</span><br><span class="line">        <span class="comment">//创建对象</span></span><br><span class="line">        Humans wangming = <span class="keyword">new</span> Humans();</span><br><span class="line">        <span class="comment">//对象的使用</span></span><br><span class="line">        wangming.name = <span class="string">&quot;王明&quot;</span>;</span><br><span class="line">        wangming.age = <span class="number">25</span>;</span><br><span class="line">        wangming.sex = <span class="string">&quot;男&quot;</span>;</span><br><span class="line">        wangming.address = <span class="string">&quot;中国北京&quot;</span>;</span><br><span class="line">        System.out.println(wangming.name+<span class="string">&quot;晚上23 点钟你在干嘛&quot;</span>);</span><br><span class="line">        <span class="comment">//调用getState()方法，把返回值打印出来</span></span><br><span class="line">        System.out.println(wangming.getState(<span class="number">23</span>));</span><br><span class="line">        System.out.println(<span class="string">&quot;下午15 点呢&quot;</span>);</span><br><span class="line">        System.out.println(wangming.getState(<span class="number">15</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="对象"><a href="#对象" class="headerlink" title="对象"></a>对象</h2><p>描述对象的类抽象出来，已经有了建立对象的模板，接下来的工作就是创造这些类的实例，既对象<br><strong>创建对象</strong></p>
+<blockquote>
+<p>className objectName = new className();</p>
+</blockquote>
+<ol>
+<li>上面的创建语句其实是俩个语句合并而成：</li>
+</ol>
+<ul>
+<li>左边<code>className objectName</code>语句声明一个className类的变量objectName，</li>
+<li>右边<code>new className()</code>语句通过new 运算符获得一个对象实例并为其分配内存，获得对象实例赋值给wangming</li>
+</ul>
+<ol start="2">
+<li>这句语句实际上是调用了一个方法，这个方法是系统自带的方法，由于这个方法被用来构造对象，所以把它称为构造函数。构造函数的作用是生成对象，并对对象的实例变量进行初始化。系统自带的默认构造函数把所有的数字变量设为0，把所有的boolean 型变量设为false，把所有的对象变量都设为null。<br>把例1中的Humans类实例化，即Humans wangming = new Humans();结果如下：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">Humans</span><span class="params">()</span></span>&#123;</span><br><span class="line">    name=<span class="keyword">null</span>;</span><br><span class="line">    age=<span class="number">0</span>;</span><br><span class="line">    sex=<span class="keyword">null</span>;</span><br><span class="line">    addr=<span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+最后把这个赋值给wangming变量。</li>
+</ol>
+<p>构造函数有一个很明显的特点是它的名字必须跟类名相同，并且没有返回值类型</p>
+<p><strong>使用对象</strong><br>对象是使用主要通过设置对象属性和调用对象方法的方式，见例1。</p>
+<h2 id="包"><a href="#包" class="headerlink" title="包"></a>包</h2><p>在大型的项目中，可能需要上千个类甚至上万个类，如果都放在一起，是非常乱的，而且要对这上万个类都起不同的名字，显然这样是很复杂的。Java 提供了一种有效的类的组织结构，这就是包。包机制是为了更好地组织类，用于区别类名的命名空间。</p>
+<p><strong>包的作用</strong></p>
+<ul>
+<li>把功能相似或相关的类或接口组织在同一个包中，方便类的查找和使用。</li>
+<li>如同文件夹一样，包也采用了树形目录的存储方式。同一个包中的类名字是不同的，不同的包中的类的名字是可以相同的，当同时调用两个不同包中相同类名的类时，应该加上包名加以区别。因此，包可以避免名字冲突。</li>
+<li>包也限定了访问权限，拥有包访问权限的类才能访问某个包中的类。</li>
+</ul>
+<p><strong>创建</strong></p>
+<ul>
+<li>创建一个新文件夹，这个文件夹就是包；</li>
+<li>在这个文件夹下创建各个程序，但在每个程序前加上<code>package pkg;</code>声明： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">package pkg;</span><br><span class="line">public class PkgTest&#123;</span><br><span class="line">    public static void main(String args[ ])&#123;</span><br><span class="line">        System.out.println(&quot;PkgTest success&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p><strong>导入包</strong><br>包可以对类进行良好的管理，但是这样的话包就位于不同的文件夹下面了，不能直接在一个文件夹中调用需要的类。Java 的解决方案是导入需要的包，调用包主要通过<code>import</code>来实现。<br><code>import packageName.*</code>导入包中所有的类</p>
+<p>我的博客:<a target="_blank" rel="noopener" href="http://bigdots.github.io/">http://bigdots.github.io</a>、<a target="_blank" rel="noopener" href="http://www.cnblogs.com/yzg1/">http://www.cnblogs.com/yzg1/</a><br>如果觉得本文不错的话，帮忙点击下面的推荐哦,谢谢！</p>
+
+    </div>
+
+    
+        <hr class="fhr">
+        <div id="vcomments"></div>
+    
+</div>
+    <div class="footer" id="footer">
+    <p>Copyright © 2020 <a class="flink" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>-<a class="flink" target="_blank" rel="noopener" href="https://github.com/sanjinhub/hexo-theme-geek">Geek</a>.
+        <label class="el-switch el-switch-green el-switch-sm" style="vertical-align: sub;">
+            <input type="checkbox" name="switch" id="update_style">
+            <span class="el-switch-style"></span>
+        </label>
+<!--         <script type="text/javascript">
+        var cnzz_protocol = (("https:" == document.location.protocol) ? "https://" : "http://");
+        document.write(unescape("%3Cspan id='cnzz_stat_icon_1278548644'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "v1.cnzz.com/stat.php%3Fid%3D1278548644%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+        </script> -->
+    </p>
+</div>
+<input type="hidden" id="web_style" value="black">
+<input type="hidden" id="valine_appid" value="cbTPc8u7ho07U6TmlFC0RjK7">
+<input type="hidden" id="valine_appKey" value="4hH8asmBIHG3iSVSUt8Hu5OP">
+
+<script src="/libs/jquery.min.js"></script>
+
+
+<script src="/libs/highlight/highlight.pack.js"></script>
+
+<script src='//cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+
+<script src="/js/js.js"></script>
+
+<style type="text/css">
+.v * {
+    color: #698fca;
+}
+
+.v .vlist .vcard .vhead .vsys {
+    color: #3a3e4a;
+}
+
+.v .vlist .vcard .vh .vmeta .vat {
+    color: #638fd5;
+}
+
+.v .vlist .vcard .vhead .vnick {
+    color: #6ba1ff;
+}
+
+.v a {
+    color: #8696b1;
+}
+
+.v .vlist .vcard .vhead .vnick:hover {
+    color: #669bfc;
+}
+</style>
+</body>
+
+</html>

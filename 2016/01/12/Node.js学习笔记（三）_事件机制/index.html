@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>
+        yzg的个人站
+    </title>
+    
+<link rel="stylesheet" href="/libs/highlight/styles/monokai-sublime.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body id="bodyx">
+    <div class="hd posts">
+    <a href="/index.html"><i class="fa fa-reply replay-btn" aria-hidden="true"></i></a>
+    <div class="post-title">
+        <p>
+            Node.js学习笔记（三）_事件机制
+        </p>
+        <hr>
+    </div>
+    <div class="post-content">
+        <p>大部分的nodejs核心api都建立在异步的事件驱动架构之上，所以events是Node.js 最重要的模块,它提供了唯一的接口。events 模块不仅用于用户代码与 Node.js 下层事件循环的交互,还几乎被所有的模块依赖。</p>
+<h2 id="EventEmitter"><a href="#EventEmitter" class="headerlink" title="EventEmitter"></a>EventEmitter</h2><p>events 模块只提供了一个对象: events.EventEmitter。EventEmitter的核心就是事件发射与事件听器功能的封装。所有发射事件的对象都是EventEmitter类的实例，它暴露一个on函数来绑定一个或着多个函数到该对象上。当事件发射时,注册到这个事件的事件监听器被依次调用,事件参数作为回调函数参数传递。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">const EventEmitter = require(&#x27;events&#x27;);</span><br><span class="line"></span><br><span class="line">class MyEmitter extends EventEmitter &#123;&#125;</span><br><span class="line"></span><br><span class="line">const myEmitter = new MyEmitter();</span><br><span class="line">myEmitter.on(&#x27;event&#x27;, () =&gt; &#123;</span><br><span class="line">  console.log(&#x27;an event occurred!&#x27;);</span><br><span class="line">&#125;);</span><br><span class="line">myEmitter.emit(&#x27;event&#x27;);</span><br></pre></td></tr></table></figure>
+
+<p>以上例 中, myEmitter 为事件 event 注册了一个事件监听器, 后发射了 event 事件。运行结果中可以看到这个事件监听器的回调函数被调用。</p>
+<ul>
+<li>EventEmitter.on(event, listener) 为指定事件注册一个监听器,接受一个字<br>符串 event 和一个回调函数listener。</li>
+<li>EventEmitter.emit(event, [arg1], [arg2], […]) 发射 event 事件,传<br>递若干可选参数到事件监听器的参数表。</li>
+<li>EventEmitter.once(event, listener) 为指定事件注册一个单次监听器, 监听<br>听器最多只会触发一次,触发后立刻解除该监听器。</li>
+<li>EventEmitter.removeListener(event, listener)  移除指定事件的某个监听<br>器,listener必须是该事件已经注册过的监听器。</li>
+</ul>
+<p>如果对一个事件添加了超过10个侦听器,将会得到一条警告,这 一处设计与Node.js自身单线程运行有关,设计者认为侦听器太多,可能导致内 存泄漏,所以存在这样一个警告.</p>
+<h2 id="error事件"><a href="#error事件" class="headerlink" title="error事件"></a>error事件</h2><p>EventEmitter 定义了一个特殊的事件 error,它包含了“错误”的语义,我们在遇到异常的时候通常会发射 error 事件。当error 被发射时,EventEmitter 规定如果没有响应的监听器,Node.js 会把它当作异常, 退出程序并打印调用栈。我们一般要为会发射 error 事件的对象设置监听器,避免遇到错误后整个个程序崩溃。</p>
+<p>最佳实践：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">const myEmitter = new MyEmitter();</span><br><span class="line">myEmitter.on(&#x27;error&#x27;, (err) =&gt; &#123;</span><br><span class="line">  console.log(&#x27;whoops! there was an error&#x27;);</span><br><span class="line">&#125;);</span><br><span class="line">myEmitter.emit(&#x27;error&#x27;, new Error(&#x27;whoops!&#x27;));</span><br></pre></td></tr></table></figure>
+
+
+
+
+<h2 id="http网络操作"><a href="#http网络操作" class="headerlink" title="http网络操作"></a>http网络操作</h2><h2 id="进程管理"><a href="#进程管理" class="headerlink" title="进程管理"></a>进程管理</h2>
+    </div>
+
+    
+        <hr class="fhr">
+        <div id="vcomments"></div>
+    
+</div>
+    <div class="footer" id="footer">
+    <p>Copyright © 2020 <a class="flink" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>-<a class="flink" target="_blank" rel="noopener" href="https://github.com/sanjinhub/hexo-theme-geek">Geek</a>.
+        <label class="el-switch el-switch-green el-switch-sm" style="vertical-align: sub;">
+            <input type="checkbox" name="switch" id="update_style">
+            <span class="el-switch-style"></span>
+        </label>
+<!--         <script type="text/javascript">
+        var cnzz_protocol = (("https:" == document.location.protocol) ? "https://" : "http://");
+        document.write(unescape("%3Cspan id='cnzz_stat_icon_1278548644'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "v1.cnzz.com/stat.php%3Fid%3D1278548644%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+        </script> -->
+    </p>
+</div>
+<input type="hidden" id="web_style" value="black">
+<input type="hidden" id="valine_appid" value="cbTPc8u7ho07U6TmlFC0RjK7">
+<input type="hidden" id="valine_appKey" value="4hH8asmBIHG3iSVSUt8Hu5OP">
+
+<script src="/libs/jquery.min.js"></script>
+
+
+<script src="/libs/highlight/highlight.pack.js"></script>
+
+<script src='//cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+
+<script src="/js/js.js"></script>
+
+<style type="text/css">
+.v * {
+    color: #698fca;
+}
+
+.v .vlist .vcard .vhead .vsys {
+    color: #3a3e4a;
+}
+
+.v .vlist .vcard .vh .vmeta .vat {
+    color: #638fd5;
+}
+
+.v .vlist .vcard .vhead .vnick {
+    color: #6ba1ff;
+}
+
+.v a {
+    color: #8696b1;
+}
+
+.v .vlist .vcard .vhead .vnick:hover {
+    color: #669bfc;
+}
+</style>
+</body>
+
+</html>

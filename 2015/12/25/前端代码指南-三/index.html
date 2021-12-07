@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>
+        yzg的个人站
+    </title>
+    
+<link rel="stylesheet" href="/libs/highlight/styles/monokai-sublime.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body id="bodyx">
+    <div class="hd posts">
+    <a href="/index.html"><i class="fa fa-reply replay-btn" aria-hidden="true"></i></a>
+    <div class="post-title">
+        <p>
+            前端代码指南(三)
+        </p>
+        <hr>
+    </div>
+    <div class="post-content">
+        <p><a href="/2015/12/24/%E5%89%8D%E7%AB%AF%E4%BB%A3%E7%A0%81%E6%8C%87%E5%8D%97-%E4%B8%80/">前端代码指南(一)</a><br><a href="/2015/12/25/%E5%89%8D%E7%AB%AF%E4%BB%A3%E7%A0%81%E6%8C%87%E5%8D%97-%E4%BA%8C/">前端代码指南(二)</a><br><a href="/2015/12/25/%E5%89%8D%E7%AB%AF%E4%BB%A3%E7%A0%81%E6%8C%87%E5%8D%97-%E4%B8%89/">前端代码指南(三)</a></p>
+<h1 id="javascript"><a href="#javascript" class="headerlink" title="javascript"></a>javascript</h1><span id="more"></span>
+
+<p><b style="color:#d44950">注：</b> 下面ES6的语法</p>
+<h3 id="性能"><a href="#性能" class="headerlink" title="性能"></a>性能</h3><p>性能中最重要的是可读性、正确性和可表达性，JavaScript基本上永远不会成为你的性能瓶颈。我们可以通过图像压缩、网络存取和减少回流等来优化性能。如果你看过整篇篇文章后只能记住一条，请记住这条。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">// 糟糕的 (albeit way faster)</span><br><span class="line">const arr = [1, 2, 3, 4];</span><br><span class="line">const len = arr.length;</span><br><span class="line">var i = -1;</span><br><span class="line">var result = [];</span><br><span class="line">while (++i &lt; len) &#123;</span><br><span class="line">  var n = arr[i];</span><br><span class="line">  if (n % 2 &gt; 0) continue;</span><br><span class="line">  result.push(n * n);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 推荐的</span><br><span class="line">const arr = [1, 2, 3, 4];</span><br><span class="line">const isEven = n =&gt; n % 2 == 0;</span><br><span class="line">const square = n =&gt; n * n;</span><br><span class="line"></span><br><span class="line">const result = arr.filter(isEven).map(square);</span><br></pre></td></tr></table></figure>
+
+<h3 id="无领域"><a href="#无领域" class="headerlink" title="无领域"></a>无领域</h3><p>尽量保持你函数的纯净。理想地，应该创建无副作用的、不使用外部数据的并返回新对象(而不是改变现有的)的函数。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 糟糕的</span><br><span class="line">const merge = (target, ...sources) =&gt; Object.assign(target, ...sources);</span><br><span class="line">merge(&#123; foo: &quot;foo&quot; &#125;, &#123; bar: &quot;bar&quot; &#125;); // =&gt; &#123; foo: &quot;foo&quot;, bar: &quot;bar&quot; &#125;</span><br><span class="line"></span><br><span class="line">// 推荐的</span><br><span class="line">const merge = (...sources) =&gt; Object.assign(&#123;&#125;, ...sources);</span><br><span class="line">merge(&#123; foo: &quot;foo&quot; &#125;, &#123; bar: &quot;bar&quot; &#125;); // =&gt; &#123; foo: &quot;foo&quot;, bar: &quot;bar&quot; &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="原生"><a href="#原生" class="headerlink" title="原生"></a>原生</h3><p>尽可能依赖原生的方法</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 糟糕的</span><br><span class="line">const toArray = obj =&gt; [].slice.call(obj);</span><br><span class="line"></span><br><span class="line">// 推荐的</span><br><span class="line">const toArray = (() =&gt;</span><br><span class="line">  Array.from ? Array.from : obj =&gt; [].slice.call(obj)</span><br><span class="line">)();</span><br></pre></td></tr></table></figure>
+
+<h3 id="强制"><a href="#强制" class="headerlink" title="强制"></a>强制</h3><p>不要在不必要的时候使用隐形强制</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 糟糕的</span><br><span class="line">if (x === undefined || x === null) &#123; ... &#125;</span><br><span class="line"></span><br><span class="line">// 推荐的</span><br><span class="line">if (x == undefined) &#123; ... &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="循环"><a href="#循环" class="headerlink" title="循环"></a>循环</h3><p>不要使用循环,因为他们强迫你使用可变的对象。可以依赖<code>array.prototype</code>方法</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">// 糟糕的</span><br><span class="line">const sum = arr =&gt; &#123;</span><br><span class="line">  var sum = 0;</span><br><span class="line">  var i = -1;</span><br><span class="line">  for (;arr[++i];) &#123;</span><br><span class="line">    sum += arr[i];</span><br><span class="line">  &#125;</span><br><span class="line">  return sum;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">sum([1, 2, 3]); // =&gt; 6</span><br><span class="line"></span><br><span class="line">// 推荐的</span><br><span class="line">const sum = arr =&gt;</span><br><span class="line">  arr.reduce((x, y) =&gt; x + y);</span><br><span class="line"></span><br><span class="line">sum([1, 2, 3]); // =&gt; 6</span><br></pre></td></tr></table></figure>
+
+<p>如果你不能避免使用循环,或者使用<code>array.prototype</code>方法对你来说是一种受虐的行为,可以使用递归</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">// 糟糕的</span><br><span class="line">const createDivs = howMany =&gt; &#123;</span><br><span class="line">  while (howMany--) &#123;</span><br><span class="line">    document.body.insertAdjacentHTML(&quot;beforeend&quot;, &quot;&lt;div&gt;&lt;/div&gt;&quot;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line">createDivs(5);</span><br><span class="line"></span><br><span class="line">// 糟糕的</span><br><span class="line">const createDivs = howMany =&gt;</span><br><span class="line">  [...Array(howMany)].forEach(() =&gt;</span><br><span class="line">    document.body.insertAdjacentHTML(&quot;beforeend&quot;, &quot;&lt;div&gt;&lt;/div&gt;&quot;)</span><br><span class="line">  );</span><br><span class="line">createDivs(5);</span><br><span class="line"></span><br><span class="line">// 推荐的</span><br><span class="line">const createDivs = howMany =&gt; &#123;</span><br><span class="line">  if (!howMany) return;</span><br><span class="line">  document.body.insertAdjacentHTML(&quot;beforeend&quot;, &quot;&lt;div&gt;&lt;/div&gt;&quot;);</span><br><span class="line">  return createDivs(howMany - 1);</span><br><span class="line">&#125;;</span><br><span class="line">createDivs(5);</span><br></pre></td></tr></table></figure>
+
+<h3 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h3><p>忘记<code>arguments </code>对象。使用其余的参数才是更好的选择,这是因为：</p>
+<ol>
+<li>其余的参数是被命名的,所以你可以给这个函数的参数一个更好的注意</li>
+<li>其余的参数是一个真正的数组,这使得它更容易使用。</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 糟糕的</span><br><span class="line">const sortNumbers = () =&gt;</span><br><span class="line">  Array.prototype.slice.call(arguments).sort();</span><br><span class="line"></span><br><span class="line">// 推荐的</span><br><span class="line">const sortNumbers = (...numbers) =&gt; numbers.sort();</span><br></pre></td></tr></table></figure>
+
+<h3 id="Apply"><a href="#Apply" class="headerlink" title="Apply"></a>Apply</h3><p>忘记Apply()函数，使用扩展来代替</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">const greet = (first, last) =&gt; `Hi $&#123;first&#125; $&#123;last&#125;`;</span><br><span class="line">const person = [&quot;John&quot;, &quot;Doe&quot;];</span><br><span class="line"></span><br><span class="line">// 糟糕的</span><br><span class="line">greet.apply(null, person);</span><br><span class="line"></span><br><span class="line">// 推荐的</span><br><span class="line">greet(...person);</span><br></pre></td></tr></table></figure>
+
+<h3 id="绑定"><a href="#绑定" class="headerlink" title="绑定"></a>绑定</h3><p>忘记bind()函数，这里有个更惯用的方法</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 糟糕的</span><br><span class="line">[&quot;foo&quot;, &quot;bar&quot;].forEach(func.bind(this));</span><br><span class="line"></span><br><span class="line">// 推荐的</span><br><span class="line">[&quot;foo&quot;, &quot;bar&quot;].forEach(func, this);</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">// 糟糕的</span><br><span class="line">const person = &#123;</span><br><span class="line">  first: &quot;John&quot;,</span><br><span class="line">  last: &quot;Doe&quot;,</span><br><span class="line">  greet() &#123;</span><br><span class="line">    const full = function() &#123;</span><br><span class="line">      return `$&#123;this.first&#125; $&#123;this.last&#125;`;</span><br><span class="line">    &#125;.bind(this);</span><br><span class="line">    return `Hello $&#123;full()&#125;`;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 推荐的</span><br><span class="line">const person = &#123;</span><br><span class="line">  first: &quot;John&quot;,</span><br><span class="line">  last: &quot;Doe&quot;,</span><br><span class="line">  greet() &#123;</span><br><span class="line">    const full = () =&gt; `$&#123;this.first&#125; $&#123;this.last&#125;`;</span><br><span class="line">    return `Hello $&#123;full()&#125;`;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="高层级的函数"><a href="#高层级的函数" class="headerlink" title="高层级的函数"></a>高层级的函数</h3><p>在不必需的时候避免使用嵌套函数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 糟糕的</span><br><span class="line">[1, 2, 3].map(num =&gt; String(num));</span><br><span class="line"></span><br><span class="line">// 推荐的</span><br><span class="line">[1, 2, 3].map(String);</span><br></pre></td></tr></table></figure>
+
+<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><p>避免函数的多层次调用，合理使用结构来解决问题</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">const plus1 = a =&gt; a + 1;</span><br><span class="line">const mult2 = a =&gt; a * 2;</span><br><span class="line"></span><br><span class="line">// 糟糕的</span><br><span class="line">mult2(plus1(5)); // =&gt; 12</span><br><span class="line"></span><br><span class="line">// 推荐的</span><br><span class="line">const pipeline = (...funcs) =&gt; val =&gt; funcs.reduce((a, b) =&gt; b(a), val);</span><br><span class="line">const addThenMult = pipeline(plus1, mult2);</span><br><span class="line">addThenMult(5); // =&gt; 12</span><br></pre></td></tr></table></figure>
+
+<h3 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h3><p>缓存功能测试、大数据结构和任何昂贵的操作。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">// 糟糕的</span><br><span class="line">const contains = (arr, value) =&gt;</span><br><span class="line">  Array.prototype.includes</span><br><span class="line">    ? arr.includes(value)</span><br><span class="line">    : arr.some(el =&gt; el === value);</span><br><span class="line">contains([&quot;foo&quot;, &quot;bar&quot;], &quot;baz&quot;); // =&gt; false</span><br><span class="line"></span><br><span class="line">// 推荐的</span><br><span class="line">const contains = (() =&gt;</span><br><span class="line">  Array.prototype.includes</span><br><span class="line">    ? (arr, value) =&gt; arr.includes(value)</span><br><span class="line">    : (arr, value) =&gt; arr.some(el =&gt; el === value)</span><br><span class="line">)();</span><br><span class="line">contains([&quot;foo&quot;, &quot;bar&quot;], &quot;baz&quot;); // =&gt; false</span><br></pre></td></tr></table></figure>
+
+<h3 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h3><p><code>const</code>优于 <code>let</code>优于 <code>var</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 糟糕的</span><br><span class="line">var me = new Map();</span><br><span class="line">me.set(&quot;name&quot;, &quot;Ben&quot;).set(&quot;country&quot;, &quot;Belgium&quot;);</span><br><span class="line"></span><br><span class="line">// 推荐的</span><br><span class="line">const me = new Map();</span><br><span class="line">me.set(&quot;name&quot;, &quot;Ben&quot;).set(&quot;country&quot;, &quot;Belgium&quot;);</span><br></pre></td></tr></table></figure>
+<h3 id="条件"><a href="#条件" class="headerlink" title="条件"></a>条件</h3><p><code>if+return语句</code>  优于 <code>if...else if...else</code> 和<code>switch</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">// 糟糕的</span><br><span class="line">var grade;</span><br><span class="line">if (result &lt; 50)</span><br><span class="line">  grade = &quot;糟糕的&quot;;</span><br><span class="line">else if (result &lt; 90)</span><br><span class="line">  grade = &quot;推荐的&quot;;</span><br><span class="line">else</span><br><span class="line">  grade = &quot;excellent&quot;;</span><br><span class="line"></span><br><span class="line">// 推荐的</span><br><span class="line">const grade = (() =&gt; &#123;</span><br><span class="line">  if (result &lt; 50)</span><br><span class="line">    return &quot;糟糕的&quot;;</span><br><span class="line">  if (result &lt; 90)</span><br><span class="line">    return &quot;推荐的&quot;;</span><br><span class="line">  return &quot;excellent&quot;;</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+
+<h3 id="对象迭代"><a href="#对象迭代" class="headerlink" title="对象迭代"></a>对象迭代</h3><p>避免使用<code>for...in</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">const shared = &#123; foo: &quot;foo&quot; &#125;;</span><br><span class="line">const obj = Object.create(shared, &#123;</span><br><span class="line">  bar: &#123;</span><br><span class="line">    value: &quot;bar&quot;,</span><br><span class="line">    enumerable: true</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">// 糟糕的</span><br><span class="line">for (var prop in obj) &#123;</span><br><span class="line">  if (obj.hasOwnProperty(prop))</span><br><span class="line">    console.log(prop);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 推荐的</span><br><span class="line">Object.keys(obj).forEach(prop =&gt; console.log(prop));</span><br></pre></td></tr></table></figure>
+
+<h3 id="把对象作为maps"><a href="#把对象作为maps" class="headerlink" title="把对象作为maps"></a>把对象作为maps</h3><p>虽然对象是一个合法的用例，但map是一个更好更强大的选择</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">// 糟糕的</span><br><span class="line">const me = &#123;</span><br><span class="line">  name: &quot;Ben&quot;,</span><br><span class="line">  age: 30</span><br><span class="line">&#125;;</span><br><span class="line">var meSize = Object.keys(me).length;</span><br><span class="line">meSize; // =&gt; 2</span><br><span class="line">me.country = &quot;Belgium&quot;;</span><br><span class="line">meSize++;</span><br><span class="line">meSize; // =&gt; 3</span><br><span class="line"></span><br><span class="line">// 推荐的</span><br><span class="line">const me = new Map();</span><br><span class="line">me.set(&quot;name&quot;, &quot;Ben&quot;);</span><br><span class="line">me.set(&quot;age&quot;, 30);</span><br><span class="line">me.size; // =&gt; 2</span><br><span class="line">me.set(&quot;country&quot;, &quot;Belgium&quot;);</span><br><span class="line">me.size; // =&gt; 3</span><br></pre></td></tr></table></figure>
+<h3 id="柯里化"><a href="#柯里化" class="headerlink" title="柯里化"></a>柯里化</h3><p>对许多开发者来说，柯里化是一个带有国外范的强大形式。合理化地使用它是非常妙的，但是请不要滥用它</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 糟糕的</span><br><span class="line">const sum = a =&gt; b =&gt; a + b;</span><br><span class="line">sum(5)(3); // =&gt; 8</span><br><span class="line"></span><br><span class="line">// 推荐的</span><br><span class="line">const sum = (a, b) =&gt; a + b;</span><br><span class="line">sum(5, 3); // =&gt; 8</span><br></pre></td></tr></table></figure>
+
+<h3 id="可读性"><a href="#可读性" class="headerlink" title="可读性"></a>可读性</h3><p>不要使用一些表面看起来很巧妙的技巧来导致你代码的意思模糊不清(即不可读)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 糟糕的</span><br><span class="line">foo || doSomething();</span><br><span class="line"></span><br><span class="line">// 推荐的</span><br><span class="line">if (!foo) doSomething();</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 糟糕的</span><br><span class="line">void function() &#123; /* IIFE */ &#125;();</span><br><span class="line"></span><br><span class="line">// 推荐的</span><br><span class="line">(function() &#123; /* IIFE */ &#125;());</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 糟糕的</span><br><span class="line">const n = ~~3.14;</span><br><span class="line"></span><br><span class="line">// 推荐的</span><br><span class="line">const n = Math.floor(3.14);</span><br></pre></td></tr></table></figure>
+
+<h3 id="代码复用"><a href="#代码复用" class="headerlink" title="代码复用"></a>代码复用</h3><p>不要抗拒去创建一些体积小,高度可组合、可重用的函数。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 糟糕的</span><br><span class="line">arr[arr.length - 1];</span><br><span class="line"></span><br><span class="line">// 推荐的</span><br><span class="line">const first = arr =&gt; arr[0];</span><br><span class="line">const last = arr =&gt; first(arr.slice(-1));</span><br><span class="line">last(arr);</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 糟糕的</span><br><span class="line">const product = (a, b) =&gt; a * b;</span><br><span class="line">const triple = n =&gt; n * 3;</span><br><span class="line"></span><br><span class="line">// 推荐的</span><br><span class="line">const product = (a, b) =&gt; a * b;</span><br><span class="line">const triple = product.bind(null, 3);</span><br></pre></td></tr></table></figure>
+<h3 id="依赖性"><a href="#依赖性" class="headerlink" title="依赖性"></a>依赖性</h3><p>减少依赖。第三方的代码是你不了解的,不要仅仅为了几个可复制的函数而加载整个第三方文件。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">// 糟糕的</span><br><span class="line">var _ = require(&quot;underscore&quot;);</span><br><span class="line">_.compact([&quot;foo&quot;, 0]));</span><br><span class="line">_.unique([&quot;foo&quot;, &quot;foo&quot;]);</span><br><span class="line">_.union([&quot;foo&quot;], [&quot;bar&quot;], [&quot;foo&quot;]);</span><br><span class="line"></span><br><span class="line">// 推荐的</span><br><span class="line">const compact = arr =&gt; arr.filter(el =&gt; el);</span><br><span class="line">const unique = arr =&gt; [...Set(arr)];</span><br><span class="line">const union = (...arr) =&gt; unique([].concat(...arr));</span><br><span class="line"></span><br><span class="line">compact([&quot;foo&quot;, 0]);</span><br><span class="line">unique([&quot;foo&quot;, &quot;foo&quot;]);</span><br><span class="line">union([&quot;foo&quot;], [&quot;bar&quot;], [&quot;foo&quot;]);</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+        <hr class="fhr">
+        <div id="vcomments"></div>
+    
+</div>
+    <div class="footer" id="footer">
+    <p>Copyright © 2020 <a class="flink" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>-<a class="flink" target="_blank" rel="noopener" href="https://github.com/sanjinhub/hexo-theme-geek">Geek</a>.
+        <label class="el-switch el-switch-green el-switch-sm" style="vertical-align: sub;">
+            <input type="checkbox" name="switch" id="update_style">
+            <span class="el-switch-style"></span>
+        </label>
+<!--         <script type="text/javascript">
+        var cnzz_protocol = (("https:" == document.location.protocol) ? "https://" : "http://");
+        document.write(unescape("%3Cspan id='cnzz_stat_icon_1278548644'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "v1.cnzz.com/stat.php%3Fid%3D1278548644%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+        </script> -->
+    </p>
+</div>
+<input type="hidden" id="web_style" value="black">
+<input type="hidden" id="valine_appid" value="cbTPc8u7ho07U6TmlFC0RjK7">
+<input type="hidden" id="valine_appKey" value="4hH8asmBIHG3iSVSUt8Hu5OP">
+
+<script src="/libs/jquery.min.js"></script>
+
+
+<script src="/libs/highlight/highlight.pack.js"></script>
+
+<script src='//cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+
+<script src="/js/js.js"></script>
+
+<style type="text/css">
+.v * {
+    color: #698fca;
+}
+
+.v .vlist .vcard .vhead .vsys {
+    color: #3a3e4a;
+}
+
+.v .vlist .vcard .vh .vmeta .vat {
+    color: #638fd5;
+}
+
+.v .vlist .vcard .vhead .vnick {
+    color: #6ba1ff;
+}
+
+.v a {
+    color: #8696b1;
+}
+
+.v .vlist .vcard .vhead .vnick:hover {
+    color: #669bfc;
+}
+</style>
+</body>
+
+</html>

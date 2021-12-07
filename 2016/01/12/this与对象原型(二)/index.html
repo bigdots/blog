@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>
+        yzg的个人站
+    </title>
+    
+<link rel="stylesheet" href="/libs/highlight/styles/monokai-sublime.css">
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body id="bodyx">
+    <div class="hd posts">
+    <a href="/index.html"><i class="fa fa-reply replay-btn" aria-hidden="true"></i></a>
+    <div class="post-title">
+        <p>
+            YDKJS:this 与对象原型(二)
+        </p>
+        <hr>
+    </div>
+    <div class="post-content">
+        <!-- TOC -->
+
+<ul>
+<li><a href="#%E8%AF%AD%E6%B3%95">语法</a></li>
+<li><a href="#%E7%B1%BB%E5%9E%8B">类型</a></li>
+<li><a href="#%E5%86%85%E5%AE%B9">内容</a><ul>
+<li><a href="#%E8%AE%A1%E7%AE%97%E5%9E%8B%E5%B1%9E%E6%80%A7%E5%90%8D">计算型属性名</a></li>
+<li><a href="#%E5%B1%9E%E6%80%A7property-vs-%E6%96%B9%E6%B3%95method">属性(Property) vs 方法(Method)</a></li>
+<li><a href="#%E6%95%B0%E7%BB%84">数组</a></li>
+<li><a href="#%E5%A4%8D%E5%88%B6%E5%AF%B9%E8%B1%A1">复制对象</a></li>
+<li><a href="#%E5%B1%9E%E6%80%A7%E6%8F%8F%E8%BF%B0%E7%AC%A6">属性描述符</a></li>
+<li><a href="#%E4%B8%8D%E5%8F%98%E6%80%A7">不变性</a></li>
+<li>[[[Get]]](#get)</li>
+<li>[[[Put]]](#put)</li>
+<li><a href="#getter-%E5%92%8C-setter">Getter 和 Setter</a></li>
+<li><a href="#%E5%AD%98%E5%9C%A8%E6%80%A7">存在性</a></li>
+</ul>
+</li>
+<li><a href="#%E9%81%8D%E5%8E%86">遍历</a></li>
+</ul>
+<!-- /TOC -->
+
+<p>什么是对象？this 为什么需要指向对象？</p>
+<h2 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h2><p>对象主要来源于俩种形式：</p>
+<ol>
+<li><p>字面量形式</p>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> myObj = &#123;&#125;;</span><br></pre></td></tr></table></figure></li>
+<li><p>构造形式</p>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> myObj = <span class="keyword">new</span> <span class="built_in">Object</span>();</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="类型"><a href="#类型" class="headerlink" title="类型"></a>类型</h2><p>Javscript 中的一切皆对象的理解是存在错误的。</p>
+<p>简单基本类型自身不是 object。typeof null 返回 object 是语言中的一个 bug，实际上 null 是它自己的基本类型。</p>
+<p><strong>内建对象</strong></p>
+<ul>
+<li>String</li>
+<li>Number</li>
+<li>Boolean</li>
+<li>Object</li>
+<li>Function</li>
+<li>Array</li>
+<li>Date</li>
+<li>RegExp</li>
+<li>Error</li>
+</ul>
+<p>内建对象仅仅只是函数，每一个都可以被用作构造器。new 一个内建对象的结果是一个新构建的相应<strong>子类型的对象</strong>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> strObj = <span class="keyword">new</span> <span class="built_in">String</span>(<span class="string">&quot;I am a string&quot;</span>);</span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.call(strObj); <span class="comment">// [object String]</span></span><br></pre></td></tr></table></figure>
+
+<p><code>Object.prototype.toString</code>方法可以考察自类型的内部。</p>
+<p><strong>内建对象与基本类型的关系？</strong></p>
+<p>基本类型不是一个对象，它是一个不可变的基本字面值。为了对它进行操作都需要一个相应的对象。</p>
+<p>在 js 中，必要的时候会将基本类型值转化为相应的对象类型，比如：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> str = <span class="string">&quot;I am a string&quot;</span>;</span><br><span class="line"><span class="built_in">console</span>.log(str.length); <span class="comment">// 13</span></span><br></pre></td></tr></table></figure>
+
+<p>这里调用<code>str.length</code>，js 会先将 str 转化成 <code>new String(&#39;I am a string&#39;)</code>，再进行属性读取。</p>
+<p><strong>特殊： null 和 undefined 没有基本包装类型。Date 没有字面量值。</strong></p>
+<p><strong>注意：仅在必要时使用构建形式，推荐使用字面形式</strong></p>
+<h2 id="内容"><a href="#内容" class="headerlink" title="内容"></a>内容</h2><p>对象的内容是由属性构成的，属性就是储存在特定位置上（任意类型）的值。</p>
+<p>引擎会根据自己的实现来存储属性值，而且通常都不是把它们存储在对象内部。储存在对象内部的是这些对象的名称，它们像指针一样指向值存储的地方。</p>
+<p><strong>访问方式：</strong></p>
+<ul>
+<li><p>属性（property）访问</p>
+<p>  使用 <code>.</code> 操作符。后面接一个<code>标识符</code>。</p>
+</li>
+<li><p>键（key）访问</p>
+<p>  使用 <code>[]</code> 操作符。可以接受任何兼容<code>UTF-8/unicode</code>的字符串。可以使用动态键（表达式）。</p>
+</li>
+</ul>
+<p>属性名总是字符串。使用字符串以外的值，它会首先被转化为字符串。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> myObj = &#123;&#125;;</span><br><span class="line">myObj[<span class="literal">true</span>] = <span class="string">&quot;foo&quot;</span>;</span><br><span class="line">myObj[<span class="number">3</span>] = <span class="string">&quot;bar&quot;</span>;</span><br><span class="line">myObj[myObj] = <span class="string">&quot;baz&quot;</span>;</span><br><span class="line"></span><br><span class="line">myObj[<span class="string">&quot;true&quot;</span>]; <span class="comment">// foo</span></span><br><span class="line">myObj[<span class="string">&quot;3&quot;</span>]; <span class="comment">// bar</span></span><br><span class="line">myObj[<span class="string">&quot;[object Object]&quot;</span>]; <span class="comment">//baz</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="计算型属性名"><a href="#计算型属性名" class="headerlink" title="计算型属性名"></a>计算型属性名</h3><p><code>[]</code>提供了使用表达式作为键名的方法。但这种方式并不支持使用字面量语法。</p>
+<p>ES6 加入了计算型属性名，可以在字面量声明时通过<code>[]</code>指定表达式属性。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> prefix = <span class="string">&quot;foo&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> myObj = &#123;</span><br><span class="line">    [prefix + <span class="string">&quot;bar&quot;</span>]: <span class="string">&quot;hello&quot;</span></span><br><span class="line">&#125;;</span><br><span class="line">myObj[<span class="string">&quot;foobar&quot;</span>]; <span class="comment">// hello</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="属性-Property-vs-方法-Method"><a href="#属性-Property-vs-方法-Method" class="headerlink" title="属性(Property) vs 方法(Method)"></a>属性(Property) vs 方法(Method)</h3><p>人们喜欢将属性进行区分，把属于对象（类）的函数称为方法。但从技术上讲，函数不会属于对象 ，因为 this 是在运行时动态绑定的，说明它与对象的关系至多是间接的。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;foo&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> someFoo = foo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> myObj = &#123;</span><br><span class="line">    <span class="attr">someFoo</span>: foo</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">foo; <span class="comment">// ƒ foo()&#123;...&#125;</span></span><br><span class="line">someFoo; <span class="comment">// ƒ foo()&#123;...&#125;</span></span><br><span class="line">myObj.someFoo; <span class="comment">// ƒ foo()&#123;...&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>myObj.someFoo</code> 和 <code>someFoo</code> 都是对 foo 函数的分离引用，它们并不意味着很特别或者被某个对象所拥有。</p>
+<h3 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h3><p>跟对象采用键来存储值一样，数组采用数字索引（数字小标）来存储值。</p>
+<p>数组的索引都是非负整数。</p>
+<p>如果在数组上添加一个似数字属性，那么它会称为一个数组索引。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> foo = [<span class="string">&quot;foo&quot;</span>, <span class="number">123</span>];</span><br><span class="line">foo[<span class="string">&quot;3&quot;</span>] = <span class="string">&quot;bar&quot;</span>;</span><br><span class="line">foo[<span class="number">3</span>]; <span class="comment">// bar</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="复制对象"><a href="#复制对象" class="headerlink" title="复制对象"></a>复制对象</h3><p>浅拷贝 和 深拷贝。</p>
+<p>使用 JSON 安全对象来进行神拷贝。</p>
+<h3 id="属性描述符"><a href="#属性描述符" class="headerlink" title="属性描述符"></a>属性描述符</h3><p>自 ES5 开始，js 添加了属性描述符来考察或者描述属性。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">    <span class="attr">a</span>: <span class="number">2</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="built_in">Object</span>.getOwnPropertyDescriptor(obj, <span class="string">&quot;a&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// &#123;value: 2, writable: true, enumerable: true, configurable: true&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>属性描述符：</p>
+<ul>
+<li><p>writable</p>
+<p>  可写性。设置为 false 则不可写。</p>
+</li>
+<li><p>enumerable</p>
+<p>  可枚举性。它控制对象属性能否被枚举，比如 for…in 循环。</p>
+  <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> myObject = &#123;&#125;;</span><br><span class="line"><span class="built_in">Object</span>.defineProperty(</span><br><span class="line">    myObject,</span><br><span class="line">    <span class="string">&quot;a&quot;</span>,</span><br><span class="line">    <span class="comment">// 让 a 像普通属性一样可以枚举</span></span><br><span class="line">    &#123; <span class="attr">enumerable</span>: <span class="literal">true</span>, <span class="attr">value</span>: <span class="number">2</span> &#125;</span><br><span class="line">);</span><br><span class="line"><span class="built_in">Object</span>.defineProperty(</span><br><span class="line">    myObject,</span><br><span class="line">    <span class="string">&quot;b&quot;</span>,</span><br><span class="line">    <span class="comment">// 让 b 不可枚举</span></span><br><span class="line">    &#123; <span class="attr">enumerable</span>: <span class="literal">false</span>, <span class="attr">value</span>: <span class="number">3</span> &#125;</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> k <span class="keyword">in</span> myObject) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(k, myObject[k]);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// a 2</span></span><br></pre></td></tr></table></figure>
+
+<p>  可以看到，myObject.b 不会出现在 for..in 循环中。</p>
+<p>  其他检验属性是否可枚举的方法：</p>
+<ol>
+<li><p><code>propertyIsEnumerable(..)</code> 会检查给定的属性名是否直接存在于对象中(而不是在原型链 上)并且满足 <code>enumerable:true</code>。</p>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">myObject.propertyIsEnumerable(<span class="string">&quot;a&quot;</span>); <span class="comment">//true</span></span><br><span class="line">myObject.propertyIsEnumerable(<span class="string">&quot;b&quot;</span>); <span class="comment">// false</span></span><br></pre></td></tr></table></figure></li>
+<li><p><code>Object.keys(..)</code> 会返回一个数组，包含所有可枚举属性，<code>Object.getOwnPropertyNames(..)</code> 会返回一个数组，包含所有属性，无论它们是否可枚举。</p>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Object</span>.keys(myObject); <span class="comment">// [&quot;a&quot;]</span></span><br><span class="line"><span class="built_in">Object</span>.getOwnPropertyNames(myObject); <span class="comment">//  [&quot;a&quot;, &quot;b&quot;]</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+</li>
+</ul>
+<ul>
+<li><p>configurable</p>
+<p>  可配置性。将它设为 false：</p>
+<ul>
+<li>defineProperty 也不可再使用，会报错。（说明是单向操作，不可撤销）</li>
+<li>delete 操作失效</li>
+</ul>
+</li>
+</ul>
+<p>我们可以使用<code>Object.defineProperty</code>来添加和修改属性。</p>
+<h3 id="不变性"><a href="#不变性" class="headerlink" title="不变性"></a>不变性</h3><p>如何实现属性/对象的不可变性？</p>
+<ol>
+<li><p>对象常量</p>
+<p> 通过 <code>writable: false</code> 和 <code>configurable: false</code>可以实现常量的创建。不可改变，重定义或者删除。</p>
+</li>
+<li><p>防止扩展</p>
+<p> 通过 <code>Object.preventExtensions()</code> 方法可以防止一个对象添加新属性。</p>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123; <span class="attr">a</span>: <span class="number">1</span> &#125;;</span><br><span class="line"><span class="built_in">Object</span>.preventExtensions(obj);</span><br><span class="line">obj.b = <span class="number">2</span>;</span><br><span class="line">obj.b; <span class="comment">//undefined</span></span><br></pre></td></tr></table></figure></li>
+<li><p>封印</p>
+<p> <code>Object.seal()</code>创建一个封印的对象。它既防扩展又不可配置。相等于同事调用<code>Object.preventExtensions()</code>和设置<code>configurable: false</code>。</p>
+</li>
+<li><p>冻结</p>
+<p> <code>Object.freeze()</code>创建一个冻结对象。它相当于<code>Object.seal()</code> + <code>writable: false</code>。这事目前最高级别的不可变性。</p>
+</li>
+</ol>
+<h3 id="Get"><a href="#Get" class="headerlink" title="[[Get]]"></a>[[Get]]</h3><p>属性访问实际上执行了一个 <code>[[Get]]</code> 操作。它会首先检查对象，查找是否有名称相同的属性：</p>
+<ol>
+<li>存在，返回相应的值。</li>
+<li>不存在，返回 <code>undefined</code>。（这个查找会遍历原型链）</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> myObject = &#123;</span><br><span class="line">    <span class="attr">a</span>: <span class="number">2</span></span><br><span class="line">&#125;;</span><br><span class="line">myObject.a; <span class="comment">// 2</span></span><br><span class="line">myObject.b; <span class="comment">// undefined</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="Put"><a href="#Put" class="headerlink" title="[[Put]]"></a>[[Put]]</h3><p>相应于 <code>[[Get]]</code> 操作，js 有个相应的 <code>[[Put]]</code> 操作。</p>
+<p>[[Put]] 操作的实际行为取决于许多因素，包括对象中是否已经存在这个属性(这是最重要的因素)。</p>
+<p>如果已经存在这个属性：</p>
+<ol>
+<li>属性是否是访问描述符(参见 Getter 和 Setter)?如果是并且存在 setter 就调用 setter。</li>
+<li>属性的数据描述符中 writable 是否是 false?如果是，在非严格模式下静默失败，在严格模式下抛出 TypeError 异常。</li>
+<li>如果都不是，将该值设置为属性的值。</li>
+</ol>
+<p>如果不存在，更复杂，详见<a href="">原型</a></p>
+<h3 id="Getter-和-Setter"><a href="#Getter-和-Setter" class="headerlink" title="Getter 和 Setter"></a>Getter 和 Setter</h3><p>对象默认的 [[Put]] 和 [[Get]] 操作分别可以控制属性值的设置和获取。</p>
+<p>在 ES5 中可以使用 getter 和 setter 部分改写默认操作，但是只能应用在单个属性上，无法应用在整个对象上。</p>
+<p>getter 是一个隐藏函数，会在获取属性值时调用。setter 也是一个隐藏函数，会在设置属性值时调用。</p>
+<p>当你给一个属性定义 getter、setter 或者两者都有时，这个属性会被定义为“访问描述符”</p>
+<p>JavaScript 会忽略访问描述符的 value 和 writable 特性，取而代之的是关心 set 和 get(还有 configurable 和 enumerable)特性。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> myObject = &#123;</span><br><span class="line">    <span class="comment">// 给 a 定义一个 getter</span></span><br><span class="line">    <span class="keyword">get</span> <span class="title">a</span>() &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">Object</span>.defineProperty(</span><br><span class="line">    myObject, <span class="comment">// 目标对象 &quot;b&quot;, // 属性名</span></span><br><span class="line">    <span class="string">&quot;b&quot;</span>,</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 给 b 设置一个 getter</span></span><br><span class="line">        <span class="attr">get</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">this</span>.a * <span class="number">2</span>;</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="comment">// 确保 b 会出现在对象的属性列表中</span></span><br><span class="line">        <span class="attr">enumerable</span>: <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">myObject.a; <span class="comment">// 2</span></span><br><span class="line">myObject.b; <span class="comment">// 4</span></span><br></pre></td></tr></table></figure>
+
+<p><code>get a() &#123; .. &#125;</code>和<code>defineProperty(..)</code>都会在对象中创建一个不包含值的属性, 对于这个属性的访问会自动调用一个隐藏函数，它的返回值会被当作属性访问的返回值。</p>
+<p>通常来说 getter 和 setter 是成对出现的(只定义一个的话 通常会产生意料之外的行为):</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> myObject = &#123;</span><br><span class="line">    <span class="comment">// 给 a 定义一个 getter</span></span><br><span class="line">    <span class="keyword">get</span> <span class="title">a</span>() &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>._a_;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">// 给 a 定义一个 setter</span></span><br><span class="line">    <span class="keyword">set</span> <span class="title">a</span>(<span class="params">val</span>) &#123;</span><br><span class="line">        <span class="built_in">this</span>._a_ = val * <span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">myObject.a = <span class="number">2</span>;</span><br><span class="line">myObject.a; <span class="comment">// 4</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="存在性"><a href="#存在性" class="headerlink" title="存在性"></a>存在性</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> myObject = &#123;</span><br><span class="line">    <span class="attr">a</span>: <span class="literal">undefined</span></span><br><span class="line">&#125;;</span><br><span class="line">myObject.a; <span class="comment">//undefined</span></span><br><span class="line">myObject.b; <span class="comment">//undefined</span></span><br></pre></td></tr></table></figure>
+
+<p>一个属性值有可能 是属性中存储的 undefined，也可能是因为属性不存在所以返回 undefined。那么如何区分 这两种情况呢?</p>
+<ol>
+<li><p>in<br>in 操作符会检查<strong>属性名</strong>在对象及其 [[Prototype]] 原型链中是否存在</p>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;a&quot;</span> <span class="keyword">in</span> myObject; <span class="comment">//true</span></span><br><span class="line"><span class="string">&quot;b&quot;</span> <span class="keyword">in</span> myObject; <span class="comment">//false</span></span><br></pre></td></tr></table></figure></li>
+<li><p>hasOwnProperty<br>只会检查属性是否在 myObject 对象中，不会检查 [[Prototype]] 链。</p>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">myObject.hasOwnProperty(<span class="string">&quot;a&quot;</span>); <span class="comment">//true</span></span><br><span class="line">myObject.hasOwnProperty(<span class="string">&quot;b&quot;</span>); <span class="comment">//false</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="遍历"><a href="#遍历" class="headerlink" title="遍历"></a>遍历</h2><ol>
+<li>for..in</li>
+<li>for 循环</li>
+<li>forEach(..)、every(..) 和 some(..)</li>
+<li>for..of</li>
+</ol>
+
+    </div>
+
+    
+        <hr class="fhr">
+        <div id="vcomments"></div>
+    
+</div>
+    <div class="footer" id="footer">
+    <p>Copyright © 2020 <a class="flink" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>-<a class="flink" target="_blank" rel="noopener" href="https://github.com/sanjinhub/hexo-theme-geek">Geek</a>.
+        <label class="el-switch el-switch-green el-switch-sm" style="vertical-align: sub;">
+            <input type="checkbox" name="switch" id="update_style">
+            <span class="el-switch-style"></span>
+        </label>
+<!--         <script type="text/javascript">
+        var cnzz_protocol = (("https:" == document.location.protocol) ? "https://" : "http://");
+        document.write(unescape("%3Cspan id='cnzz_stat_icon_1278548644'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "v1.cnzz.com/stat.php%3Fid%3D1278548644%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+        </script> -->
+    </p>
+</div>
+<input type="hidden" id="web_style" value="black">
+<input type="hidden" id="valine_appid" value="cbTPc8u7ho07U6TmlFC0RjK7">
+<input type="hidden" id="valine_appKey" value="4hH8asmBIHG3iSVSUt8Hu5OP">
+
+<script src="/libs/jquery.min.js"></script>
+
+
+<script src="/libs/highlight/highlight.pack.js"></script>
+
+<script src='//cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+
+<script src="/js/js.js"></script>
+
+<style type="text/css">
+.v * {
+    color: #698fca;
+}
+
+.v .vlist .vcard .vhead .vsys {
+    color: #3a3e4a;
+}
+
+.v .vlist .vcard .vh .vmeta .vat {
+    color: #638fd5;
+}
+
+.v .vlist .vcard .vhead .vnick {
+    color: #6ba1ff;
+}
+
+.v a {
+    color: #8696b1;
+}
+
+.v .vlist .vcard .vhead .vnick:hover {
+    color: #669bfc;
+}
+</style>
+</body>
+
+</html>
