@@ -89,11 +89,12 @@ IE6的退出市场，让我们在浏览器兼容性这一问题上舒了一口�
 - IE7/8: 不支持事件捕获，因而只能取消事件冒泡，event.cancelBubble 
 
 - 现代浏览器: event.returnValue = false
-
-		function(event){
-			if (event.stopPropagation){
-				event.stopPropagation();
-			} else {
-				event.cancelBubble = true;
-			}
-		}
+  ```js
+  function(event){
+    if (event.stopPropagation){
+      event.stopPropagation();
+    } else {
+      event.cancelBubble = true;
+    }
+  }
+  ```

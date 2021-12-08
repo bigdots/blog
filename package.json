@@ -22,5 +22,9 @@
     "hexo-renderer-stylus": "^2.0.0",
     "hexo-server": "^2.0.0",
     "hexo-theme-landscape": "^0.0.3"
+  },
+  "devDependencies": {
+    "hexo-asset": "^1.0.0",
+    "hexo-deployer-git": "^3.0.0"
   }
 }

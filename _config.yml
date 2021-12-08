@@ -102,4 +102,7 @@ theme: geek
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
-  type: ''
+  type: git
+  repo: git@github.com:bigdots/blog.git
+  branch: [public]
+  # message: [Site updated: { { now('YYYY-MM-DD HH:mm:ss') } }]
